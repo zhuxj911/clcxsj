@@ -1,0 +1,196 @@
+%!TEX root = ../clcxsj.tex
+
+\chapter{常用测量函数设计}
+
+$C\#$是一门纯面向对象语言，也就是说所有的常量与方法都需要以类$class$为载体，我们如同其他的数学软件包一样，我们将其命名为$SMath(SurveyMath)$，保存在$SMath.cs$文件中，为了引用方便，我们需将常用的一些常量及方法定义为静态成员。示例代码如下所示：
+\begin{verbatim}
+namespace ZXY
+{
+    public static class SMath
+    {
+        public const double PI=3.1415926535897932384626433832795;
+        public const double PI2=6.283185307179586476925286766559;
+        public const double TODEG=57.295779513082320876798154814105;
+        public const double TORAD=0.01745329251994329576923690768489;
+        public const double TOSECOND=206264.80624709635515647335733078;
+    
+        public static double DMS2RAD(double dmsAngle)
+        {
+            ......
+        }
+    
+        public static double RAD2DMS(double radAngle)
+        {
+            ......
+        }
+    }
+}
+\end{verbatim}
+
+\section{常用测量计算公式}
+角度、距离与高差是测量工程师工作的基本对象，度分秒形式的角度与弧度之间的转换是我们进行测量数据处理的基础。为了方便的进行测量数据处理，我们需要定义一些常量，如前述示例代码所示。
+
+$PI$表示$\pi$, $PI2$表示$2\pi$;
+$TODEG$表示$180/\pi$，用于将弧度化为度；
+$TORAD$表示$\pi/180$，用于将度化为弧度；
+$TOSECOND$表示$180*3600/\pi$，用于将弧度转换为秒。
+
+\subsection{角度弧度互换函数：}
+
+ 在测量工程中角度的常用习惯表示法是度分秒的形式，在计算程序中测量工程人员也常将度分秒形式的角度用格式为xxx.xxxxx的形式表示，即以小数点前的整数部分表示度，小数点后两位数表示分，从小
+ 数点后第三位起表示秒。在计算机编程时所用的角度要以弧度表示的，因此需要
+ 设计函数相互转换。
+
+1．角度化弧度函数：
+
+角度化弧度函数的逻辑非常简单，许多测量编程人员将其写成如下的形式：
+\begin{verbatim}
+public static double DMS2RAD(double dmsAngle)
+{
+   int d = (int)dmsAngle;
+   dmsAngle = (dmsAngle - d) * 100.0;
+   int m = (int)dmsAngle;
+   double s = (dmsAngle - m) * 100.0;
+   return (d + m / 60.0 + s / 3600.0) * TORAD;
+}
+\end{verbatim}
+但由于计算机中浮点数的表示方法的原因，以上函数并不能精确的将度分秒的角度转换为弧度。
+
+ 如某一角度为$1°40'00''$，我们以1.4000形式的浮点数输入，计算机将表示为1.3999999999999999的形式。
+ 这在计算机中并没有什么错误，但以上函数在提取角度的分秒时，提取到的m值为39，提取到的s值为
+ 99.999999999999,即我们提取到的角度为$1°39'100''$，有40"的角度误差，这是我们测绘工程人员不能接受的。
+ 
+ 有的软件设计人员在软件中发现这个问题后的处理的办法是让用户在角度后加减一秒，进行规避这种误差，显然，
+ 将软件人员的责任推给用户是极其不合适和不负责任的。还有许多的书籍中介绍了许多五花八门的处理方法，但奏效的小，不奏效的却很多，甚至有的将这么简单的算法逻辑变得逻辑十分复杂。
+ 
+ 虽然浮点数的表达不够精确，但我们知道在计算机中，整数的表达与计算却是精确的，因此在角度的度分秒值提取中，我们采用整数的运算方式进行计算，相应代码如下。
+ 
+\begin{verbatim}
+public static double DMS2RAD(double dmsAngle)
+{
+    dmsAngle *= 10000; 
+    int angle = (int)Math.Round(dmsAngle);
+    int d = angle / 10000;
+    angle -= d * 10000;
+    int m = angle / 100;
+    double s = dmsAngle - d * 10000 - m * 100;
+    return (d + m / 60.0 + s / 3600.0) * TORAD;
+}
+\end{verbatim}
+
+ 以上算法对于负的角度值的提取同样有效。
+
+
+2．弧度化角度函数
+
+同样的道理，以下函数将不能正确的将一些弧度值转换为度分秒形式的角度值，在某些情况下转换出的角度将出现$59'60''$或$59'59.9999''$的形式。
+
+\begin{verbatim}
+public static double RAD2DMS(double radAngle)
+{
+    radAngle *= TODEG;
+    int d = (int)radAngle;
+    radAngle = (radAngle - d) * 60;
+    int m = (int)radAngle;
+    double s = (radAngle - m) * 60;
+    return (d + m / 100.0 + s / 10000.0);
+}
+\end{verbatim}
+
+同样，我们需要利用整数的精确表达能力与计算能力来进行转换，正确的代码如下：
+
+\begin{verbatim}
+public static double RAD2DMS(double radAngle)
+{
+    radAngle *= TOSECOND;
+    int angle = (int)Math.Round(radAngle); 
+    int d = angle / 3600;
+    angle -= d * 3600;
+    int m = angle / 60;
+    double s = radAngle - d * 3600 - m * 60;
+    return (d + m / 100.0 + s / 10000.0);
+}
+\end{verbatim}
+
+\subsection{坐标方位角推算}
+
+ 1.已知01边的坐标方位角$\alpha_0$和01边和12边间的水平角$\beta$，计算12边的坐标方位角。
+ \begin{verbatim}
+ double Azimuth(double azimuth0, double angle)
+ {
+    return To0_2PI(azimuth0 + angle + _PI);
+ }
+\end{verbatim}
+
+ 2.将角度规划到0～2π，单位为弧度
+ \begin{verbatim}
+ double To0_2PI(double rad)
+ {
+   int f = rad >= 0 ? 0 : 1;
+   int n = (int)(rad / TWO_PI);
+
+   return rad - n * TWO_PI + f * TWO_PI;
+ }
+ \end{verbatim}
+
+\subsection{平面坐标正反算}
+1.坐标正算：
+
+根据0->1点的坐标方位角和水平边长，计算0->1点的坐标增量。
+\begin{verbatim}
+void double dxdy(double azimuth, double distance,
+                 double& dx, double& dy)
+{
+    dx = cos(azimuth) * distance;
+    dy = sin(azimuth) * distance;
+}
+\end{verbatim}
+
+根据0点的坐标和0->i点的坐标方位角和水平边长，计算i点的坐标。
+\begin{verbatim}
+void Coordinate(double x0, double y0,
+        double azimuth, double distance,
+        double& xi, double& yi)
+{
+    xi = x0 + cos(azimuth) * distance;
+    yi = y0 + sin(azimuth) * distance;
+}
+\end{verbatim}
+
+根据1点的坐标和后视边(0->1)点的坐标方位角，水平角(0-1-i)，水平边长(1-i)，计算i点的坐标。
+\begin{verbatim}
+void Coordinate(double x0, double y0, double azimuth0,
+        double angle, double distance,
+        double& xi, double& yi)
+{
+    double azimuthi = Azimuth(azimuth0, angle);
+    xi = x0 + cos(azimuthi) * distance;
+    yi = y0 + sin(azimuthi) * distance;
+}
+\end{verbatim}
+
+2.坐标反算：
+
+计算0点至1点的坐标方位角，返回值单位为弧度。
+\begin{verbatim}
+double Azimuth(double x0, double y0, double x1, double y1)
+{
+   double dx = x1 - x0;
+   double dy = y1 - y0;
+   return atan2(dy, dx) + (dy < 0 ? 1 : 0) * _2PI;
+}
+\end{verbatim}
+
+计算两点间(0->1)的平距
+\begin{verbatim}
+double Distance(double x0, double y0, double x1, double y1)
+{
+    double dx = x1 - x0;
+    double dy = y1 - y0;
+    return sqrt(dx * dx + dy * dy);
+}
+\end{verbatim}
+
+\subsection{以类的形式进行封装}
+这些函数还可以以类的形式用静态成员函数的方法把它们封装在一个类里面。这
+在纯面向对象语言如\verb|JAVA|、\verb|C#|等里面，尤其应该这样封装。

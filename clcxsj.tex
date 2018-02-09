@@ -1,0 +1,71 @@
+%-*- coding: UTF-8 -*-
+%clcxsj.tex
+%测量程序设计
+
+\documentclass[10.5pt, UTF8]{ctexbook}
+
+ \usepackage{graphicx}
+ \usepackage{amsmath}
+ \usepackage{mathtools}
+ \usepackage{fancyhdr}
+ \usepackage{listings} %%专用于代码排版的LaTeX宏包， 可对关键字、注释、字符串等
+                                         %%使用不同的字体和颜色，也可为代码添加边框、北京背景等风格
+ \usepackage{xcolor}  %%对代码进行色彩支持
+    
+ \pagestyle{fancy}
+ \fancyhf{} % delete current setting for header and footer
+ \fancyhead[LE,RO]{\bfseries\thepage}
+ \fancyhead[LO]{\bfseries\rightmark}
+ \fancyhead[RE]{\bfseries\leftmark}
+
+ \renewcommand{\headrulewidth}{0.5pt}
+ \renewcommand{\footrulewidth}{0pt}
+ \addtolength{\headheight}{0.5pt} % make space for the rule
+ \fancypagestyle{plain}{ \fancyhead{}  \renewcommand{\headrulewidth}{0pt} }
+
+ \CTEXsetup[number={\arabic{chapter}}]{chapter}
+ \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+ \renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+ 
+ \title{\heiti \zihao{2} 测量程序设计 }
+ \author{\kaishu \zihao{-3}朱学军 }
+ \date{ 2018年3月 }
+
+\begin{document}
+
+\lstset{basicstyle=\small, 
+        numbers=left, %设置行号位置
+        numberstyle=\tiny, %设置行号大小
+        keywordstyle=\color{blue}, %设置关键字颜色
+        commentstyle=\color[cmyk]{1,0,1,0}, %设置注释颜色
+        frame=shadowbox, rulesepcolor=\color{red!20!green!20!blue!20}, %设置边框格式 shadowbox
+        breaklines, %自动折行
+        extendedchars=false, %解决代码跨页时，章节标题，页眉等汉字不显示的问题
+        xleftmargin=2em,xrightmargin=2em, aboveskip=1em, %设置边距
+        tabsize=4, %设置tab空格数
+        showspaces=false %不显示空格
+        %%escapeinside=``{\%}{)} 
+       }%%设置 lstlisting 环境所用的公共参数
+\maketitle
+
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 正文部分
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{chapter/chapter01} %%第1章 从C走向C\#
+\include{chapter/chapter02} %%第2章 C\#语言基础与Visual Studio编程环境
+\include{chapter/chapter03} %%第3章 C\#面向对象特性-封装
+\include{chapter/chapter04} %%第4章 C\#面向对象特性-继承
+\include{chapter/chapter05} %%第5章 C\#面向对象特性-多态
+\include{chapter/chapter06} %%第6章 C\#图形界面-WPF
+\include{chapter/chapter07} %%第7章 常用测量函数设计
+\include{chapter/chapter08} %%第8章 高斯投影程序设计
+\include{chapter/chapter09} %%第9章 坐标转换程序设计
+\include{chapter/chapter10} %%第10章 线路要素计算程序设计
+\include{chapter/chapter11} %%第11章 单导线近似平差程序设计
+
+  % 附录\appendix
+  %\include{chapter/appendix}
+
+\end{document}

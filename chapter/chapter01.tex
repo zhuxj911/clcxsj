@@ -1,8 +1,67 @@
 ﻿%!TEX root = ../clcxsj.tex
 
 \chapter{从C走向C\#}
-\section{111111}
-本章主要讲述C语言与C++的不同之处，学习完本章后，应该能够在 Visual C++
-编译器下基本能够正确的编译C语言程序和简单的具有C++特征的程序。
+
+\section{C/S程序设计模式}
+改变C语言中将代码写入main函数中的习惯；
+
+改变C\#语言中将代码写入Main函数中的习惯；
+
+改变在WinForm中直接写入代码的习惯；
+
+以上这些习惯将带来一系列的问题，在团队开发与多人协作尤其如此，
+如：不能进行unittest、git代码合并时会引发大量的冲突。
+
+\section{从面向过程走向面向对象的程序设计 }
+
+良好的面向过程设计程序设计程序是可以很好的转向面向对象的程序设计的。
 
  
+\begin{lstlisting}[language=C]
+#include <math.h>
+
+typedef struct _point {
+    char name;
+    double x, y, z;
+}Point;
+
+typedef struct _circle {
+    Point center;
+    double r;
+    double area;
+    double length;
+}Circle;
+
+//计算两点的距离
+double distance(Point * p1, Point * p2){
+    double dx = p2->x - p1->x;
+    double dy = p2->y - p1->y;
+    return sqrt(dx*dx + dy*dy);
+}
+
+//判断两圆是否相交
+bool isIntersect(Circle * c1, Circle * c2){
+    double d = distance(&c1->center, &c2->center);
+    if (c1->r + c2->r > d)
+        return false;
+    else
+        return true;
+}
+
+\end{lstlisting}
+
+% \lstinputlisting{source_filename.py}
+% \lstinputlisting[language=Python]{source_filename.py}
+% \lstinputlisting[language=Python, firstline=37, lastline=45]{source_filename.py}
+
+\section{ 结构体(struct) }
+
+C语言中有 struct，在C++中对 struct 进行了扩展，其实质就是一class。
+
+\section{ 类(class) }
+
+class是绝大多数的面向对象程序设计语言的关键词。
+
+程序或软件的基本概念是：程序 = 数据结构 + 算法
+
+从程序设计语言的语法角度分析，class 是 数据与函数的复合体，是符合上述程序设计原则的。

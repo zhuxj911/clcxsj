@@ -1,0 +1,62 @@
+﻿%!TEX root = ../clcxsj.tex
+
+\chapter{从C走向C\#}
+
+\section{Client/Server程序设计模式}
+改变C语言中将代码写入main函数中的习惯；
+
+改变C\#语言中将代码写入Main函数中的习惯；
+
+改变在WinForm中直接写入代码的习惯；
+
+以上这些习惯将带来一系列的问题，在团队开发与多人协作尤其如此，
+如：不能进行unittest(单元测试)、git（著名的源代码管理工具）代码合并时会引发大量的冲突。
+
+\section{从面向过程走向面向对象的程序设计 }
+
+良好的面向过程设计程序设计程序是可以很好的转向面向对象的程序设计的，如下代码所示：
+ 
+ 
+\lstinputlisting[language=C, firstline=1, lastline=43]{./chapter01/Ch01Ex01/Ch01Ex01/Ch01Ex01.cpp}
+
+% \begin{lstlisting}[language=C]
+% #include <math.h>
+
+% typedef struct _point {
+%     char name[11];
+%     double x, y, z;
+% }Point;
+% }
+% \end{lstlisting}
+
+% \lstinputlisting{source_filename.py}
+% \lstinputlisting[language=C]{Ch01Ex1.cpp}
+% \lstinputlisting[language=Python, firstline=37, lastline=45]{source_filename.py}
+
+相应的main函数测试代码如下：
+\lstinputlisting[language=C, firstline=44, lastline=67]{./chapter01/Ch01Ex01/Ch01Ex01/Ch01Ex01.cpp}
+
+程序的运行结果如下：
+\begin{verbatim}
+Circle1 的面积 = 20106.192983
+Circle1 与 Circle2 是否相交 ：是
+\end{verbatim}
+
+
+
+与以上代码相对应的C\#代码为：
+\lstinputlisting[language=C]{./chapter01/Ch01Ex02/Ch01Ex02/Circle.cs}
+
+相应的C\#的Main函数测试代码如下：
+\lstinputlisting[language=C]{./chapter01/Ch01Ex02/Ch01Ex02/Program.cs}
+
+程序的运行结果如下：
+\begin{verbatim}
+Circle1的面积=20106.1929829747
+Circle2的面积=38013.2711084365
+Circle1与Circle2是否相交:是
+\end{verbatim}
+
+\section{ C\#程序的组织结构}
+
+ 从以上代码可以看出，C\#是一纯面向对象语言。

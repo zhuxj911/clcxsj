@@ -1,27 +1,46 @@
-%-*- coding: UTF-8 -*-
-%clcxsj.tex
-%测量程序设计
+%!TEX program = xelatex
 
-\documentclass[UTF8, A4]{ctexbook}
+\documentclass[11pt]{ctexbook}
 
- \usepackage{graphicx}
- \usepackage{amsmath}
- \usepackage{mathtools}
- \usepackage{fancyhdr}
- \usepackage{listings} %%专用于代码排版的LaTeX宏包， 可对关键字、注释、字符串等
+\usepackage{graphicx}%插图宏集
+\usepackage{amsmath,  amssymb, amsfonts}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{fontspec}
+\usepackage{subfig}  %% 同行并排插图
+\usepackage{caption}
+\usepackage{enumerate} %% 列表项
+\usepackage{multirow}  %% 表格多行合并
+\usepackage{fontspec}
+
+\usepackage{listings} %%专用于代码排版的LaTeX宏包， 可对关键字、注释、字符串等
                                          %%使用不同的字体和颜色，也可为代码添加边框、北京背景等风格
  \usepackage{xcolor}  %%对代码进行色彩支持
-    
- \pagestyle{fancy}
- \fancyhf{} % delete current setting for header and footer
- \fancyhead[LE,RO]{\bfseries\thepage}
- \fancyhead[LO]{\bfseries\rightmark}
- \fancyhead[RE]{\bfseries\leftmark}
 
- % \renewcommand{\headrulewidth}{0.5pt}
- % \renewcommand{\footrulewidth}{0pt}
-  \addtolength{\headheight}{13pt} % make space for the rule
- % \fancypagestyle{plain}{ \fancyhead{}  \renewcommand{\headrulewidth}{0pt} }
+\geometry{a4paper, centering, scale=0.8}
+\pagestyle{fancy}
+\fancyhead[LE,RO]{\bfseries\thepage}
+\fancyhead[LO]{\bfseries\rightmark}
+\fancyhead[RE]{\bfseries\leftmark}
+
+\renewcommand{\headrulewidth}{0.4pt}%改为0pt即可去掉页眉下面的横线
+\renewcommand{\footrulewidth}{0pt}%改为0pt即可去掉页脚上面的横线
+\addtolength{\headheight}{14pt} % make space for the rule
+\fancypagestyle{plain}{ \fancyhead{}  
+\renewcommand{\headrulewidth}{0pt} }
+\fancyfoot[CO,RE]{}%奇数页中间，偶数页右侧页脚为空
+\fancyfoot[LO,CE]{}%奇数页左侧，偶数页中间页脚为空
+%奇数页右侧，偶数页左侧显示 当前页 of 总页数
+%%\fancyfoot[RO,LE]{\thepage\ of \pageref{LastPage}}
+
+%\setCJKmainfont[BoldFont ={SimHei}, ItalicFont ={KaiTi}]{SimSun}
+%\setCJKsansfont{SimHei} %%  KaiTi -- simkai.ttf   LiSu -- SIMLI.TTF
+%\setCJKmonofont{FangSong}%%FangSong -- sinfang.ttf YouYuan -- SIMYOU.TTF
+
+\captionsetup[figure]{labelsep=space} %%去掉图标中的 :
+\captionsetup[table]{labelsep=space}  %%去掉表标题中的 ：
+
+\newcommand\degree{^\circ} %%度的符号
 
  \CTEXsetup[number={\arabic{chapter}}]{chapter}
  \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
@@ -33,19 +52,32 @@
 
 \begin{document}
 
-\lstset{basicstyle=\small, 
-        numbers=left, %设置行号位置
-        numberstyle=\small, %设置行号大小
-        keywordstyle=\color{blue}, %设置关键字颜色
-        commentstyle=\color[cmyk]{1,0,1,0}, %设置注释颜色
-        frame=shadowbox, rulesepcolor=\color{red!20!green!20!blue!20}, %设置边框格式 shadowbox
-        breaklines, %自动折行
-        extendedchars=false, %解决代码跨页时，章节标题，页眉等汉字不显示的问题
-        xleftmargin=2em,xrightmargin=2em, aboveskip=1em, %设置边距
-        tabsize=4, %设置tab空格数
-        showspaces=false %不显示空格
-        %%escapeinside=``{\%}{)} 
-       }%%设置 lstlisting 环境所用的公共参数
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+ 
+\lstset{style=mystyle}
+
 \maketitle
 
 \tableofcontents
@@ -53,17 +85,18 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 正文部分
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\include{chapter/chapter01} %%第1章 从C走向C\#
-\include{chapter/chapter02} %%第2章 C\#语言基础与Visual Studio编程环境
-\include{chapter/chapter03} %%第3章 C\#面向对象特性-封装
-\include{chapter/chapter04} %%第4章 C\#面向对象特性-继承
-\include{chapter/chapter05} %%第5章 C\#面向对象特性-多态
-\include{chapter/chapter06} %%第6章 C\#图形界面-WPF
-\include{chapter/chapter07} %%第7章 常用测量函数设计
-\include{chapter/chapter08} %%第8章 高斯投影程序设计
-\include{chapter/chapter09} %%第9章 坐标转换程序设计
-\include{chapter/chapter10} %%第10章 线路要素计算程序设计
-\include{chapter/chapter11} %%第11章 单导线近似平差程序设计
+\include{chapter00/chapter00} %%课程介绍及课程目标
+\include{chapter01/chapter01} %%第1章 从C走向C\#
+\include{chapter02/chapter02} %%第2章 C\#语言基础与Visual Studio编程环境
+\include{chapter03/chapter03} %%第3章 C\#面向对象特性-封装
+\include{chapter04/chapter04} %%第4章 C\#面向对象特性-继承
+\include{chapter05/chapter05} %%第5章 C\#面向对象特性-多态
+\include{chapter06/chapter06} %%第6章 C\#图形界面-WPF
+\include{chapter07/chapter07} %%第7章 常用测量函数设计
+\include{chapter08/chapter08} %%第8章 高斯投影程序设计
+\include{chapter09/chapter09} %%第9章 坐标转换程序设计
+\include{chapter10/chapter10} %%第10章 线路要素计算程序设计
+\include{chapter11/chapter11} %%第11章 单导线近似平差程序设计
 
   % 附录\appendix
   %\include{chapter/appendix}

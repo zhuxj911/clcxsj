@@ -16,7 +16,12 @@
 
 良好的面向过程设计程序设计程序是可以很好的转向面向对象的程序设计的，如下代码所示：
  
+ \subsection{代码示例}
  
+ 我们先从一个简单的C语言代码开始。在测绘专业中我们经常与测量点打交道，因此我们定义一个点Point，
+ 另外我们定义一个简单的为大家所熟知的圆Circle，判断两圆是否相交，计算圆的面积和周长。代码
+ 如下所示：
+
 \lstinputlisting[language=C, firstline=1, lastline=43]{./chapter01/Ch01Ex01/Ch01Ex01/Ch01Ex01.cpp}
 
 % \begin{lstlisting}[language=C]
@@ -57,6 +62,24 @@ Circle2的面积=38013.2711084365
 Circle1与Circle2是否相交:是
 \end{verbatim}
 
+\subsection{代码分析}
+C语言中有 struct，在C++中对 struct 进行了扩展，其实质就是一class。
+C与C++中又特别是C中，struct与指针是其根本。
+
+类(class)是绝大多数的面向对象程序设计语言的关键词。
+
+程序或软件的基本概念是：程序 = 数据结构 + 算法
+
+从程序设计语言的语法角度分析，class 是 数据与函数的复合体，是符合上述程序设计原则的。
+
 \section{ C\#程序的组织结构}
 
- 从以上代码可以看出，C\#是一纯面向对象语言。
+ 从以上C\#示例代码可以看出，C\#是一纯面向对象语言，其组织程序的基本单位是类(class)。
+ 在class之外是namespace，在class内可以定义类成员(class member)和类方法(class method)。
+ 在method中可以定义语句。
+
+ Visual Studio用Solution(.sln)、Project(.csproj)与File(.cs)及文件夹进行组织。其形式如下：
+
+ Solution --1..m--Project -- 1..m--File
+
+ 一个Project对应一个Exe文件或DLL文件或其它模块，是class等的功能组合。

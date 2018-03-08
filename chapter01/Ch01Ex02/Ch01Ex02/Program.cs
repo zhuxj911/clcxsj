@@ -13,7 +13,8 @@ namespace Ch01Ex02
             Console.WriteLine("Circle2的面积={0}", c2.Area);
 
             bool yes = c1.IsIntersectWithCircle(c2);
-            Console.WriteLine("Circle1与Circle2是否相交:{0}", yes ? "是" : "否" );
+            Console.WriteLine("Circle1与Circle2是否相交:{0}", 
+				yes ? "是" : "否" );
         }
     }
 }

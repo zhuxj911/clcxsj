@@ -14,15 +14,18 @@
 
 \section{从面向过程走向面向对象的程序设计 }
 
-良好的面向过程设计程序设计程序是可以很好的转向面向对象的程序设计的，如下代码所示：
+良好的面向过程设计程序设计程序是可以很好的转向面向对象的程序设计的，我们将从一个简单的
+C程序开始设计结构较为良好的C代码，再将其用面向对象的C\#进行实现。从中体会面向过程与
+面向对象的程序设计方法的不同。
  
  \subsection{代码示例}
  
- 我们先从一个简单的C语言代码开始。在测绘专业中我们经常与测量点打交道，因此我们定义一个点Point，
- 另外我们定义一个简单的为大家所熟知的圆Circle，判断两圆是否相交，计算圆的面积和周长。代码
+在测绘专业中我们经常与测量点打交道，因此我们定义一个点Point（测点除了它的坐标x,y和高程z之外，还需有点名），
+ 另外我们定义一个简单的为大家所熟知的圆Circle，来使用点Point，并实现判断两圆是否相交，计算圆的面积和周长等功能。代码
  如下所示：
 
-\lstinputlisting[language=C, firstline=1, lastline=43]{./chapter01/Ch01Ex01/Ch01Ex01/Ch01Ex01.cpp}
+\lstinputlisting[language=C, firstline=1, lastline=40]{./chapter01/Ch01Ex01/Ch01Ex01/Ch01Ex01.cpp}
+% \caption{结构化的C代码}\label{code:Ch01Ex01}
 
 % \begin{lstlisting}[language=C]
 % #include <math.h>
@@ -39,7 +42,9 @@
 % \lstinputlisting[language=Python, firstline=37, lastline=45]{source_filename.py}
 
 相应的main函数测试代码如下：
-\lstinputlisting[language=C, firstline=44, lastline=67]{./chapter01/Ch01Ex01/Ch01Ex01/Ch01Ex01.cpp}
+
+\lstinputlisting[language=C, firstline=41, lastline=64]{./chapter01/Ch01Ex01/Ch01Ex01/Ch01Ex01.cpp}
+% \caption{Client作用的C main函数}\label{code:Ch01Ex01main}
 
 程序的运行结果如下：
 \begin{verbatim}
@@ -48,12 +53,16 @@ Circle1 与 Circle2 是否相交 ：是
 \end{verbatim}
 
 
-
 与以上代码相对应的C\#代码为：
+
 \lstinputlisting[language=C]{./chapter01/Ch01Ex02/Ch01Ex02/Circle.cs}
+% \caption{由C转换为C\#的示例代码}\label{code:Ch01Ex02}
+
 
 相应的C\#的Main函数测试代码如下：
+
 \lstinputlisting[language=C]{./chapter01/Ch01Ex02/Ch01Ex02/Program.cs}
+% \caption{Client化的C\#Main函数}\label{code:Ch01Ex02Main}
 
 程序的运行结果如下：
 \begin{verbatim}

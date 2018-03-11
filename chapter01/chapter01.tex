@@ -2,15 +2,40 @@
 
 \chapter{从C走向C\#}
 
+基本上我们都学习过C语言，有过一定的软件设计基础。C语言是功能强大的高效
+程序设计语言，但在现代的软件开发中特别是Window界面程序中开发的效率太低了。
+Microsoft推出的.Net Framwork在新版Windows中越来越多的进行了预安装，
+C\#语言面向对象、语法优美、功能强大、开发效率高，应用也越来越广泛。
+因此我们将从C语言程序设计转向C\#程序设计，
+学习更多的现代程序设计方法，满足现代测绘大数据的处理与算法编写需求。
+
 \section{Client/Server程序设计模式}
+现代软件往往是多人协作开发的成果，单个人进行大型软件的开发是比较少的。
+在软件开发中需要遵循软件工程的组织原则，寻求代码的可复用性、可测试性
+与可阅读性。在学习编程时我们首先应该改掉以下三个不良编码习惯：
+
 改变C语言中将代码写入main函数中的习惯；
 
 改变C\#语言中将代码写入Main函数中的习惯；
 
-改变在WinForm中直接写入代码的习惯；
+改变在UI(WinForm或WPF或其它的界面)中直接写入逻辑算法代码的习惯。
 
-以上这些习惯将带来一系列的问题，在团队开发与多人协作尤其如此，
-如：不能进行unittest(单元测试)、git（著名的源代码管理工具）代码合并时会引发大量的冲突。
+以上三种形式的代码书写处我们可以称为Client，我们编写的逻辑算法代码可以称为
+Server。试想如果我们去商场买东西，我们就是Client，提供需求；商场就是Server，提供服务。
+如果我们要买一只圆珠笔，也许我们只需简单的告诉商场人员，然后付钱拿笔走人就行了。但如果
+商场要让我们自己去仓库里找笔、查价钱、再在商场登记簿上登记库存等等一些动作，
+你想想会是怎么样的一种结果？买只笔都要把我们累死了。
+
+这说明了什么呢？提供服务功能的商场应该对有功能需求的客户简化和屏蔽各种复杂的中间环节。
+在软件开发时同样如此，我们的main或Main函数或UI处的代码应该简洁，
+基本上只是调用各个功能算法而已。
+
+如果我们像以上这三种方式组织代码，将会带来一系列的问题，
+尤其在团队开发与多人协作时代码不能复用，不能进行unittest(单元测试)、不能用git工具（著名的源代码管理工具）进行源代码的自动合并。
+软件系统稍微复杂一点，我们的开发就会面临失败的危险。
+
+万丈高楼从地起，因此，在学习编程时首先我们要有Client/Server模式意识，
+要遵循界面与算法相分离的原则进行程序设计。
 
 \section{从面向过程走向面向对象的程序设计 }
 
@@ -18,11 +43,11 @@
 C程序开始设计结构较为良好的C代码，再将其用面向对象的C\#进行实现。从中体会面向过程与
 面向对象的程序设计方法的不同。
  
- \subsection{代码示例}
+ \subsection{面向过程的C代码示例}
  
-在测绘专业中我们经常与测量点打交道，因此我们定义一个点Point（测点除了它的坐标x,y和高程z之外，还需有点名），
- 另外我们定义一个简单的为大家所熟知的圆Circle，来使用点Point，并实现判断两圆是否相交，计算圆的面积和周长等功能。代码
- 如下所示：
+在测绘专业中我们经常与测量点打交道，因此我们定义一个点Point（测点除了它的坐标x,y和高程z之外，还需至少有点名），
+ 另外我们定义一个简单的为大家所熟知的圆Circle，来使用点Point定义它的圆心，并实现判断两圆是否相交，
+ 计算圆的面积和周长等功能。代码如下所示：
 
 \lstinputlisting[language=C, firstline=1, lastline=40]{./chapter01/Ch01Ex01/Ch01Ex01/Ch01Ex01.cpp}
 % \caption{结构化的C代码}\label{code:Ch01Ex01}
@@ -41,9 +66,27 @@ C程序开始设计结构较为良好的C代码，再将其用面向对象的C\#
 % \lstinputlisting[language=C]{Ch01Ex1.cpp}
 % \lstinputlisting[language=Python, firstline=37, lastline=45]{source_filename.py}
 
+\subsection{对C代码的解释}
+代码中的11和16行定义结构体时使用了 typedef，这样在标准C中再定义Point类型或Circle类型时可以避免
+在其前面加关键词struct。
+
+第24-26行计算圆的面积，传入了圆的指针，这是C及C++中传递自定义数据类型的常用的高效方式。
+由于计算的圆面积会保存在结构体Circle中的area中，所以函数不需要返回值，返回值定义为void。
+
+第29-33行为计算两点的距离，由于该函数不会修改p1、p2两个Point内的任何成员，故应该将这两个指针
+定义为const类型，防止函数内部无意或故意的修改。
+
+同理第36-39行判断两圆是否相交，由于该函数不会修改c1、c2两个圆内的任何成员，也应将这两个指针
+定义为const类型。
+
+第37行由于Distance函数的参数需要两个Point指针类型的参数，尽管c1与c2均为指针，但c1->center与
+c2->center不是指针，所以需要在其前用取地址符 \& 。
+
+第38行的关系运算符本身的运算结果就为bool型，故不需要进行if、else类型的判断。
+
 相应的main函数测试代码如下：
 
-\lstinputlisting[language=C, firstline=41, lastline=64]{./chapter01/Ch01Ex01/Ch01Ex01/Ch01Ex01.cpp}
+\lstinputlisting[language=C, firstline=41, lastline=65]{./chapter01/Ch01Ex01/Ch01Ex01/Ch01Ex01.cpp}
 % \caption{Client作用的C main函数}\label{code:Ch01Ex01main}
 
 程序的运行结果如下：
@@ -53,13 +96,15 @@ Circle1 与 Circle2 是否相交 ：是
 \end{verbatim}
 
 
-与以上代码相对应的C\#代码为：
+\subsection{面向对象的C\#代码}
+
+将以上代码相对应的C代码直接翻译为C\#代码为：
 
 \lstinputlisting[language=C]{./chapter01/Ch01Ex02/Ch01Ex02/Circle.cs}
 % \caption{由C转换为C\#的示例代码}\label{code:Ch01Ex02}
 
 
-相应的C\#的Main函数测试代码如下：
+相应C\#的Main函数测试代码如下：
 
 \lstinputlisting[language=C]{./chapter01/Ch01Ex02/Ch01Ex02/Program.cs}
 % \caption{Client化的C\#Main函数}\label{code:Ch01Ex02Main}
@@ -71,7 +116,46 @@ Circle2的面积=38013.2711084365
 Circle1与Circle2是否相交:是
 \end{verbatim}
 
-\subsection{代码分析}
+\subsection{优化的面向对象C\#代码}
+上面的C\#不符合面向对象的软件设计原则，且在Main函数中，如果由于
+疏漏忘记第30行或33行，圆c1或c2将不会有正确的面积。
+
+因此，我们将其优化。首先对Point类进行封装，将其字段定义为private，
+用属性方法将其向外简单的暴露接口，相应的C\#代码为：
+
+\lstinputlisting[language=C, firstline=7, lastline=40]{./chapter01/Ch01Ex03/Ch01Ex03/Circle.cs}
+
+以上是用C\#的属性对private字段的简单封装，也可以写成如下形式：
+\begin{lstlisting}[language=C]
+        public string Name { get ; set ; }
+        public double X { get ; set ;}
+        public double Y { get ; set ; }
+        public double Z {get ; set ;}
+\end{lstlisting}
+
+为了简化Main函数对Point类的调用及对其各字段值的初始化，我们定义一个构造函数如下：
+\lstinputlisting[language=C, firstline=33, lastline=40]{./chapter01/Ch01Ex03/Ch01Ex03/Circle.cs}
+
+同样道理，也应对Circle进行封装，将其各个字段定义为private，
+并用属性方法将其向外简单的暴露接口，相应的C\#代码为：
+
+\lstinputlisting[language=C, firstline=51, lastline=66]{./chapter01/Ch01Ex03/Ch01Ex03/Circle.cs}
+
+圆心Center只是简单的封装，圆的半径则不同。由圆的特性知，当圆的半径确定，
+其面积与周长也就确定了。为了计算的高效，封装时，当圆的半径值发生改变时，
+就需要重新计算圆的面积，确保面积的正确性。
+
+由于圆的面积只与圆的半径有关，我们不需要在其他的情况对圆的面积进行修改，
+因此封装的C\#代码为：
+
+\lstinputlisting[language=C, firstline=67, lastline=71]{./chapter01/Ch01Ex03/Ch01Ex03/Circle.cs}
+
+
+相应C\#的Main函数测试代码如下：
+
+\lstinputlisting[language=C]{./chapter01/Ch01Ex03/Ch01Ex03/Program.cs}
+
+\section{C\#与面向对象基础}
 C语言中有 struct，在C++中对 struct 进行了扩展，其实质就是一class。
 C与C++中又特别是C中，struct与指针是其根本。
 

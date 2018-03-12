@@ -31,7 +31,8 @@ Server。试想如果我们去商场买东西，我们就是Client，提供需�
 基本上只是调用各个功能算法而已。
 
 如果我们像以上这三种方式组织代码，将会带来一系列的问题，
-尤其在团队开发与多人协作时代码不能复用，不能进行unittest(单元测试)、不能用git工具（著名的源代码管理工具）进行源代码的自动合并。
+尤其在团队开发与多人协作时代码不能复用，不能进行unittest(单元测试)、
+不能用git工具（著名的源代码管理工具）进行源代码的自动合并。
 软件系统稍微复杂一点，我们的开发就会面临失败的危险。
 
 万丈高楼从地起，因此，在学习编程时首先我们要有Client/Server模式意识，
@@ -49,7 +50,9 @@ C程序开始设计结构较为良好的C代码，再将其用面向对象的C\#
  另外我们定义一个简单的为大家所熟知的圆Circle，来使用点Point定义它的圆心，并实现判断两圆是否相交，
  计算圆的面积和周长等功能。代码如下所示：
 
-\lstinputlisting[language=C, firstline=1, lastline=40]{./chapter01/Ch01Ex01/Ch01Ex01/Ch01Ex01.cpp}
+\lstinputlisting[language=C,
+% caption={C代码示例}, label=Ch01Ex01,
+ firstline=1, lastline=40]{./chapter01/Ch01Ex01/Ch01Ex01/Ch01Ex01.cpp}
 % \caption{结构化的C代码}\label{code:Ch01Ex01}
 
 % \begin{lstlisting}[language=C]
@@ -103,6 +106,19 @@ Circle1 与 Circle2 是否相交 ：是
 \lstinputlisting[language=C]{./chapter01/Ch01Ex02/Ch01Ex02/Circle.cs}
 % \caption{由C转换为C\#的示例代码}\label{code:Ch01Ex02}
 
+由以上C\#代码可以看出与C代码的不同。这是因为C\#语言是纯面向对象语言的缘故。
+
+程序或软件的基本概念是：程序 = 数据结构 + 算法。在以上C或C\#代码中，Point和Circle
+都可以看作是数据结构，计算两点距离和圆的面积或判断两圆是否相交都可以看作是算法。
+在C语言中，数据结构和算法是分离的，尽管函数的参数是数据结构，但函数并不属于数据结构。
+在C\#中则不同，数据结构用class定义，则数据与算法都属于同一个class。
+
+计算两点距离的函数设计为Point类的一个方法，可以看作是计算当前点与另一个点的距离，
+因此函数的参数就只有一个Point p2，另一个自然是this（当前类本身）了。
+
+同样的道理圆的面积计算也不需要参数了（可以想象为计算知道自己的半径，计算自己的面积
+并存入自己的成员变量中了）。判断两圆是否相交也可以看作是判断当前圆与另一个圆Circle c2
+是否相交了，股只需要一个参数。
 
 相应C\#的Main函数测试代码如下：
 
@@ -117,15 +133,15 @@ Circle1与Circle2是否相交:是
 \end{verbatim}
 
 \subsection{优化的面向对象C\#代码}
-上面的C\#不符合面向对象的软件设计原则，且在Main函数中，如果由于
-疏漏忘记第30行或33行，圆c1或c2将不会有正确的面积。
+上面的C\#不符合面向对象的软件设计原则（违背封装、继承与多态中的封装原则），且在Main函数中，如果由于
+疏漏忘记第30行或33行对圆的面积进行计算，圆c1或c2将不会有正确的面积。
 
 因此，我们将其优化。首先对Point类进行封装，将其字段定义为private，
-用属性方法将其向外简单的暴露接口，相应的C\#代码为：
+用属性方法将其向外暴露接口，相应的C\#代码为：
 
-\lstinputlisting[language=C, firstline=7, lastline=40]{./chapter01/Ch01Ex03/Ch01Ex03/Circle.cs}
+\lstinputlisting[language=C, firstline=7, lastline=32]{./chapter01/Ch01Ex03/Ch01Ex03/Circle.cs}
 
-以上是用C\#的属性对private字段的简单封装，也可以写成如下形式：
+以上是用C\#的属性对private字段的进行简单的封装，也可以写成如下形式：
 \begin{lstlisting}[language=C]
         public string Name { get ; set ; }
         public double X { get ; set ;}
@@ -150,29 +166,30 @@ Circle1与Circle2是否相交:是
 
 \lstinputlisting[language=C, firstline=67, lastline=71]{./chapter01/Ch01Ex03/Ch01Ex03/Circle.cs}
 
+在此我们去掉了属性Area中的set语句，并将area成员定义为了private，使外部无法修改area的值，
+来保证圆的面积Area的正确性。
+
+还有一个地方可能会修改圆的半径，就是圆的初始化时，因此圆的构造函数应定义为：
+
+\lstinputlisting[language=C, firstline=75, lastline=82]{./chapter01/Ch01Ex03/Ch01Ex03/Circle.cs}
+
+不要忘记在半径r的值发生改变后重新计算圆的面积和周长。
+
+完整的优化后的C\#代码如下：
+\lstinputlisting[language=C]{./chapter01/Ch01Ex03/Ch01Ex03/Circle.cs}
+
+代码中由于计算圆的面积将会在属性R中和构造函数中调用，我们将其定义为函数CalArea供多次复用，
+并将可访问性定义为private供内部使用。
 
 相应C\#的Main函数测试代码如下：
 
 \lstinputlisting[language=C]{./chapter01/Ch01Ex03/Ch01Ex03/Program.cs}
 
-\section{C\#与面向对象基础}
-C语言中有 struct，在C++中对 struct 进行了扩展，其实质就是一class。
-C与C++中又特别是C中，struct与指针是其根本。
+由优化后的C\#代码可以看出Main十分简洁。
 
-类(class)是绝大多数的面向对象程序设计语言的关键词。
-
-程序或软件的基本概念是：程序 = 数据结构 + 算法
-
-从程序设计语言的语法角度分析，class 是 数据与函数的复合体，是符合上述程序设计原则的。
-
-\section{ C\#程序的组织结构}
-
- 从以上C\#示例代码可以看出，C\#是一纯面向对象语言，其组织程序的基本单位是类(class)。
- 在class之外是namespace，在class内可以定义类成员(class member)和类方法(class method)。
- 在method中可以定义语句。
-
- Visual Studio用Solution(.sln)、Project(.csproj)与File(.cs)及文件夹进行组织。其形式如下：
-
- Solution --1..m--Project -- 1..m--File
-
- 一个Project对应一个Exe文件或DLL文件或其它模块，是class等的功能组合。
+\section{作业}
+\begin{enumerate}
+\item 请完成示例中的圆的周长计算功能；
+\item 请试着完成多段线Polyline的面积与长度计算功能（提示：多段线是点序的集合）；
+\item 请试着完成多边形Polygon的面积与长度计算功能；
+\end{enumerate}

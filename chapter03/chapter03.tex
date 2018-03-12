@@ -1,8 +1,328 @@
 ﻿%!TEX root = ../clcxsj.tex
 
-\chapter{C\#面向对象特性-封装}
-\section{111111}
-本章主要讲述C语言与C++的不同之处，学习完本章后，应该能够在 Visual C++
-编译器下基本能够正确的编译C语言程序和简单的具有C++特征的程序。
+\chapter{C\#类与封装}
+
+\section{类和对象}
+类 (class) 是最基础的 C\# 类型。类是一个数据结构，将状态（字段）和
+操作（方法和其他函数成员）组合在一个单元中。类为动态创建的类实例 (instance) 提供了定义，
+实例也称为对象 (object)。类支持继承 (inheritance) 和多态性 (polymorphism)，
+这是派生类 (derived class) 可用来扩展和专用化基类 (base class) 的机制。
+
+使用类声明可以创建新的类。类声明以一个声明头开始，其组成方式如下：
+先指定类的特性和修饰符，后是类的名称，接着是基类（如有）以及该类实现的接口。
+声明头后面跟着类体，它由一组位于一对大括号 { 和 } 之间的成员声明组成。
+下面是一个名为 Point 的简单类的声明：
+
+ \begin{lstlisting}[language=C] 
+public class Point
+{
+    public int x, y;
+    public Point(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+}
+\end{lstlisting}
+
+类的实例使用 new 运算符创建，该运算符为新的实例分配内存、
+调用构造函数初始化该实例，并返回对该实例的引用。
+下面的语句创建两个 Point 对象，并将对这两个对象的引用存储在两个变量中：
+
+ \begin{lstlisting}[language=C] 
+Point p1 = new Point(0, 0);
+Point p2 = new Point(10, 20);
+\end{lstlisting}
+
+当不再使用对象时，该对象占用的内存将自动收回。在 C\# 中，
+没有必要也不可能显式释放分配给对象的内存。
+
+\subsection{成员}
+类的成员或者是静态成员 (static member)，或者是实例成员 (instance member)。
+静态成员属于类，实例成员属于对象（类的实例）。
+
+\begin{tabular}{|l|l|}
+\hline
+成员 &  说明   \\
+\hline
+常量   &         与类关联的常量值 \\
+字段   &         类的变量 \\
+方法   &         类可执行的计算和操作 \\
+属性   &         与读写类的命名属性相关联的操作 \\
+索引器  &      与以数组方式索引类的实例相关联的操作 \\
+事件   &         可由类生成的通知 \\
+运算符  &      类所支持的转换和表达式运算符 \\
+构造函数 &   初始化类的实例或类本身所需的操作 \\
+析构函数 &   在永久丢弃类的实例之前执行的操作 \\
+类型   &         类所声明的嵌套类型 \\
+\hline
+\end{tabular}
+
+\subsection{可访问性}
+类的每个成员都有关联的可访问性，它控制能够访问该成员的程序文本区域。有五种可能的可访问性形式。
+下表概述了这些可访问性。
+
+\begin{tabular}{|l|l|}
+\hline
+可访问性  &   含义  \\
+\hline
+public        &  访问不受限制   \\
+protected  &  访问仅限于此类或从此类派生的类  \\
+internal    & 访问仅限于此程序  \\
+protected internal  & 访问仅限于此程序或从此类派生的类  \\
+private & 访问仅限于此类  \\
+\hline
+\end{tabular}
+
+\subsection{ 类型形参}
+
+类定义可以通过在类名后添加用尖括号括起来的类型参数名称列表来指定一组类型参数。
+类型参数可用于在类声明体中定义类的成员。在下面的示例中，Pair 的类型参数为 TFirst 和 TSecond：
+
+ \begin{lstlisting}[language=C] 
+public class Pair<TFirst,TSecond>
+{
+    public TFirst First;
+    public TSecond Second;
+}
+ \end{lstlisting}
+
+要声明为采用类型参数的类类型称为泛型类类型。结构类型、接口类型和委托类型也可以是泛型。
+当使用泛型类时，必须为每个类型参数提供类型实参：
+
+ \begin{lstlisting}[language=C] 
+Pair<int,string> pair = new Pair<int,string> { First = 1, Second = “two” };
+int i = pair.First;     // TFirst is int
+string s = pair.Second; // TSecond is string
+ \end{lstlisting}
+
+提供了类型实参的泛型类型（例如上面的 Pair<int,string>）称为构造的类型。
+
+\subsection{字段}
+字段是与类或类的实例关联的变量。
+使用 static 修饰符声明的字段定义了一个静态字段 (static field)。
+一个静态字段只标识一个存储位置。无论对一个类创建多少个实例，
+它的静态字段永远都只有一个副本。
+不使用 static 修饰符声明的字段定义了一个实例字段 (instance field)。
+类的每个实例都为该类的所有实例字段包含一个单独副本。
+在下面的示例中，Color 类的每个实例都有实例字段 r、g 和 b 的单独副本，
+但是 Black、White、Red、Green 和 Blue 静态字段只存在一个副本：
+
+ \begin{lstlisting}[language=C] 
+public class Color
+{
+    public static readonly Color Black = new Color(0, 0, 0);
+    public static readonly Color White = new Color(255, 255, 255);
+    public static readonly Color Red = new Color(255, 0, 0);
+    public static readonly Color Green = new Color(0, 255, 0);
+    public static readonly Color Blue = new Color(0, 0, 255);
+    private byte r, g, b;
+    public Color(byte r, byte g, byte b) {
+        this.r = r;
+        this.g = g;
+        this.b = b;
+    }
+}
+ \end{lstlisting}
+
+如上面的示例所示，可以使用 readonly 修饰符声明只读字段 (read-only field)。给 readonly 字段的赋值只能作为字段声明的组成部分出现，或在同一个类中的构造函数中出现。
+
+1\subsection{方法}
+
+方法 (method) 是一种成员，用于实现可由对象或类执行的计算或操作。
+静态方法 (static method) 通过类来访问。实例方法 (instance method) 通过类的实例来访问。
+方法具有一个参数 (parameter) 列表（可以为空），表示传递给该方法的值或变量引用；
+方法还具有一个返回类型 (return type)，指定该方法计算和返回的值的类型。
+如果方法不返回值，则其返回类型为 void。
+与类型一样，方法也可以有一组类型参数，当调用方法时必须为类型参数指定类型实参。
+与类型不同的是，类型实参经常可以从方法调用的实参推断出，而无需显式指定。
+方法的签名 (signature) 在声明该方法的类中必须唯一。方法的签名由方法的名称、
+类型参数的数目以及该方法的参数的数目、修饰符和类型组成。方法的签名不包含返回类型。
+
+\subsubsection{参数}
+参数用于向方法传递值或变量引用。方法的参数从调用该方法时指定的实参 (argument) 获取它们的实际值。
+有四类参数：值参数、引用参数、输出参数和参数数组。
+值参数 (value parameter) 用于传递输入参数。一个值参数相当于一个局部变量，
+只是它的初始值来自为该形参传递的实参。对值参数的修改不影响为该形参传递的实参。
+值参数可以是可选的，通过指定默认值可以省略对应的实参。
+引用参数 (reference parameter) 用于传递输入和输出参数。
+为引用参数传递的实参必须是变量，并且在方法执行期间，
+引用参数与实参变量表示同一存储位置。引用参数使用 ref 修饰符声明。
+下面的示例演示 ref 参数的用法。
+
+ \begin{lstlisting}[language=C] 
+using System;
+class Test
+{
+    static void Swap(ref int x, ref int y) {
+        int temp = x;
+        x = y;
+        y = temp;
+    }
+    static void Main() {
+        int i = 1, j = 2;
+        Swap(ref i, ref j);
+        Console.WriteLine("{0} {1}", i, j);         // Outputs "2 1"
+    }
+}
+ \end{lstlisting}
+
+输出参数 (output parameter) 用于传递输出参数。对于输出参数来说，
+调用方提供的实参的初始值并不重要。除此之外，输出参数与引用参数类似。
+输出参数是用 out 修饰符声明的。下面的示例演示 out 参数的用法。
+
+ \begin{lstlisting}[language=C] 
+using System;
+class Test
+{
+    static void Divide(int x, int y, out int result, out int remainder) {
+        result = x / y;
+        remainder = x % y;
+    }
+    static void Main() {
+        int res, rem;
+        Divide(10, 3, out res, out rem);
+        Console.WriteLine("{0} {1}", res, rem); // Outputs "3 1"
+    }
+}
+ \end{lstlisting}
+
+参数数组 (parameter array) 允许向方法传递可变数量的实参。
+参数数组使用 params 修饰符声明。只有方法的最后一个参数才可以是参数数组，
+并且参数数组的类型必须是一维数组类型。
+System.Console 类的 Write 和 WriteLine 方法就是参数数组用法的很好示例。
+它们的声明如下。
+
+ \begin{lstlisting}[language=C] 
+public class Console
+{
+    public static void Write(string fmt, params object[] args) {...}
+    public static void WriteLine(string fmt, params object[] args) {...}
+    ...
+}
+ \end{lstlisting}
+
+在使用参数数组的方法中，参数数组的行为完全就像常规的数组类型参数。
+但是，在具有参数数组的方法的调用中，既可以传递参数数组类型的单个实参，
+也可以传递参数数组的元素类型的任意数目的实参。在后一种情况下，
+将自动创建一个数组实例，并使用给定的实参对它进行初始化。
+示例：
+
+ \begin{lstlisting}[language=C] 
+Console.WriteLine("x={0} y={1} z={2}", x, y, z);
+ \end{lstlisting}
+
+等价于以下语句：
+
+ \begin{lstlisting}[language=C] 
+string s = "x={0} y={1} z={2}";
+object[] args = new object[3];
+args[0] = x;
+args[1] = y;
+args[2] = z;
+Console.WriteLine(s, args);
+ \end{lstlisting}
+
+\subsection{静态方法和实例方法}
+使用 static 修饰符声明的方法为静态方法 (static method)。
+静态方法不对特定实例进行操作，并且只能直接访问静态成员。
+不使用 static 修饰符声明的方法为实例方法 (instance method)。
+实例方法对特定实例进行操作，并且能够访问静态成员和实例成员。
+在调用实例方法的实例上，可以通过 this 显式地访问该实例。
+而在静态方法中引用 this 是错误的。
+下面的 Entity 类具有静态成员和实例成员。
+
+ \begin{lstlisting}[language=C] 
+class Entity
+{
+    static int nextSerialNo;
+    int serialNo;
+    public Entity() {
+        serialNo = nextSerialNo++;
+    }
+    public int GetSerialNo() {
+        return serialNo;
+    }
+    public static int GetNextSerialNo() {
+        return nextSerialNo;
+    }
+    public static void SetNextSerialNo(int value) {
+        nextSerialNo = value;
+    }
+}
+ \end{lstlisting}
+
+每个 Entity 实例都包含一个序号（我们假定这里省略了一些其他信息）。
+Entity 构造函数（类似于实例方法）使用下一个可用的序号来初始化新的实例。
+由于该构造函数是一个实例成员，它既可以访问 serialNo 实例字段，
+也可以访问 nextSerialNo 静态字段。
+
+GetNextSerialNo 和 SetNextSerialNo 静态方法可以访问 nextSerialNo 静态字段
+，但是如果直接访问 serialNo 实例字段就会产生错误。
+
+下面的示例演示 Entity 类的使用。
+
+ \begin{lstlisting}[language=C] 
+using System;
+class Test
+{
+    static void Main() {
+        Entity.SetNextSerialNo(1000);
+        Entity e1 = new Entity();
+        Entity e2 = new Entity();
+        Console.WriteLine(e1.GetSerialNo());                // Outputs "1000"
+        Console.WriteLine(e2.GetSerialNo());                // Outputs "1001"
+        Console.WriteLine(Entity.GetNextSerialNo());        // Outputs "1002"
+    }
+}
+ \end{lstlisting}
+
+注意：SetNextSerialNo 和 GetNextSerialNo 静态方法是在类上调用的，而 GetSerialNo 实例方法是在该类的实例上调用的。
+
+
+\subsection{构造函数}
+C\# 支持两种构造函数：实例构造函数和静态构造函数。
+实例构造函数 (instance constructor) 是实现初始化类实例所需操作的成员。
+静态构造函数 (static constructor) 是一种用于在第一次加载类本身时实现其初始化所需操作的成员。
+
+构造函数的声明如同方法一样，不过它没有返回类型，并且它的名称与其所属的类的名称相同。
+如果构造函数声明包含 static 修饰符，则它声明了一个静态构造函数。
+否则，它声明的是一个实例构造函数。
+实例构造函数可以被重载。例如，List<T> 类声明了两个实例构造函数，
+一个无参数，另一个接受一个 int 参数。实例构造函数使用 new 运算符进行调用。
+下面的语句分别使用 List<string> 类的每个构造函数分配两个 List 实例。
+
+ \begin{lstlisting}[language=C] 
+List<string> list1 = new List<string>();
+List<string> list2 = new List<string>(10);
+ \end{lstlisting}
+
+实例构造函数不同于其他成员，它是不能被继承的。一个类除了其中实际声明的实例构造函数外，
+没有其他的实例构造函数。如果没有为某个类提供任何实例构造函数，
+则将自动提供一个不带参数的空的实例构造函数。
+
+\subsection{属性}
+
+属性 (property) 是字段的自然扩展。属性和字段都是命名的成员，
+都具有相关的类型，且用于访问字段和属性的语法也相同。
+然而，与字段不同，属性不表示存储位置。相反，属性有访问器 (accessor)，
+这些访问器指定在它们的值被读取或写入时需执行的语句。
+
+属性的声明与字段类似，不同的是属性声明以位于定界符 { 和 } 之间的一个 get 访问器和/或一个 set 访问器结束，而不是以分号结束。
+同时具有 get 访问器和 set 访问器的属性是读写属性 (read-write property)，只有 get 访问器的属性是只读属性 (read-only property)，只有 set 访问器的属性是只写属性 (write-only property)。
+get 访问器相当于一个具有属性类型返回值的无形参方法。除了作为赋值的目标，当在表达式中引用属性时，将调用该属性的 get 访问器以计算该属性的值。
+set 访问器相当于具有一个名为 value 的参数并且没有返回类型的方法。当某个属性作为赋值的目标被引用，或者作为 ++ 或 -- 的操作数被引用时，将调用 set 访问器，并传入提供新值的实参。
+List<T> 类声明了两个属性 Count和 Capacity，它们分别是只读属性和读写属性。
+下面是这些属性的使用示例。
+
+ \begin{lstlisting}[language=C] 
+List<string> names = new List<string>();
+names.Capacity = 100;           // Invokes set accessor
+int i = names.Count;                // Invokes get accessor
+int j = names.Capacity;         // Invokes get accessor
+ \end{lstlisting}
+
+与字段和方法相似，C\# 同时支持实例属性和静态属性。静态属性使用 static 修饰符声明，而实例属性的声明不带该修饰符。
+属性的访问器可以是虚的。当属性声明包括 virtual、abstract 或 override 修饰符时，
+修饰符应用于该属性的访问器。
 
  

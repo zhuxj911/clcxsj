@@ -56,7 +56,7 @@ namespace Ch01Ex03
             get { return r; }
             set
             {
-                if(value != r)
+                if(value != r && value >= 0)
                 {
                     r = value;
                     CalArea(); //r的值发生改变，重新计算圆的面积
@@ -72,9 +72,9 @@ namespace Ch01Ex03
 
         private double length;
 
-        public Circle(string centerName, double x, double y, double z, double r)
+        public Circle(double x, double y, double z, double r)
         {
-            Center = new Point(centerName, x, y, z);
+            Center = new Point("", x, y, z);
 
             this.r = r;
             CalArea(); //r的值确定，计算圆的面积

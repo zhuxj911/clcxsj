@@ -1,55 +1,26 @@
 ﻿using System;
 
-namespace Ch01Ex02
+namespace Ch01Ex
 {
-    class Point
+    public class Point
     {
-        private string name;
-        public string Name
-        {
-            get { return name; }
-            set { name = value; }
-        }
+        public string Name { get;  set;}
+        public double X { get; set; }
+        public double Y { get; set; }
+        public double Z { get; set; }
 
-        private double x;
-        public double X
-        {
-            get { return x; }
-            set { x = value; }
-        }
-        private double y;
-        public double Y
-        {
-            get { return y; }
-            set { y = value; }
-        }
-        private double z;
-        public double Z
-        {
-            get { return z; }
-            set { z = value; }
-        }
-
-        public Point()
+        public Point(double x, double y)
         {
             Name = "";
-            x = y = z = 0;
+            X = x; Y = y;  Z = 0;
         }
-        //函数重载：函数名称一样，但参数（个数或类型）不一样
+
         public Point(string name, double x, double y, double z)
         {
-            this.name = name;
-            this.x = x;
-            this.y = y;
-            this.z = z;
+            Name = name;
+            X = x; Y = y; Z = z;
         }
 
-
-        /// <summary>
-        /// 计算当前点至p2点的距离
-        /// </summary>
-        /// <param name="p2">目标点</param>
-        /// <returns>两点的距离</returns>
         public double Distance(Point p2)
         {
             double dx = X - p2.X;
@@ -58,10 +29,19 @@ namespace Ch01Ex02
         }
     }
 
-    class Circle
+    public class Circle
     {
-        private Point center;
+        public Point Center{ get; set; }
+
         private double r;
+        public double R
+        {
+            get { return r; }
+            set
+            {
+                if (r != value) { r = value; CalArea(); }
+            }
+        }
 
         private double area;
         public double Area
@@ -71,23 +51,22 @@ namespace Ch01Ex02
 
         private double length;
 
-        public Circle()
+        public Circle(Point center, double r)
         {
-           
-        }
-
-        public Circle(string centerName, double x, double y, double z, double r)
-        {
-            center = new Point(centerName, x, y, z);
+            this.Center = center;
             this.r = r;
 
             CalArea();
         }
 
+        public Circle(double x, double y, double r)
+        {
+            Center = new Point(x, y);
+            this.r = r;
 
-        /// <summary>
-        /// 计算圆的面积
-        /// </summary>
+            CalArea();
+        }
+
         private void CalArea()
         {
             area = Math.PI * r * r;
@@ -96,7 +75,7 @@ namespace Ch01Ex02
         //判断两圆是否相交
         public bool IsIntersectWithCircle(Circle c2)
         {
-            double d = this.center.Distance(c2.center);
+            double d = this.Center.Distance(c2.Center);
             return d <= (r + c2.r);
         }
     }

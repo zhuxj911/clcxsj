@@ -6,3 +6,30 @@
 编译器下基本能够正确的编译C语言程序和简单的具有C++特征的程序。
 
  
+\subsection{基类}
+
+类声明可通过在类名和类型参数后面添加一个冒号和基类的名称来指定一个基类。
+省略基类的指定等同于从类型 object 派生。在下面的示例中，Point3D 的基类是 Point，而 Point 的基类是 object：
+
+ \begin{lstlisting}[language=C] 
+public class Point
+{
+    public int x, y;
+    public Point(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+}
+public class Point3D: Point
+{
+    public int z;
+    public Point3D(int x, int y, int z): base(x, y) {
+        this.z = z;
+    }
+}
+ \end{lstlisting}
+
+类继承其基类的成员。继承意味着一个类隐式地将它的基类的所有成员当作自已的成员，但基类的实例构造函数、静态构造函数和析构函数除外。派生类能够在继承基类的基础上添加新的成员，但是它不能移除继承成员的定义。在前面的示例中，Point3D 从 Point 继承了 x 和 y 字段，并且每个 Point3D 实例均包含三个字段：x、y 和 z。
+从某个类类型到它的任何基类类型存在隐式的转换。因此，类类型的变量可以引用该类的实例或任何派生类的实例。例如，对于前面给定的类声明，Point 类型的变量既可以引用 Point 也可以引用 Point3D：
+Point a = new Point(10, 20);
+Point b = new Point3D(10, 20, 30);

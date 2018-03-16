@@ -6,8 +6,8 @@ namespace Ch01Ex03
     {
         static void Main(string[] args)
         {
-            Circle c1 = new Circle(100, 100, 425.324, 80);
-            Circle c2 = new Circle(200, 200, 417.626, 110);
+            Circle c1 = new Circle(100, 100, 80);
+            Circle c2 = new Circle(200, 200, 110);
 
             Console.WriteLine("Circle1的面积={0}", c1.Area );
             Console.WriteLine("Circle2的面积={0}", c2.Area);

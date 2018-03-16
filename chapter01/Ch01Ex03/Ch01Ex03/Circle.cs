@@ -30,6 +30,14 @@ namespace Ch01Ex03
             set { z = value; }
         }
 
+        public Point(double x, double y)
+        {
+            this.name = "";
+            this.x = x;
+            this.y = y;
+            this.z = 0;
+        }
+
         public Point(string name, double x, double y, double z)
         {
             this.name = name;
@@ -72,12 +80,11 @@ namespace Ch01Ex03
 
         private double length;
 
-        public Circle(double x, double y, double z, double r)
+        public Circle(double x, double y, double r)
         {
-            Center = new Point("", x, y, z);
+            Center = new Point(x, y);
 
-            this.r = r;
-            CalArea(); //r的值确定，计算圆的面积
+            this.R = r;  //赋值给R而不是this.r，确保计算圆的面积
         }
 
         //计算圆的面积

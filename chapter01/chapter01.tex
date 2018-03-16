@@ -132,7 +132,7 @@ Circle2的面积=38013.2711084365
 Circle1与Circle2是否相交:是
 \end{verbatim}
 
-\subsection{优化的面向对象C\#代码}
+\section{走向面向对象的C\#代码}
 上面的C\#不符合面向对象的软件设计原则（违背封装、继承与多态中的封装原则），且在Main函数中，如果由于
 疏漏忘记第30行或33行对圆的面积进行计算，圆c1或c2将不会有正确的面积。
 
@@ -149,13 +149,13 @@ Circle1与Circle2是否相交:是
         public double Z {get ; set ;}
 \end{lstlisting}
 
-为了简化Main函数对Point类的调用及对其各字段值的初始化，我们定义一个构造函数如下：
-\lstinputlisting[language=C, firstline=33, lastline=40]{./chapter01/Ch01Ex03/Ch01Ex03/Circle.cs}
+为了简化Main函数对Point类的调用及对其各字段值的初始化，我们定义构造函数如下：
+\lstinputlisting[language=C, firstline=33, lastline=47]{./chapter01/Ch01Ex03/Ch01Ex03/Circle.cs}
 
 同样道理，也应对Circle进行封装，将其各个字段定义为private，
 并用属性方法将其向外简单的暴露接口，相应的C\#代码为：
 
-\lstinputlisting[language=C, firstline=51, lastline=66]{./chapter01/Ch01Ex03/Ch01Ex03/Circle.cs}
+\lstinputlisting[language=C, firstline=59, lastline=74]{./chapter01/Ch01Ex03/Ch01Ex03/Circle.cs}
 
 圆心Center只是简单的封装，圆的半径则不同。由圆的特性知，当圆的半径确定，
 其面积与周长也就确定了。为了计算的高效，封装时，当圆的半径值发生改变时，
@@ -164,16 +164,16 @@ Circle1与Circle2是否相交:是
 由于圆的面积只与圆的半径有关，我们不需要在其他的情况对圆的面积进行修改，
 因此封装的C\#代码为：
 
-\lstinputlisting[language=C, firstline=67, lastline=71]{./chapter01/Ch01Ex03/Ch01Ex03/Circle.cs}
+\lstinputlisting[language=C, firstline=75, lastline=80]{./chapter01/Ch01Ex03/Ch01Ex03/Circle.cs}
 
 在此我们去掉了属性Area中的set语句，并将area成员定义为了private，使外部无法修改area的值，
 来保证圆的面积Area的正确性。
 
 还有一个地方可能会修改圆的半径，就是圆的初始化时，因此圆的构造函数应定义为：
 
-\lstinputlisting[language=C, firstline=75, lastline=82]{./chapter01/Ch01Ex03/Ch01Ex03/Circle.cs}
+\lstinputlisting[language=C, firstline=83, lastline=89]{./chapter01/Ch01Ex03/Ch01Ex03/Circle.cs}
 
-不要忘记在半径r的值发生改变后重新计算圆的面积和周长。
+为确保在半径r的值发生改变后能重新计算圆的面积和周长，此处赋值给半径属性R。
 
 完整的优化后的C\#代码如下：
 \lstinputlisting[language=C]{./chapter01/Ch01Ex03/Ch01Ex03/Circle.cs}

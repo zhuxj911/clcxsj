@@ -13,7 +13,7 @@
 声明头后面跟着类体，它由一组位于一对大括号 { 和 } 之间的成员声明组成。
 下面是一个名为 Point 的简单类的声明：
 
- \begin{lstlisting}[language=C] 
+ \begin{lstlisting}[language=C]
 public class Point
 {
     public int x, y;
@@ -28,7 +28,7 @@ public class Point
 调用构造函数初始化该实例，并返回对该实例的引用。
 下面的语句创建两个 Point 对象，并将对这两个对象的引用存储在两个变量中：
 
- \begin{lstlisting}[language=C] 
+ \begin{lstlisting}[language=C]
 Point p1 = new Point(0, 0);
 Point p2 = new Point(10, 20);
 \end{lstlisting}
@@ -78,7 +78,7 @@ private & 访问仅限于此类  \\
 类定义可以通过在类名后添加用尖括号括起来的类型参数名称列表来指定一组类型参数。
 类型参数可用于在类声明体中定义类的成员。在下面的示例中，Pair 的类型参数为 TFirst 和 TSecond：
 
- \begin{lstlisting}[language=C] 
+ \begin{lstlisting}[language=C]
 public class Pair<TFirst,TSecond>
 {
     public TFirst First;
@@ -89,7 +89,7 @@ public class Pair<TFirst,TSecond>
 要声明为采用类型参数的类类型称为泛型类类型。结构类型、接口类型和委托类型也可以是泛型。
 当使用泛型类时，必须为每个类型参数提供类型实参：
 
- \begin{lstlisting}[language=C] 
+ \begin{lstlisting}[language=C]
 Pair<int,string> pair = new Pair<int,string> { First = 1, Second = “two” };
 int i = pair.First;     // TFirst is int
 string s = pair.Second; // TSecond is string
@@ -107,7 +107,7 @@ string s = pair.Second; // TSecond is string
 在下面的示例中，Color 类的每个实例都有实例字段 r、g 和 b 的单独副本，
 但是 Black、White、Red、Green 和 Blue 静态字段只存在一个副本：
 
- \begin{lstlisting}[language=C] 
+ \begin{lstlisting}[language=C]
 public class Color
 {
     public static readonly Color Black = new Color(0, 0, 0);
@@ -126,7 +126,7 @@ public class Color
 
 如上面的示例所示，可以使用 readonly 修饰符声明只读字段 (read-only field)。给 readonly 字段的赋值只能作为字段声明的组成部分出现，或在同一个类中的构造函数中出现。
 
-1\subsection{方法}
+\subsection{方法}
 
 方法 (method) 是一种成员，用于实现可由对象或类执行的计算或操作。
 静态方法 (static method) 通过类来访问。实例方法 (instance method) 通过类的实例来访问。
@@ -149,7 +149,7 @@ public class Color
 引用参数与实参变量表示同一存储位置。引用参数使用 ref 修饰符声明。
 下面的示例演示 ref 参数的用法。
 
- \begin{lstlisting}[language=C] 
+ \begin{lstlisting}[language=C]
 using System;
 class Test
 {
@@ -170,7 +170,7 @@ class Test
 调用方提供的实参的初始值并不重要。除此之外，输出参数与引用参数类似。
 输出参数是用 out 修饰符声明的。下面的示例演示 out 参数的用法。
 
- \begin{lstlisting}[language=C] 
+ \begin{lstlisting}[language=C]
 using System;
 class Test
 {
@@ -192,7 +192,7 @@ class Test
 System.Console 类的 Write 和 WriteLine 方法就是参数数组用法的很好示例。
 它们的声明如下。
 
- \begin{lstlisting}[language=C] 
+ \begin{lstlisting}[language=C]
 public class Console
 {
     public static void Write(string fmt, params object[] args) {...}
@@ -207,13 +207,13 @@ public class Console
 将自动创建一个数组实例，并使用给定的实参对它进行初始化。
 示例：
 
- \begin{lstlisting}[language=C] 
+ \begin{lstlisting}[language=C]
 Console.WriteLine("x={0} y={1} z={2}", x, y, z);
  \end{lstlisting}
 
 等价于以下语句：
 
- \begin{lstlisting}[language=C] 
+ \begin{lstlisting}[language=C]
 string s = "x={0} y={1} z={2}";
 object[] args = new object[3];
 args[0] = x;
@@ -231,7 +231,7 @@ Console.WriteLine(s, args);
 而在静态方法中引用 this 是错误的。
 下面的 Entity 类具有静态成员和实例成员。
 
- \begin{lstlisting}[language=C] 
+ \begin{lstlisting}[language=C]
 class Entity
 {
     static int nextSerialNo;
@@ -261,7 +261,7 @@ GetNextSerialNo 和 SetNextSerialNo 静态方法可以访问 nextSerialNo 静态
 
 下面的示例演示 Entity 类的使用。
 
- \begin{lstlisting}[language=C] 
+ \begin{lstlisting}[language=C]
 using System;
 class Test
 {
@@ -291,7 +291,7 @@ C\# 支持两种构造函数：实例构造函数和静态构造函数。
 一个无参数，另一个接受一个 int 参数。实例构造函数使用 new 运算符进行调用。
 下面的语句分别使用 List<string> 类的每个构造函数分配两个 List 实例。
 
- \begin{lstlisting}[language=C] 
+ \begin{lstlisting}[language=C]
 List<string> list1 = new List<string>();
 List<string> list2 = new List<string>(10);
  \end{lstlisting}
@@ -314,10 +314,10 @@ set 访问器相当于具有一个名为 value 的参数并且没有返回类型
 List<T> 类声明了两个属性 Count和 Capacity，它们分别是只读属性和读写属性。
 下面是这些属性的使用示例。
 
- \begin{lstlisting}[language=C] 
+ \begin{lstlisting}[language=C]
 List<string> names = new List<string>();
 names.Capacity = 100;           // Invokes set accessor
-int i = names.Count;                // Invokes get accessor
+int i = names.Count;            // Invokes get accessor
 int j = names.Capacity;         // Invokes get accessor
  \end{lstlisting}
 
@@ -325,4 +325,4 @@ int j = names.Capacity;         // Invokes get accessor
 属性的访问器可以是虚的。当属性声明包括 virtual、abstract 或 override 修饰符时，
 修饰符应用于该属性的访问器。
 
- 
+

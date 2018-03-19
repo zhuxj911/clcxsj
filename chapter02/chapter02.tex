@@ -17,12 +17,14 @@ C\#中的数据类型可分为两类：值类型 (value type) 和引用类型 (r
 值类型的变量直接包含它们的数据，而引用类型的变量存储对它们的数据的引用，后者称为对象。
 
 \subsection{值类型}
-C\# 的值类型进一步划分为简单类型 (simple type)、枚举类型 (enum type)、结构类型 (struct type) 
+C\# 的值类型进一步划分为简单类型 (simple type)、枚举类型 (enum type)、结构类型 (struct type)
 和可以为 null 的类型 (nullable type)。
 对于值类型，每个变量都有它们自己的数据副本（除 ref 和 out 参数变量外），
 因此对一个变量的操作不可能影响另一个变量。
 
 \begin{tabular}{|l|l|}
+\hline
+类别   & 说明 \\
 \hline
 简单类型   & 有符号整型：sbyte、short、int、long \\
                     & 无符号整型：byte、ushort、uint、ulong \\
@@ -45,7 +47,9 @@ C\# 的引用类型进一步划分为类类型 (class type)、接口类型 (inte
 
 \begin{tabular}{|l|l|}
 \hline
-类类型  &  所有其他类型的最终基类：object \\
+类别   & 说明 \\
+\hline
+类型  &  所有其他类型的最终基类：object \\
               &  Unicode 字符串：string \\
               &  class C {...} 形式的用户定义的类型 \\
 \hline
@@ -118,6 +122,8 @@ class Test
 
 \begin{tabular}{|l|l|}
 \hline
+类别            & 说明 \\
+\hline
 x.m            &          成员访问  \\
 x(...)         &           方法和委托调用  \\
 x[...]         &           数组和索引器访问  \\
@@ -165,7 +171,7 @@ static void Main(string[] args) {
 
 
 跳转语句 (jump statement) 用于转移控制。这一组中有 break、continue、goto、throw、return 和 yield 语句。
-yield语句 
+yield语句
 \begin{lstlisting}[language=C]
 static IEnumerable<int> Range(int from, int to) {
     for (int i = from; i < to; i++) {
@@ -182,7 +188,7 @@ static void Main() {
 
 try...catch 语句用于捕获在块的执行期间发生的异常，try...finally 语句用于指定终止代码，不管是否发生异常，该代码都始终要执行。
 throw 和 try语句
- \begin{lstlisting}[language=C] 
+ \begin{lstlisting}[language=C]
  static double Divide(double x, double y) {
     if (y == 0) throw new DivideByZeroException();
     return x / y;
@@ -206,7 +212,7 @@ static void Main(string[] args) {
 \end{lstlisting}
 
 checked 语句和 unchecked 语句用于控制整型算术运算和转换的溢出检查上下文。
- \begin{lstlisting}[language=C] 
+ \begin{lstlisting}[language=C]
 static void Main() {
     int i = int.MaxValue;
     checked {
@@ -219,7 +225,7 @@ static void Main() {
 \end{lstlisting}
 
 lock 语句用于获取某个给定对象的互斥锁，执行一个语句，然后释放该锁。
- \begin{lstlisting}[language=C] 
+ \begin{lstlisting}[language=C]
 class Account
 {
     decimal balance;
@@ -235,7 +241,7 @@ class Account
 \end{lstlisting}
 
 using 语句用于获得一个资源，执行一个语句，然后释放该资源。
- \begin{lstlisting}[language=C] 
+ \begin{lstlisting}[language=C]
 static void Main() {
     using (TextWriter w = File.CreateText("test.txt")) {
         w.WriteLine("Line one");

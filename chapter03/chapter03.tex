@@ -3,10 +3,10 @@
 \chapter{C\#类与封装}
 
 \section{类和对象}
-类 (class) 是最基础的 C\# 类型。类是一个数据结构，将状态（字段）和
-操作（方法和其他函数成员）组合在一个单元中。类为动态创建的类实例 (instance) 提供了定义，
+类 (class) 是最基础也是最重要的 C\# 类型。类是一个数据结构，将状态（字段）和
+操作（方法和其他函数成员）组合在一个单元中。类为动态创建类的实例 (instance) 提供定义，
 实例也称为对象 (object)。类支持继承 (inheritance) 和多态性 (polymorphism)，
-这是派生类 (derived class) 可用来扩展和专用化基类 (base class) 的机制。
+通过继承产生派生类 (derived class)， 从而扩展和专用化基类 (base class) 。
 
 使用类声明可以创建新的类。类声明以一个声明头开始，其组成方式如下：
 先指定类的特性和修饰符，后是类的名称，接着是基类（如有）以及该类实现的接口。
@@ -115,7 +115,9 @@ public class Color
     public static readonly Color Red = new Color(255, 0, 0);
     public static readonly Color Green = new Color(0, 255, 0);
     public static readonly Color Blue = new Color(0, 0, 255);
+
     private byte r, g, b;
+
     public Color(byte r, byte g, byte b) {
         this.r = r;
         this.g = g;
@@ -124,7 +126,7 @@ public class Color
 }
  \end{lstlisting}
 
-如上面的示例所示，可以使用 readonly 修饰符声明只读字段 (read-only field)。给 readonly 字段的赋值只能作为字段声明的组成部分出现，或在同一个类中的构造函数中出现。
+如上示例所示，可以使用 readonly 修饰符声明只读字段 (read-only field)。给 readonly 字段的赋值只能作为字段声明的组成部分出现，或在同一个类中的构造函数中出现。
 
 \subsection{方法}
 
@@ -224,27 +226,38 @@ Console.WriteLine(s, args);
 
 \subsection{静态方法和实例方法}
 使用 static 修饰符声明的方法为静态方法 (static method)。
+
 静态方法不对特定实例进行操作，并且只能直接访问静态成员。
+
 不使用 static 修饰符声明的方法为实例方法 (instance method)。
+
 实例方法对特定实例进行操作，并且能够访问静态成员和实例成员。
+
 在调用实例方法的实例上，可以通过 this 显式地访问该实例。
-而在静态方法中引用 this 是错误的。
+
+在静态方法中引用 this 是错误的，只能通过类名进行引用。
+
 下面的 Entity 类具有静态成员和实例成员。
 
  \begin{lstlisting}[language=C]
 class Entity
 {
     static int nextSerialNo;
+
     int serialNo;
+
     public Entity() {
         serialNo = nextSerialNo++;
     }
+
     public int GetSerialNo() {
         return serialNo;
     }
+
     public static int GetNextSerialNo() {
         return nextSerialNo;
     }
+
     public static void SetNextSerialNo(int value) {
         nextSerialNo = value;
     }
@@ -302,15 +315,20 @@ List<string> list2 = new List<string>(10);
 
 \subsection{属性}
 
-属性 (property) 是字段的自然扩展。属性和字段都是命名的成员，
+属性 (property) 是字段的自然扩展。
+
+属性和字段都是命名的成员，
 都具有相关的类型，且用于访问字段和属性的语法也相同。
+
 然而，与字段不同，属性不表示存储位置。相反，属性有访问器 (accessor)，
 这些访问器指定在它们的值被读取或写入时需执行的语句。
 
 属性的声明与字段类似，不同的是属性声明以位于定界符 { 和 } 之间的一个 get 访问器和/或一个 set 访问器结束，而不是以分号结束。
+
 同时具有 get 访问器和 set 访问器的属性是读写属性 (read-write property)，只有 get 访问器的属性是只读属性 (read-only property)，只有 set 访问器的属性是只写属性 (write-only property)。
 get 访问器相当于一个具有属性类型返回值的无形参方法。除了作为赋值的目标，当在表达式中引用属性时，将调用该属性的 get 访问器以计算该属性的值。
 set 访问器相当于具有一个名为 value 的参数并且没有返回类型的方法。当某个属性作为赋值的目标被引用，或者作为 ++ 或 -- 的操作数被引用时，将调用 set 访问器，并传入提供新值的实参。
+
 List<T> 类声明了两个属性 Count和 Capacity，它们分别是只读属性和读写属性。
 下面是这些属性的使用示例。
 

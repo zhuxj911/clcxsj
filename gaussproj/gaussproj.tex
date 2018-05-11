@@ -16,7 +16,7 @@ WGS84坐标系以及CGCS2000大地坐标系。
     \item 坐标反算：将点的高斯投影平面直角坐标转换成大地坐标。
     \item 换带计算：将某带的点的高斯投影平面直角坐标转换成邻带或某中央
       子午线经度的高斯投影平面直角坐标。
-    \item 其他计算：计算子午线收敛角、长度比等。 
+    \item 其他计算：计算子午线收敛角、长度比等。
 \end{enumerate}
 
 \subsection{高斯投影的数学模型}
@@ -43,10 +43,10 @@ $$e=\sqrt{\frac{a^2-b^2}{a^2}}$$
 $$e'=\sqrt{\frac{a^{2}-b^{2}}{b^{2}}}$$
 
 \item 子午圈曲率半径：
-$$M=a(1-e^2)(1-e^2\sin ^2 B)^{-\frac{3}{2}}$$
+$$M=\frac{a(1-e^2)}{(1-e^2\sin ^2 B)^{\frac{3}{2}}}$$
 
 \item 卯酉圈曲率半径：
-$$N=a(1-e^2\sin ^2 B)^{-\frac{1}{2}}$$
+$$N=\frac{a}{\sqrt{1-e^2\sin^2 B}}$$
 
 \item 辅助符号：
 $$t=\tan B\qquad\eta=e'\cos B$$
@@ -62,7 +62,7 @@ $$P=b^2(L_2 - L_1) \left | sinB + \frac{2}{3}e^2 \sin ^3 B + \frac{3}{5}e^4 \sin
 公式引用自《大地测量学基础》第121页(4-142)，该公式为（4-140）的展开式。
 
 \item 子午线弧长
-$$X=a_0 B - \frac{a_2}{2}\sin 2B + \frac{a_4}{4}\sin 4B 
+$$X=a_0 B - \frac{a_2}{2}\sin 2B + \frac{a_4}{4}\sin 4B
 - \frac{a_6}{6} \sin 6B  + \frac{a_8}{8}\sin 8B$$
 
 式中：
@@ -83,7 +83,7 @@ m_0 &= a(1-e^2) \\
 m_2 &= \frac{3}{2}e^2 m_0  \\
 m_4 &= \frac{5}{4}e^2 m_2   \\
 m_6 &= \frac{7}{6}e^2 m_4   \\
-m_8 &= \frac{9}{8}e^2 m_6 
+m_8 &= \frac{9}{8}e^2 m_6
 \end{aligned} \right.
 \]
 
@@ -120,14 +120,14 @@ l&=\frac{1}{N_f cosB_f}y - \frac{1}{6N_f ^3 cosB_f}(1 + 2t_f ^2 + \eta_f ^2)y^3 
 \item 平面子午线收敛角计算
 
 利用$(B, l)$计算公式如下：
-$$\gamma = \sin B \cdot l + \frac{1 + 3 \eta^2 + 2 \eta^4}{3} \sin B \cos ^2 B \cdot l^3 
+$$\gamma = \sin B \cdot l + \frac{1 + 3 \eta^2 + 2 \eta^4}{3} \sin B \cos ^2 B \cdot l^3
 + \frac{2 - t^2}{15}\sin B \cos ^4 B \cdot l^5$$
 
 公式引用自《大地测量学基础》第181页(4-408)。
 
 利用$(x, y)$计算公式如下：
 
-$$\gamma = \frac{1}{N_f}t_f y - \frac{1+t_f ^2 - \eta_f ^2}{3N_f ^3}t_f y^3 
+$$\gamma = \frac{1}{N_f}t_f y - \frac{1+t_f ^2 - \eta_f ^2}{3N_f ^3}t_f y^3
 + \frac{2+5t_f^2+3t_f^4}{15N_f ^5}t_fy^5$$
 
 公式引用自《大地测量学基础》第182页(4-410)。

@@ -1,4 +1,4 @@
-﻿%!TEX root = ../clcxsj.tex
+%!TEX root = ../clcxsj.tex
 
 \chapter{从C走向C\#}
 
@@ -52,7 +52,7 @@ C程序开始设计结构较为良好的C代码，再将其用面向对象的C\#
 
 \lstinputlisting[language=C,
 % caption={C代码示例}, label=Ch01Ex01,
- firstline=1, lastline=40]{./chapter01/Ch01Ex01/Ch01Ex01/Ch01Ex01.cpp}
+ firstline=1, lastline=40]{./introduction/Ch01Ex01/Ch01Ex01/Ch01Ex01.cpp}
 % \caption{结构化的C代码}\label{code:Ch01Ex01}
 
 % \begin{lstlisting}[language=C]
@@ -89,7 +89,7 @@ c2->center不是指针，所以需要在其前用取地址符 \& 。
 
 相应的main函数测试代码如下：
 
-\lstinputlisting[language=C, firstline=41, lastline=65]{./chapter01/Ch01Ex01/Ch01Ex01/Ch01Ex01.cpp}
+\lstinputlisting[language=C, firstline=41, lastline=65]{./introduction/Ch01Ex01/Ch01Ex01/Ch01Ex01.cpp}
 % \caption{Client作用的C main函数}\label{code:Ch01Ex01main}
 
 程序的运行结果如下：
@@ -103,7 +103,7 @@ Circle1 与 Circle2 是否相交 ：是
 
 将以上代码相对应的C代码直接翻译为C\#代码为：
 
-\lstinputlisting[language=C]{./chapter01/Ch01Ex02/Ch01Ex02/Circle.cs}
+\lstinputlisting[language=C]{./introduction/Ch01Ex02/Ch01Ex02/Circle.cs}
 % \caption{由C转换为C\#的示例代码}\label{code:Ch01Ex02}
 
 由以上C\#代码可以看出与C代码的不同。这是因为C\#语言是纯面向对象语言的缘故。
@@ -122,7 +122,7 @@ Circle1 与 Circle2 是否相交 ：是
 
 相应C\#的Main函数测试代码如下：
 
-\lstinputlisting[language=C]{./chapter01/Ch01Ex02/Ch01Ex02/Program.cs}
+\lstinputlisting[language=C]{./introduction/Ch01Ex02/Ch01Ex02/Program.cs}
 % \caption{Client化的C\#Main函数}\label{code:Ch01Ex02Main}
 
 程序的运行结果如下：
@@ -139,7 +139,7 @@ Circle1与Circle2是否相交:是
 因此，我们将其优化。首先对Point类进行封装，将其字段定义为private，
 用属性方法将其向外暴露接口，相应的C\#代码为：
 
-\lstinputlisting[language=C, firstline=7, lastline=32]{./chapter01/Ch01Ex03/Ch01Ex03/Circle.cs}
+\lstinputlisting[language=C, firstline=7, lastline=32]{./introduction/Ch01Ex03/Ch01Ex03/Circle.cs}
 
 以上是用C\#的属性对private字段的进行简单的封装，也可以写成如下形式：
 \begin{lstlisting}[language=C]
@@ -150,12 +150,12 @@ Circle1与Circle2是否相交:是
 \end{lstlisting}
 
 为了简化Main函数对Point类的调用及对其各字段值的初始化，我们定义构造函数如下：
-\lstinputlisting[language=C, firstline=33, lastline=47]{./chapter01/Ch01Ex03/Ch01Ex03/Circle.cs}
+\lstinputlisting[language=C, firstline=33, lastline=47]{./introduction/Ch01Ex03/Ch01Ex03/Circle.cs}
 
 同样道理，也应对Circle进行封装，将其各个字段定义为private，
 并用属性方法将其向外简单的暴露接口，相应的C\#代码为：
 
-\lstinputlisting[language=C, firstline=59, lastline=74]{./chapter01/Ch01Ex03/Ch01Ex03/Circle.cs}
+\lstinputlisting[language=C, firstline=59, lastline=74]{./introduction/Ch01Ex03/Ch01Ex03/Circle.cs}
 
 圆心Center只是简单的封装，圆的半径则不同。由圆的特性知，当圆的半径确定，
 其面积与周长也就确定了。为了计算的高效，封装时，当圆的半径值发生改变时，
@@ -164,26 +164,26 @@ Circle1与Circle2是否相交:是
 由于圆的面积只与圆的半径有关，我们不需要在其他的情况对圆的面积进行修改，
 因此封装的C\#代码为：
 
-\lstinputlisting[language=C, firstline=75, lastline=80]{./chapter01/Ch01Ex03/Ch01Ex03/Circle.cs}
+\lstinputlisting[language=C, firstline=75, lastline=80]{./introduction/Ch01Ex03/Ch01Ex03/Circle.cs}
 
 在此我们去掉了属性Area中的set语句，并将area成员定义为了private，使外部无法修改area的值，
 来保证圆的面积Area的正确性。
 
 还有一个地方可能会修改圆的半径，就是圆的初始化时，因此圆的构造函数应定义为：
 
-\lstinputlisting[language=C, firstline=83, lastline=89]{./chapter01/Ch01Ex03/Ch01Ex03/Circle.cs}
+\lstinputlisting[language=C, firstline=83, lastline=89]{./introduction/Ch01Ex03/Ch01Ex03/Circle.cs}
 
 为确保在半径r的值发生改变后能重新计算圆的面积和周长，此处赋值给半径属性R。
 
 完整的优化后的C\#代码如下：
-\lstinputlisting[language=C]{./chapter01/Ch01Ex03/Ch01Ex03/Circle.cs}
+\lstinputlisting[language=C]{./introduction/Ch01Ex03/Ch01Ex03/Circle.cs}
 
 代码中由于计算圆的面积将会在属性R中和构造函数中调用，我们将其定义为函数CalArea供多次复用，
 并将可访问性定义为private供内部使用。
 
 相应C\#的Main函数测试代码如下：
 
-\lstinputlisting[language=C]{./chapter01/Ch01Ex03/Ch01Ex03/Program.cs}
+\lstinputlisting[language=C]{./introduction/Ch01Ex03/Ch01Ex03/Program.cs}
 
 由优化后的C\#代码可以看出Main十分简洁。
 

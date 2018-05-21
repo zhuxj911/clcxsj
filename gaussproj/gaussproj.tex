@@ -1,32 +1,26 @@
 %!TEX root = ../clcxsj.tex
 
 \chapter{高斯投影正反算与换带}
-\section{数据模型}
-\subsection{投影换带的目的}
-高斯投影是为解决球面与平面之间坐标映射问题的，即大地坐标(B,
-L)与高斯平面直角坐标$(x,y)$之间的换算，以及不同带之间的高斯坐标
+
+高斯投影是为解决球面与平面之间的坐标映射问题，即大地坐标(B,
+L)与高斯平面直角坐标$(x,y)$之间的相互换算，以及不同带之间的高斯坐标
 的换算问题。
 
-本章将运用$C\#$编程语言编写一通用的高斯投影程序，用于1954北京坐标系、1980西安坐标系、
-WGS84坐标系以及CGCS2000大地坐标系。
+本章将运用$C\#$编程语言编写一个通用的高斯投影程序，用于1954北京坐标系、1980西安坐标系、
+WGS84坐标系以及CGCS2000大地坐标系或自定义参考椭球的高斯投影正反算与换带计算。
 
-\subsection{高斯投影的主要内容}
-\begin{enumerate}
-    \item 坐标正算：将点的大地坐标转换成高斯投影平面直角坐标。
-    \item 坐标反算：将点的高斯投影平面直角坐标转换成大地坐标。
-    \item 换带计算：将某带的点的高斯投影平面直角坐标转换成邻带或某中央
-      子午线经度的高斯投影平面直角坐标。
-    \item 其他计算：计算子午线收敛角、长度比等。
-\end{enumerate}
 
-\subsection{高斯投影的数学模型}
+\section{高斯投影的数学模型}
+
+为了编制正确而且高效的高斯投影与换带程序，我们首先需要分析高斯投影的数学模型，也就是我们
+常说的算法。
 
 本章所引用的公式来自:
 孔祥元,郭际明,刘宗泉.大地测量学基础-2版.武汉:武汉大学出版社,2010.5，
-以下简称为大地测量学基础。
+以下将这本书简称为大地测量学基础或大地测量学。
 
-高斯投影是在椭球参数(长半轴a、短半轴b、扁率$\alpha$)一定的条件下，根据
-给定的数学模型来进行计算的，我们首先分析这些计算公式。
+高斯投影是在椭球的几何参数(长半轴a、短半轴b、扁率$\alpha$)确定的条件下，根据
+给定的数学模型来进行计算的，我们首先分析这些计算公式与数学模型。
 
 \begin{enumerate}
 
@@ -145,551 +139,452 @@ $$m=1+\frac{y^2}{2R^2} + \frac{y^4}{24R^4}$$
 
 式中$R=\sqrt{MN}$，公式引用自《大地测量学基础》第189页(4-451)。
 
-
-
 \end{enumerate}
 
-\subsection{数学模型分析}
-分析以上各个计算公式发现，如果长半轴与扁率确定,参考椭球的第一偏心率$e$、
+\section{程序功能分析与设计}
+
+\subsection{高斯投影的主要内容}
+\begin{enumerate}
+    \item 坐标正算：将点的大地坐标转换成高斯投影平面直角坐标。
+    \item 坐标反算：将点的高斯投影平面直角坐标转换成大地坐标。
+    \item 换带计算：将某带的点的高斯投影平面直角坐标转换成邻带或某中央
+    子午线经度的高斯投影平面直角坐标。
+    \item 其他计算：计算子午线收敛角、长度比等。
+\end{enumerate}
+
+\subsection{参考椭球类的设计}
+
+分析以上各个计算公式发现，如果椭球长半轴与扁率确定,参考椭球的第一偏心率$e$、
 第二偏心率$e'$，辅助计算参数$(m_0, m_2, m_4, m_6, m_8)$与
-$(a_0, a_2, a_4, a_6, a_8)$也就确定了。也就是说这些参数对于某一种确定的
+$(a_0, a_2, a_4, a_6, a_8)$也就确定了，其中的$(m_0, m_2, m_4, m_6, m_8)$
+作为计算$(a_0, a_2, a_4, a_6, a_8)$的值使用过一次。也就是说这些参数对于某一种确定的
 参考椭球是常数。而$(M,N,t,\eta)$则是纬度$B$的函数。
 
-\section{高斯投影基本功能实现}
+我们新建一 WPF 项目，命名为GaussProj，程序中我们将应用WPF技术编写图形界面。
 
-为了让我们的算法能被其他项目使用，我们在此新建一 Class Library(.NET Framework) 项目，
-在项目中将以前所写的 SMath.cs 文件加入，将命名空间
-改为 ZXY 。
+在高斯投影中由于要处理角度与点等数据，我们可以将前面的角度处理函数DMS2RAD与RAD2DMS与SPoint点类
+拷贝到当前项目中来，也可以将其打包成一 Class Library(.NET Framework)即类库文件引用到当前项目中，
+在当前项目中尽量不修改前面的各个功能代码。
 
-基于以上分析，我们新建一椭球类$(Ellipsoid)$，在其中我们定义以上与椭球类型
+基于上一小节的分析，我们新建一椭球类$(Spheroid)$，在其中我们定义以上与椭球类型
 相关的元素。代码如下所示：
-\begin{verbatim}
-//File Ellipsoid.cs
-using System;
-
-namespace ZXY
+ \begin{lstlisting}[language=C]
+namespace GaussProj
 {
-    public class Ellipsoid
+    /// <summary>
+    /// 参考椭球
+    /// </summary>
+    public class Spheroid
     {
-        private double a;
-        private double b;
-        private double f; //(a-b)/a = 1/f
+        /// <summary>
+        /// 长半轴
+        /// </summary>
+        public double a { get; set; }
 
-        private double e2;
-        private double eT2;
+        /// <summary>
+        /// 短半轴
+        /// </summary>
+        public double b { get; set; }
 
+        /// <summary>
+        /// 扁率分母
+        /// </summary>
+        public double f { get; set; }  //(a-b)/a = 1/f
+
+        /// <summary>
+        /// 第一偏心率的平方
+        /// </summary>
+        public double e2 { get; set; }
+
+         /// <summary>
+        /// 第二偏心率的平方
+        /// </summary>
+        public double eT2 { get; set; }
+
+        //计算子午线弧长时的各个系数项
         private double a0;
         private double a2;
         private double a4;
         private double a6;
         private double a8;
-
-        private double m0;
-        private double m2;
-        private double m4;
-        private double m6;
-        private double m8;
-
-        .................................
     }
 }
-\end{verbatim}
+\end{lstlisting}
 
-C语言是典型的面向过程设计语言，小巧、灵活，功能强大。
-下面我们将从一个小功能开始构造满足以上全部功能的程序。
+在各项计算中，第一偏心率与第二偏心率的直接使用较少，其平方值用的较多，因此在
+Spheroid类我们直接用其平方值。
 
-在此我们先完成正算功能，我们设定正算中所用的角度均为弧度，从而避免在正算中进行
-度分秒与弧度的转换问题，我们也先把读数据文件、多点等问题去掉，从只计算
-一个点开始考虑问题。我们现在只考虑54北京坐标系的问题，别的暂且不管。假
-如我们的主函数的调用形式如下：
-\begin{verbatim}
-void main()
-{
-    //克拉索夫斯基参考椭球
-    double a = 6378245.0,  f = 298.3;
-    //正算点的纬度和经差
-    double B = 0.3836189311, l = 0.0423314484;
-    // B = 21°58′47.0845″ l = 2°25′31.4880″
-    double x, y;
-    CalEcd(a, f);
-    GaussZs(B, l, &x, &y);
-    printf("x = %lf, y = %lf \n", x, y);
-    //算出的x=2433586.692， y=250547.403
-}
-\end{verbatim}
-
-以上程序的流程为：
-
-(1)给定一个类型的参考椭球：如长半轴a， 扁率f
-
-(2)计算相关的参数：计算偏心率，子午线弧长系数等，这些相对于一个给定
-的椭球来说，它是一个定值；
-
-(3)根据给定的B，l 计算相应的高斯平面坐标；
-
-(4)输出计算值。
-
-从流程上可看出，GaussZs函数的原型如下：
-\begin{verbatim}
-void GaussZs(double B, double l,
-             double * x, double * y)
-\end{verbatim}
-这里B，l为给定值，x，y设定为指针类型，用于返回计算后的值。下面我们来实
-现这个函数，它的计算流程如下：
-
-(1)计算子午线弧长；
-
-(2)计算x和y坐标；
-
-我们设计该函数如下：
-\begin{verbatim}
-void GaussZs(double B, double l,
-             double * x, double * y)
-{
-    double sinB = sin( B );
-    double cosB = cos( B );
-    double cosB2 = cosB * cosB;
-    double cosB4 = cosB2 * cosB2;
-    double l2 = l * l;
-    double l4 = l2 * l2;
-
-    double g = _eT * cosB;
-    double g2 = g * g;
-    double g4 = g2 * g2;
-    double t = tan(B);
-    double t2 = t * t;
-    double t4 = t2 * t2;
-
-    //计算子午线弧长
-    double X = MeridianArcLength( B );
-    double N = _c / sqrt(1.0 + g2);
-
-    *x = X + N * sinB * cosB * l2 *
-    ( 0.5
-      + cosB2 * l2 * (5.0 - t2 + 9.0 * g2 + 4.0 * g4) / 24.0
-      + cosB4 * l4 * (61.0 - 58.0 * t2
-          + t4 + 270.0 * g2 - 330.0 * g2 * t2)  / 720.0
-    );
-    *y = N * cosB * l *
-    ( 1.0
-      + cosB2 * l2 * (1.0 - t2 + g2) / 6.0
-      + cosB4 * l4 * (5.0 - 18.0 * t2 + t4
-          + 14.0 * g2 - 58.0 * t2 * g2) / 120.0
-    );
-}
-\end{verbatim}
-
-从函数的实现看，前面的变量只是为了简化后面的计算式，整个函数中没有逻辑
-判断和循环，因此较为简单。但子午线弧长的计算函数MeridianArcLength(
-double )我们还没实现，根据算法，它的实现如下：
-\begin{verbatim}
-double MeridianArcLength(double B)
-{
-    double sinB = sin(B);
-    double cosB = cos(B);
-    double sinB3 = sinB * sinB * sinB;
-    double sinB5 = sinB * sinB * sinB3;
-    double sinB7 = sinB * sinB * sinB5;
-    return _A0 * B - cosB * (_B0 * sinB + _C0 * sinB3
-           + _D0 * sinB5 + _E0 * sinB7);
-}
-\end{verbatim}
-程序中的\verb|_A0、_B0、_C0、_D0、_E0|为子午线弧长计算的系数，在此我把它们设
-为全局变量，在CalEcd函数中进行计算。如：
-
-\begin{verbatim}
-double _a, _b, _c, _d, _e, _eT;
-double _A0, _B0, _C0 , _D0, _E0;
-double _e2, _e4, _e6, _e8;
-\end{verbatim}
-
-由于这些相关的系数只与椭球的参数有关，我们只在函数CalEcd计算一次。其实
-现如下：
-\begin{verbatim}
-void CalEcd(double a, double f)
-{
-    _a = a; _b = _a * (1.0 - 1.0 / f);
-
-    _e = sqrt(_a * _a - _b * _b) / _a;
-    _eT = sqrt(_a * _a - _b * _b) / _b;
-    _c = _a / _b * _a;
-    _d = _b / _a * _b;
-
-    _e2 = _e * _e;
-    _e4 = _e2 * _e2;
-    _e6 = _e2 * _e4;
-    _e8 = _e2 * _e6;
-
-    _A0 = _d * (  1    + 3.0 /4.0 * _e2
-                   + 45.0 / 64.0 * _e4
-               + 175.0 / 256.0 * _e6
-               + 11025.0 / 16384.0 * _e8 );
-    _B0 = _d * (         3.0 /4.0 * _e2
-                   + 45.0 / 64.0 * _e4
-               + 175.0 / 256.0 * _e6
-               + 11025.0 / 16384.0 * _e8);
-    _C0 = _d * (         15.0 / 32.0 * _e4
-               + 175.0 / 384.0 * _e6
-                       + 3675.0 /  8192.0 * _e8);
-    _D0 = _d * (         35.0 /  96.0 * _e6
-                   + 735.0 /  2048.0 * _e8);
-    _E0 = _d * (     315.0 /  1024.0 * _e8 );
-}
-\end{verbatim}
-
-至此，我们完成了高斯平面直角坐标的正算功能的程序设计。为了利用C++语言
-增强了的C功能，我们把文件的扩展名由c改为cpp，以利用C++编译器进行严格检
-查。
-
-为了进行源代码一级的复用，我们在工程中新加入一个头文件（.h），将上面除
-主函数main()之外的所有代码剪切到头文件中（如头文件为Gauss.h），在主函
-数所在的文件中将头文件包含在内，即在文件顶端加入：\verb|#include "Gauss.h"|，
-在别的地方我们就可继续使用这些函数。
-
-为了直接利用纬度、经度和中央子午线的经度计算高斯平面坐标，我们可以利用函数重
-载的功能继续实现坐标正算：
-
-\begin{verbatim}
-void GaussZs(double B, double L, double L0,
-             double * x, double * y)
-{
-    double l = L - L0;
-    GaussZs(B, l, x, y);
-}
-\end{verbatim}
-
-这里的实现很简单，只是计算了经差，调用了原来的正算函数。我们就可在主函
-数中作如下形式的调用了：
-
-\begin{verbatim}
-void main()
-{
-    //21°58′47.0845″的弧度形式
-    double B = 0.3836189311;
-    // 113°25′31.4880″的弧度形式
-    double L = 1.9796469181;
-    // 111°的弧度形式
-    double L0 = 1.9373154697;
-    //54//x:2433586.692, y:250547.403
-    GaussZs(B, L, L0, &x, &y);
-    printf("x = %lf, y = %lf \n", x, y);
-}
-\end{verbatim}
-至此，我们已经完成了高斯坐标正算的全部计算了。以上的函数调用中的角度均
-使用了弧度的形式，利用前面所讲的角度化弧度的函数，我们可以以下形式的调
-用：
-
-\begin{verbatim}
-void main()
-{
-    //21°58′47.0845″
-    double B = DMStoRAD(21.58470845);
-    //113°25′31.4880″
-    double L = DMStoRAD (113.25314880);
-    double L0 = DMStoRAD(111.0); //111°
-    //54//x:2433586.692, y:250547.403
-    GaussZs(B, L, L0, &x, &y);
-    printf("x = %lf, y = %lf \n", x, y);
-}
-\end{verbatim}
-
-同样，坐标反算的程序设计的实现方法也基本一样。由于面向过程的程序设计不
-是我们的重点，就将这部分的实现放入面向对象中。
-
-\section{*面向对象的高斯坐标正反算程序设计}
-在前面的程序设计中，我们将椭球参数用全局变量表示，为了消除这些全局变量
-的影响，我们采用类的形式对其进行封装，封装的形式如下：
-
-\begin{verbatim}
-class CEarth
-{
-private:
-    double _a, _b, _c, _d, _e, _eT;
-    double _A0, _B0, _C0 , _D0, _E0;
-    double _e2, _e4, _e6, _e8, _e10;
-};
-\end{verbatim}
-
-将它们设为private，防止类以外的代码随意访问它们。
-再将上面实现的正算等函数作为其成员函数，则形式为：
-
-\begin{verbatim}
-class CEarth
-{
-private:
-    double _a, _b, _c, _d, _e, _eT;
-    double _A0, _B0, _C0 , _D0, _E0;
-    double _e2, _e4, _e6, _e8, _e10;
-public:
-    CEarth();//构造函数
-    virtual ~CEarth();  //析构函数
-    //计算相关系数
-    void CalEcd(double a, double alf);
-    //正算
-    void GsZs(double l, double B,
-              double& x, double& y);
-    void GsZs(double L, double B, double L0,
-              double& x, double& y);
-    //反算
-    void GsFs(double x, double y,
-              double& l, double& B);
-    void GsFs(double x, double y, double L0,
-              double & L, double & B);
-    //子午线收敛角
-    double MeridianConvergentAngleByBl(
-              double l, double B);
-    double MeridianConvergentAngleByxy(
-              double x, double y);
-    //子午线弧长
-    double MeridianArcLength(double B);
-     //底点纬度
-    double Bf(double x);
-};
-\end{verbatim}
-
-在类的成员函数定义中，将传进的参数用引用的形式加const进行限定，同时用
-引用取代指针进行函数返回值，如GsZs，GsFs函数。
-
-在这里，我们看看反算的实现。在反算的计算流程中，经差l的计算很简单，直
-接计算即可，但纬度的计算需要先计算底点纬度，由于我们的程序是针对多种椭
-球的，底点纬度的数值计算公式是不能使用的。我们用子午线弧长计算公式进行
-迭代计算，在开始迭代时，取弧长的初值为\verb|x / _A0|，其具体实现如下：
-
-\begin{verbatim}
-double CEarth::Bf(double x)
-{
-    double Bf0 = x / _A0; //子午线弧长的初值
-    int i = 0;
-    while( i < 10000 )//设定迭代次数
-    {
-        double sinBf = sin(Bf0);
-        double cosBf = cos(Bf0);
-        double sinBf3 = sinBf * sinBf * sinBf;
-        double sinBf5 = sinBf * sinBf * sinBf3;
-        double sinBf7 = sinBf * sinBf * sinBf5;
-
-        double Bf = (  x
-                 + cosBf * ( _B0 * sinBf
-                                + _C0 * sinBf3
-                    + _D0 * sinBf5
-                    + _E0 * sinBf7)
-            ) / _A0;
-        if( fabs(Bf - Bf0) < 1e-10) //计算精度
-            return Bf;
-        else
+ 在Spheroid类中我们可以如下直接定义构造函数用于初始化其各个字段(Field)：
+  \begin{lstlisting}[language=C]
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        private Spheroid(double semimajor_axis, double inverse_flattening)
         {
-            Bf0 = Bf;
-            i++;
+            this.a = semimajor;
+            this.f =  inverse_flattening;
+            ...................................................
         }
-    }
-    return -1e12;
-}
-\end{verbatim}
+\end{lstlisting}
 
-反算的实现如下：
+但这样我们可能无法为已知的一些参考椭球直接提供参数，所以我们将构造函数定义
+为 private，让用户无法通过new直接创建实例化对象。我们设计类的静态函数
+Create**** 来创建类Spheroid的实例化对象，其代码如下：
 
-\begin{verbatim}
-void CEarth::GsFs(double x, double y,
-                  double & l, double & B)
-{
-    double Bf0 = Bf( x );
-    double cosBf = cos( Bf0 );
+ \begin{lstlisting}[language=C]
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        private Spheroid(){}
 
-    double gf = _eT * cosBf;
-    double gf2 = gf * gf;
-    double gf4 = gf2 * gf2;
+        /// <summary>
+        /// 初始化椭球参数的内部函数
+        /// </summary>
+        private void Init(double semimajor_axis, double inverse_flattening)
+        {
+            this.a = semimajor_axis; this.f = inverse_flattening;
+            b = a * (1 - 1 / f);
 
-    double tf = tan(Bf0);
-    double tf2 = tf * tf;
-    double tf4 = tf2 * tf2;
+            e2 = 1 - b / a * b / a;
+            eT2 = a / b * a / b - 1;
 
-    double Nf = _c / sqrt(1.0 + gf2);
-    double Nf2 = Nf * Nf;
-    double Nf4 = Nf2 * Nf2;
+            double m0 = a * (1 - e2);
+            double m2 = 3.0 / 2.0 * e2 * m0;
+            double m4 = 5.0 / 4.0 * e2 * m2;
+            double m6 = 7.0 / 6.0 * e2 * m4;
+            double m8 = 9.0 / 8.0 * e2 * m6;
 
-    double y2 = y * y;
-    double y4 = y2 * y2;
+            a0 = m0 + m2 / 2.0 + 3.0 / 8.0 * m4 + 5.0 / 16.0 * m6
+                          + 35.0 / 128.0 * m8;
+            a2 = m2 / 2.0 + m4 / 2.0 + 15.0 / 32.0 * m6 + 7.0 / 16.0 * m8;
+            a4 = m4 / 8.0 + 3.0 / 16.0 * m6 + 7.0 / 32.0 * m8;
+            a6 = m6 / 32.0 + m8 / 16.0;
+            a8 = m8 / 128.0;
+        }
 
-    l = y / (Nf * cosBf) *
-    ( 1.0
-      - y2 / (6.0 * Nf2) * (1.0 + 2.0 * tf2 + gf2)
-          + y4 / (120.0 * Nf4 ) * (5.0
-      + 28.0 * tf2
-          + 24.0 * tf4
-      + 6.0 * gf2
-      + 8.0 * gf2 * tf2)
-    );
-    B = Bf0 - y2 / Nf2 * tf * 0.5 *
-      ( (1.0 + gf2)
-             - y2 * (5.0
-                     + 3.0 * tf2
-                     + 6.0 * gf2
-                     - 6.0 * tf2 * gf2
-                     - 3.0 * gf4
-                     + 9.0 * gf4 * tf4
-                    ) / (12.0 * Nf2)
-             + y4 * (61.0
-                     + 90.0 * tf2
-                     + 45.0 * tf4
-                     + 107.0 * gf2
-                     + 162.0 * gf2 * tf2
-                     + 45.0 * gf2 * tf4
-                    ) / ( 360 * Nf4)
-     );
-}
+        public static Spheroid CreateBeiJing1954()
+        {
+            Spheroid spheroid = new Spheroid();
+            spheroid.Init(6378245, 298.3);
+            return spheroid;
+        }
 
-//L：经度（弧度）, B：纬度（弧度）， L0：中央子午线经度
-void CEarth::GsFs(double x, double y, double L0,
-                  double& L, double& B)
-{
-    double l;
-    GsFs(x, y, l, B);
-    L = L0 + l;
-}
-\end{verbatim}
+        public static Spheroid CreateXian1980()
+        {
+            Spheroid spheroid = new Spheroid();
+            spheroid.Init(6378140, 298.257);
+            return spheroid;
+        }
 
-在以上实现中，由于我们的成员变量均为private类型，而构造函数为默认的形
-式，无法将椭球的参数值传递进去。由于要实现54、80和自定义椭球的坐标系，
-相应的解决方法有：
+        public static Spheroid CreateWGS1984()
+        {
+            Spheroid spheroid = new Spheroid();
+            spheroid.Init(6378137, 298.257223563);
+            return spheroid;
+        }
 
-1．将默认的构造函数改为CEarth (double a, double alf)形式，将不同的椭球
-参数传给类。比如要建立54坐标系，只需要如下作即可：
-\begin{verbatim}
-CEarth earth54(6378245.0, 298.3);
-CEarth * pEarth54 = new CEarth(6378245.0, 298.3);
-\end{verbatim}
+        public static Spheroid CreateCGCS2000()
+        {
+            Spheroid spheroid = new Spheroid();
+            spheroid.Init(6378137, 298.257222101);
+            return spheroid;
+        }
 
-这种形式很直观，但缺点也很明显，对于已知的常用椭球，编程人员每次均要提
-供其具体的参数值，很不方便，也容易出错。
+        public static Spheroid CreateCoordinateSystem(double semimajor_axis,
+              double inverse_flattening)
+        {
+            Spheroid spheroid = new Spheroid();
+            spheroid.Init(semimajor_axis, inverse_flattening);
+            return spheroid;
+        }
+\end{lstlisting}
 
-2．利用类厂的方法，将生成已知的常用椭球定义为静态成员函数，同时将构造
-函数声明为private类型，防止象方法1那样直接访问。这种方法的优点是显而易
-见的，它的实现如下：
+这种将构造函数设为private，通过静态函数来创建实例化对象的技术在软件设计中
+会经常用到。同时在设计类的方法时，应注意访问权限的设置，如上面代码中Init函数，
+在类中用于初始化椭球的各项几何参数，并不需要在类外来调用它，所以我们将其设置为
+private权限。
 
-在类CEarth中将默认的构造函数的访问域改为：
-\begin{verbatim}
-private:
-    CEarth();
-    void CalEcd(double a, double alf);
-\end{verbatim}
+\subsection{高斯投影正算功能的实现}
+有了类Spheroid的设计，我们先来完成高斯投影正算功能。
+为了避免在计算中频繁的进行度分秒与弧度之间的转换问题，
+我们设定除了特别声明之外，在类Spheroid中所用的角度均为弧度。
 
-同时CalEcd函数计算椭球内部的基本系数，不需要外部程序访问，也将其定义为
-private。
+我们将高斯投影正算的函数名称定义为 BLtoXY，其设计如下：
 
-同时在类中声明以静态成员指针变量：
-\begin{verbatim}
-private:
-    static CEarth * _pEarth;
-\end{verbatim}
-在类的实现文件前面进行初始化：
-\begin{verbatim}
-CEarth* CEarth::_pEarth = NULL;
-\end{verbatim}
+ \begin{lstlisting}[language=C]
+        /// <summary>
+        /// 高斯投影正算
+        /// </summary>
+        /// <param name="B">纬度,单位:弧度</param>
+        /// <param name="L">经度,单位:弧度</param>
+        /// <param name="L0">中央子午线经度,单位:弧度</param>
+        /// <param name="x">高斯平面x坐标</param>
+        /// <param name="y">高斯平面y坐标</param>
+        public void BLtoXY(double B, double L, double L0,
+            out double x, out double y)
+        {
+            ......................................
+        }
+ \end{lstlisting}
 
-再在类中定义用于创建椭球的静态成员函数：
-\begin{verbatim}
-public:
-    static CEarth * CreateEarth54();
-    static CEarth * CreateEarth80();
-    static CEarth * CreateEarthCustomize(double a, double alf);
-\end{verbatim}
+由于函数的返回值为两个值x与y，无法以函数的返回值return的形式返回计算结果，
+所以我们用函数参数 out 的形式将计算结果返回。
 
-它们的实现为：
-\begin{verbatim}
-CEarth * CEarth::CreateEarth54()
-{
-    if(_pEarth == NULL) _pEarth = new CEarth();
-    _pEarth->CalEcd(6378245.0, 298.3);
-    return _pEarth;
-}
-CEarth * CEarth::CreateEarth80()
-{
-    if(_pEarth == NULL) _pEarth = new CEarth();
-    _pEarth->CalEcd(6378140.0, 298.257);
-    return _pEarth;
-}
-CEarth * CEarth::CreateEarthCustomize(double a, double alf)
-{
-    if(_pEarth == NULL) _pEarth = new CEarth();
-    _pEarth = new CEarth();
-    _pEarth->CalEcd(a, alf);
-    return _pEarth;
-}
-\end{verbatim}
+ 由前面的高斯投影正算公式分析可知，高斯投影正算的计算较为简单，没有复杂的逻辑，
+ 先计算经差，然后计算子午线弧长后就可以直接写计算坐标x,y的算法了。
+ 但公式较为复杂，极容易写错，公式中具有大量的平方、四次方等变量。因此在编程时
+ 应将这些变量命名为与其相似的形式并提前计算。相关代码如下：
+ \begin{lstlisting}[language=C]
+        /// <summary>
+        /// 计算子午线弧长
+        /// </summary>
+        /// <param name="B">纬度(单位:弧度)</param>
+        /// <returns>子午线弧长</returns>
+        private double funX(double B)
+        {
+            return a0 * B - a2 / 2.0 * Math.Sin(2 * B)
+                + a4 / 4.0 * Math.Sin(4 * B)
+                - a6 / 6.0 * Math.Sin(6 * B)
+                + a8 / 8.0 * Math.Sin(8 * B);
+        }
 
-从它们的实现看，是用new的方式生成了椭球对象，为了避免内存泄漏，类的析
-构函数中，负责将申请的内存进行释放，它的实现如下：
-\begin{verbatim}
-CEarth::~CEarth()
-{
-    if(_pEarth != NULL)
-    {
-        delete _pEarth;
-        _pEarth = NULL;
-    }
-}
-\end{verbatim}
+        private double funN(double sinB)
+        {
+            return a / Math.Sqrt(1 - e2 * sinB * sinB);
+        }
 
-主函数调用的形式为：
-\begin{verbatim}
-void main()
-{
+        /// <summary>
+        /// 高斯投影正算
+        /// </summary>
+        /// <param name="B">纬度,单位:弧度</param>
+        /// <param name="L">经度,单位:弧度</param>
+        /// <param name="L0">中央子午线经度,单位:弧度</param>
+        /// <param name="x">高斯平面x坐标</param>
+        /// <param name="y">高斯平面y坐标</param>
+        public void BLtoXY(double B, double L, double L0,
+            out double x, out double y)
+        {
+            double l = L - L0; //计算经差
+
+            double sinB = Math.Sin(B);
+            double cosB = Math.Cos(B);
+            double cosB2 = cosB * cosB;
+            double cosB4 = cosB2 * cosB2;
+            double t = Math.Tan(B);
+            double t2 = t * t;
+            double t4 = t2 * t2;
+            double g2 = eT2 * cosB * cosB;
+            double g4 = g2 * g2;
+            double l2 = l * l;
+            double l4 = l2 * l2;
+
+            double X = funX(B); //计算子午线弧长
+            double N = funN(sinB);
+
+           x = X + 0.5 * N * sinB * cosB * l2 * (1
+                + cosB2 / 12.0 * (5 - t2 + 9 * g2 + 4 * g4) * l2
+                + cosB4 / 360.0 * (61 - 58 * t2 + t4) * l4);
+
+
+          y = N * cosB * l * (1
+                + cosB2 * (1 - t2 + g2) * l2 / 6.0
+                + cosB4 * (5 - 18 * t2 + t4 + 14 * g2 - 58 * g2 * t2)
+                        * l4 / 120.0);
+        }
+ \end{lstlisting}
+
+利用 BLtoXY 函数就可以进行高斯投影正算了，其算法流程为：
+ \begin{lstlisting}[language=C]
+    //创建克拉索夫斯基参考椭球
+    Spheroid  spheroid = Spheroid.CreateBeiJing1954();
+
+    //传入点的纬度B、经度与中央子午线经度，单位为弧度
+    double B = ZXY.SMath.DMS2RAD(21.58470845);
+    double L = ZXY.SMath.DMS2RAD(113.25314880);
+    double L0 = ZXY.SMath.DMS2RAD(111);
     double x, y;
-CEarth * pEarth = CEarth::CreateEarth54();
-    double B = zx::CSurMath::DmsToRad(21.58470845);
-    double l = zx::CSurMath::DmsToRad(113.25314880)
-                   - zx::CSurMath::DmsToRad(111);
-    pEarth->GsZs( l, B, x, y);
-printf("x = %lf, y = %lf \n", x, y);
-}
-\end{verbatim}
-现在我们基本上用面向对象的方法完成了高斯投影正反算的问题了。
 
-\section{实现换带计算和文件读写}
-\subsection{换带计算}
-换带计算的基本方法：已知某一带（中央子午线经度已知oldL0）的点坐标
-（oldX, oldY），利用高斯反算计算出大地坐标（B， L），再根据新带的中央
-子午线经度（newL0），高斯正算计算新带中的高斯平面坐标（newX,  newY）。
-用算法描述如下：
+    spheroid.BLtoXY(B, L, L0, out x, out y);
+\end{lstlisting}
 
-1．$（B，L）= GsFs(oldX, oldY, oldL0)$
+点的纬度、经度为：$ B = 21 \degree 58'47.0845'',  L= 113\degree 25'31.4880''$，
+中央子午线经度为：$L0 = 111\degree$，
+计算出的坐标为：$x=2433586.692, y=250547.403$, 坐标y为点的自然坐标，
+未加常数500km与带号。
 
-2．$(newX,  newY) = GsZs(B, L, newL0)$
+\subsection{高斯投影反算功能的实现}
+由高斯投影反算公式分析，在反算时需要首先计算底点纬度。底点纬度需要由
+子午线弧长公式进行反算，由该公式可以看出，已知X=x时，这个函数在计算B值时它
+并不是一个线型函数，不能直接计算。解决这类问题的计算方法就是迭代计算，我们将公式
+进行变换，如下所示：
 
-用一函数描述它为：
-\begin{verbatim}
-void CEarth::GsHd(double oldX, double oldY,
-                  double oldL0,  double newL0,
-                  double& newX, double& newY)
-{
+$$B= (X + \frac{a_2}{2}\sin 2B - \frac{a_4}{4}\sin 4B
++ \frac{a_6}{6} \sin 6B  - \frac{a_8}{8}\sin 8B)/a_0$$
+
+在该公式中，两边都有B，我们将公式右边的B赋初始值$B_0=X/a_0$代入可以
+计算出新的$B_i$值，循环进行计算，由于该迭代收敛，两值之差在一定范围内时
+我们认为其值即为我们的解。
+
+因此底点纬度计算函数设计为：
+ \begin{lstlisting}[language=C]
+        /// <summary>
+        /// 计算底点纬度
+        /// </summary>
+        /// <param name="x">高斯平面x坐标</param>
+        /// <returns>底点纬度</returns>
+        private double funBf(double x)
+        {
+            double sinB, sin2B, sin4B, sin6B, sin8B;
+            double Bf0 = x / a0, Bf = 0; //子午线弧长的初值
+            int i = 0;
+            while (i < 10000)//设定最大迭代次数
+            {
+                sinB = Math.Sin(Bf0);
+                sin2B = Math.Sin(2 * Bf0);
+                sin4B = Math.Sin(4 * Bf0);
+                sin6B = Math.Sin(6 * Bf0);
+                sin8B = Math.Sin(8 * Bf0);
+                Bf = (x
+                + a2 * sin2B / 2
+                - a4 * sin4B / 4
+                + a6 * sin6B / 6
+                - a8 * sin8B / 8) / a0;
+
+                if (Math.Abs(Bf - Bf0) < 1e-10) //计算精度
+                    return Bf;
+                else
+                {
+                    Bf0 = Bf;
+                    i++;
+                }
+            }
+            return -1e12;
+        }
+\end{lstlisting}
+
+ 在底点纬度计算出以后，高斯投影反算计算就没有难度了。
+ 我们将函数名命名为 XYtoBL，其函数设计为：
+ \begin{lstlisting}[language=C]
+        public void XY2BL(double x, double y, double L0,
+            out double B, out double L)
+        {
+           double Bf = funBf(x);
+
+            double cosBf = Math.Cos(Bf);
+            double gf2 = eT2 * cosBf * cosBf;
+            double gf4 = gf2 * gf2;
+            double tf = Math.Tan(Bf);
+            double tf2 = tf * tf;
+            double tf4 = tf2 * tf2;
+            double sinB = Math.Sin(Bf);
+            double Nf = funN(sinB);
+            double Mf = funM(sinB);
+            double Nf2 = Nf * Nf;
+            double Nf4 = Nf2 * Nf2;
+            double y2 = y * y;
+            double y4 = y2 * y2;
+
+            B = Bf + tf * y2 / Mf / Nf * 0.5 * (
+               -1.0
+              + y2 * (5.0 + 3.0 * tf2 + gf2 - 9.0 * gf2 * tf2) / 12.0 / Nf2
+              - y4 * (61.0 + 90.0 * tf2 + 45.0 * tf4) / 360.0 / Nf4);
+
+           double l = y / Nf / cosBf * (
+                1.0
+              - y2 / 6.0 / Nf2 * (1.0 + 2.0 * tf2 + gf2)
+             + y4 / 120.0 / Nf4
+             * (5.0 + 28.0 * tf2 + 24.0 * tf4 + 6.0 * gf2 + 8.0 * gf2 * tf2));
+
+            L = L0 + l;
+        }
+\end{lstlisting}
+
+该函数中还有Nf与Mf需要计算，Nf的计算同前面的funN函数，Mf的计算函数为
+ \begin{lstlisting}[language=C]
+        private double funM(double sinB)
+        {
+            return a * (1 - e2) * Math.Pow(1 - e2 * sinB * sinB, -1.5);
+        }
+\end{lstlisting}
+
+ 有了高斯投影反算函数 XYtoBL， 就可以比较容易的写出其反算示例了，如以下代码所示：
+
+\begin{lstlisting}[language=C]
+     //创建克拉索夫斯基参考椭球
+    Spheroid  spheroid = Spheroid.CreateBeiJing1954();
+
+    //传入点的X、Y坐标与中央子午线经度(单位为弧度)
+    double x=2433586.692, y=250547.403;
+    double L0 = ZXY.SMath.DMS2RAD(111);
+
     double B, L;
-    GsFs(oldX, oldY, oldL0, L, B);
-    GsZs(L, B, newL0, newX, newY);
-}
-\end{verbatim}
+    spheroid.XYtoBL(x, y, L0, out B, out L);
+    //B= ZXY.SMath.RAD2DMS(B);
+    //L= ZXY.SMath.RAD2DMS(L);
+\end{lstlisting}
 
-注意：高斯换带计算一般是指同一参考椭球的不同带之间的换算，不同的参考椭
-球的坐标系是不能采用这种方法的。
+传入的y坐标应为真实坐标值，应不包括500km与带号等。
+如果计算的经纬度需向界面展示，还应像上述代码后两行所示将其值转换为
+度分秒形式。
 
-计算示例如下：
+计算出的点的纬度与经度为：
+$B=21 \degree 58'47.0845'', L=113\degree 25'31.4880''$
 
-\begin{verbatim}
-void main()
-{
-    double oldX = 3275110.535;
-    double oldY = 235437.233;
+计算点的子午线收敛角与计算某点处的长度变形值均比较简单，可以在正算或反算时将其同时
+计算出，大家可以自己练习完成，在此就不再讲述了。
+
+\subsection{换带计算}
+换带计算其实质就是变换坐标系的中央子午线位置。因此首先应根据点的坐标
+反算出点的经纬度，然后再根据新的坐标系中央子午线位置计算出点在
+新的坐标系中的高斯平面坐标。
+
+也就是先反算，再正算，注意此处的反算与正算的中央子午线经度值是不一样的。
+
+该函数我们命名为 XYtoXY，其设计为如下代码：
+
+\begin{lstlisting}[language=C]
+        /// <summary>
+        /// 高斯投影换带
+        /// </summary>
+        /// <param name="ox">点在源坐标系的x坐标</param>
+        /// <param name="oy">点在源坐标系的y坐标</param>
+        /// <param name="oL0">源坐标系的中央子午线经度，单位:弧度</param>
+        /// <param name="nL0">目标坐标系的中央子午线经度，单位:弧度</param>
+        /// <param name="nx">点在目标坐标系的x坐标</param>
+        /// <param name="ny">点在目标坐标系的y坐标</param>
+        public void XYtoXY(double ox, double oy,
+            double oL0, double nL0,
+           out double nx, out double ny)
+        {
+            double B, L;
+            XYtoBL(ox, oy, oL0, out B, out L); //高斯投影反算
+            BLtoXY(B, L, nL0, out nx, out ny); //高斯投影正算
+        }
+\end{lstlisting}
+
+高斯投影换带的外部调用可以按如下方式写：
+
+\begin{lstlisting}[language=C]
+    double oldX = 3275110.535, oldY = 235437.233;
+
     double oldL0 = zx::CSurMath::DmsToRad(117);
     double newL0 = zx::CSurMath::DmsToRad(120);
+
     double newX, newY;
+    Spheroid  spheroid = Spheroid.CreateBeiJing1954();
+    spheroid.XYtoXY(oldX, oldY, oldL0, newL0, out newX, out newY);
+\end{lstlisting}
 
-   CEarth * pEarth = CEarth::CreateEarth54();
-   pEarth->GsHd(oldX, oldY, oldL0, newL0, newX, newY);
-   printf("newX = %lf,  newY = %lf \n", newX,  newY);
-   // 3272782.315, -55299.545
-}
-\end{verbatim}
+计算出的点在新坐标系下的坐标为(3272782.315, -55299.545)。
 
-\subsection{多点计算和文件读写}
+至此，我们已经完成了高斯投影的全部计算功能了。需要注意的是以上的函数调用中的角度均
+使用了弧度的形式，在外部调用时可以利用前面所讲的度分秒化弧度和弧度化度分秒函数先行转换。
+
+\section{图形界面程序编写}
+以上我们已经将主要的算法编写完毕，下面我们将利用 C\# 的 WPF技术编写图形界面，让我们的程序
+变得更加实用。
+
+\section{多点计算和文件读写}
 以上我们的算法和测试验证程序均是针对一个点而言的，如果我们在一个文本形
 式的数据文件里存放有多个点，怎么计算呢？
 

@@ -24,7 +24,7 @@ WGS84坐标系以及CGCS2000大地坐标系或自定义参考椭球的高斯投�
 
 \begin{enumerate}
 
- \item 基本公式
+\item 基本公式
 
 \begin{enumerate}
 \item 扁率：
@@ -155,7 +155,7 @@ $$m=1+\frac{y^2}{2R^2} + \frac{y^4}{24R^4}$$
 \subsection{参考椭球类的设计}
 
 分析以上各个计算公式发现，如果椭球长半轴与扁率确定,参考椭球的第一偏心率$e$、
-第二偏心率$e'$，辅助计算参数$(m_0, m_2, m_4, m_6, m_8)$与
+第二偏心率$e'$，子午线弧长计算的辅助计算参数$(m_0, m_2, m_4, m_6, m_8)$与
 $(a_0, a_2, a_4, a_6, a_8)$也就确定了，其中的$(m_0, m_2, m_4, m_6, m_8)$
 作为计算$(a_0, a_2, a_4, a_6, a_8)$的值使用过一次。也就是说这些参数对于某一种确定的
 参考椭球是常数。而$(M,N,t,\eta)$则是纬度$B$的函数。
@@ -168,7 +168,8 @@ $(a_0, a_2, a_4, a_6, a_8)$也就确定了，其中的$(m_0, m_2, m_4, m_6, m_8)
 
 基于上一小节的分析，我们新建一椭球类$(Spheroid)$，在其中我们定义以上与椭球类型
 相关的元素。代码如下所示：
- \begin{lstlisting}[language=C]
+
+\begin{lstlisting}[language=C]
 namespace GaussProj
 {
     /// <summary>
@@ -216,15 +217,15 @@ Spheroid类我们直接用其平方值。
 
  在Spheroid类中我们可以如下直接定义构造函数用于初始化其各个字段(Field)：
   \begin{lstlisting}[language=C]
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        private Spheroid(double semimajor_axis, double inverse_flattening)
-        {
-            this.a = semimajor;
-            this.f =  inverse_flattening;
-            ...................................................
-        }
+/// <summary>
+/// 构造函数
+/// </summary>
+private Spheroid(double semimajor_axis, double inverse_flattening)
+{
+    this.a = semimajor;
+    this.f =  inverse_flattening;
+    ...................................................
+}
 \end{lstlisting}
 
 但这样我们可能无法为已知的一些参考椭球直接提供参数，所以我们将构造函数定义
@@ -232,71 +233,71 @@ Spheroid类我们直接用其平方值。
 Create**** 来创建类Spheroid的实例化对象，其代码如下：
 
  \begin{lstlisting}[language=C]
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        private Spheroid(){}
+/// <summary>
+/// 构造函数
+/// </summary>
+private Spheroid(){}
 
-        /// <summary>
-        /// 初始化椭球参数的内部函数
-        /// </summary>
-        private void Init(double semimajor_axis, double inverse_flattening)
-        {
-            this.a = semimajor_axis; this.f = inverse_flattening;
-            b = a * (1 - 1 / f);
+/// <summary>
+/// 初始化椭球参数的内部函数
+/// </summary>
+private void Init(double semimajor_axis, double inverse_flattening)
+{
+    this.a = semimajor_axis; this.f = inverse_flattening;
+    b = a * (1 - 1 / f);
 
-            e2 = 1 - b / a * b / a;
-            eT2 = a / b * a / b - 1;
+    e2 = 1 - b / a * b / a;
+    eT2 = a / b * a / b - 1;
 
-            double m0 = a * (1 - e2);
-            double m2 = 3.0 / 2.0 * e2 * m0;
-            double m4 = 5.0 / 4.0 * e2 * m2;
-            double m6 = 7.0 / 6.0 * e2 * m4;
-            double m8 = 9.0 / 8.0 * e2 * m6;
+    double m0 = a * (1 - e2);
+    double m2 = 3.0 / 2.0 * e2 * m0;
+    double m4 = 5.0 / 4.0 * e2 * m2;
+    double m6 = 7.0 / 6.0 * e2 * m4;
+    double m8 = 9.0 / 8.0 * e2 * m6;
 
-            a0 = m0 + m2 / 2.0 + 3.0 / 8.0 * m4 + 5.0 / 16.0 * m6
-                          + 35.0 / 128.0 * m8;
-            a2 = m2 / 2.0 + m4 / 2.0 + 15.0 / 32.0 * m6 + 7.0 / 16.0 * m8;
-            a4 = m4 / 8.0 + 3.0 / 16.0 * m6 + 7.0 / 32.0 * m8;
-            a6 = m6 / 32.0 + m8 / 16.0;
-            a8 = m8 / 128.0;
-        }
+    a0 = m0 + m2 / 2.0 + 3.0 / 8.0 * m4 + 5.0 / 16.0 * m6
+                  + 35.0 / 128.0 * m8;
+    a2 = m2 / 2.0 + m4 / 2.0 + 15.0 / 32.0 * m6 + 7.0 / 16.0 * m8;
+    a4 = m4 / 8.0 + 3.0 / 16.0 * m6 + 7.0 / 32.0 * m8;
+    a6 = m6 / 32.0 + m8 / 16.0;
+    a8 = m8 / 128.0;
+}
 
-        public static Spheroid CreateBeiJing1954()
-        {
-            Spheroid spheroid = new Spheroid();
-            spheroid.Init(6378245, 298.3);
-            return spheroid;
-        }
+public static Spheroid CreateBeiJing1954()
+{
+    Spheroid spheroid = new Spheroid();
+    spheroid.Init(6378245, 298.3);
+    return spheroid;
+}
 
-        public static Spheroid CreateXian1980()
-        {
-            Spheroid spheroid = new Spheroid();
-            spheroid.Init(6378140, 298.257);
-            return spheroid;
-        }
+public static Spheroid CreateXian1980()
+{
+    Spheroid spheroid = new Spheroid();
+    spheroid.Init(6378140, 298.257);
+    return spheroid;
+}
 
-        public static Spheroid CreateWGS1984()
-        {
-            Spheroid spheroid = new Spheroid();
-            spheroid.Init(6378137, 298.257223563);
-            return spheroid;
-        }
+public static Spheroid CreateWGS1984()
+{
+    Spheroid spheroid = new Spheroid();
+    spheroid.Init(6378137, 298.257223563);
+    return spheroid;
+}
 
-        public static Spheroid CreateCGCS2000()
-        {
-            Spheroid spheroid = new Spheroid();
-            spheroid.Init(6378137, 298.257222101);
-            return spheroid;
-        }
+public static Spheroid CreateCGCS2000()
+{
+    Spheroid spheroid = new Spheroid();
+    spheroid.Init(6378137, 298.257222101);
+    return spheroid;
+}
 
-        public static Spheroid CreateCoordinateSystem(double semimajor_axis,
-              double inverse_flattening)
-        {
-            Spheroid spheroid = new Spheroid();
-            spheroid.Init(semimajor_axis, inverse_flattening);
-            return spheroid;
-        }
+public static Spheroid CreateCoordinateSystem(double semimajor_axis,
+      double inverse_flattening)
+{
+    Spheroid spheroid = new Spheroid();
+    spheroid.Init(semimajor_axis, inverse_flattening);
+    return spheroid;
+}
 \end{lstlisting}
 
 这种将构造函数设为private，通过静态函数来创建实例化对象的技术在软件设计中
@@ -311,21 +312,21 @@ private权限。
 
 我们将高斯投影正算的函数名称定义为 BLtoXY，其设计如下：
 
- \begin{lstlisting}[language=C]
-        /// <summary>
-        /// 高斯投影正算
-        /// </summary>
-        /// <param name="B">纬度,单位:弧度</param>
-        /// <param name="L">经度,单位:弧度</param>
-        /// <param name="L0">中央子午线经度,单位:弧度</param>
-        /// <param name="x">高斯平面x坐标</param>
-        /// <param name="y">高斯平面y坐标</param>
-        public void BLtoXY(double B, double L, double L0,
-            out double x, out double y)
-        {
-            ......................................
-        }
- \end{lstlisting}
+\begin{lstlisting}[language=C]
+/// <summary>
+/// 高斯投影正算
+/// </summary>
+/// <param name="B">纬度,单位:弧度</param>
+/// <param name="L">经度,单位:弧度</param>
+/// <param name="L0">中央子午线经度,单位:弧度</param>
+/// <param name="x">高斯平面x坐标</param>
+/// <param name="y">高斯平面y坐标</param>
+public void BLtoXY(double B, double L, double L0,
+    out double x, out double y)
+{
+    ......................................
+}
+\end{lstlisting}
 
 由于函数的返回值为两个值x与y，无法以函数的返回值return的形式返回计算结果，
 所以我们用函数参数 out 的形式将计算结果返回。
@@ -334,77 +335,79 @@ private权限。
  先计算经差，然后计算子午线弧长后就可以直接写计算坐标x,y的算法了。
  但公式较为复杂，极容易写错，公式中具有大量的平方、四次方等变量。因此在编程时
  应将这些变量命名为与其相似的形式并提前计算。相关代码如下：
- \begin{lstlisting}[language=C]
-        /// <summary>
-        /// 计算子午线弧长
-        /// </summary>
-        /// <param name="B">纬度(单位:弧度)</param>
-        /// <returns>子午线弧长</returns>
-        private double funX(double B)
-        {
-            return a0 * B - a2 / 2.0 * Math.Sin(2 * B)
-                + a4 / 4.0 * Math.Sin(4 * B)
-                - a6 / 6.0 * Math.Sin(6 * B)
-                + a8 / 8.0 * Math.Sin(8 * B);
-        }
 
-        private double funN(double sinB)
-        {
-            return a / Math.Sqrt(1 - e2 * sinB * sinB);
-        }
+\begin{lstlisting}[language=C]
+/// <summary>
+/// 计算子午线弧长
+/// </summary>
+/// <param name="B">纬度(单位:弧度)</param>
+/// <returns>子午线弧长</returns>
+private double funX(double B)
+{
+    return a0 * B - a2 / 2.0 * Math.Sin(2 * B)
+        + a4 / 4.0 * Math.Sin(4 * B)
+        - a6 / 6.0 * Math.Sin(6 * B)
+        + a8 / 8.0 * Math.Sin(8 * B);
+}
 
-        /// <summary>
-        /// 高斯投影正算
-        /// </summary>
-        /// <param name="B">纬度,单位:弧度</param>
-        /// <param name="L">经度,单位:弧度</param>
-        /// <param name="L0">中央子午线经度,单位:弧度</param>
-        /// <param name="x">高斯平面x坐标</param>
-        /// <param name="y">高斯平面y坐标</param>
-        public void BLtoXY(double B, double L, double L0,
-            out double x, out double y)
-        {
-            double l = L - L0; //计算经差
+private double funN(double sinB)
+{
+    return a / Math.Sqrt(1 - e2 * sinB * sinB);
+}
 
-            double sinB = Math.Sin(B);
-            double cosB = Math.Cos(B);
-            double cosB2 = cosB * cosB;
-            double cosB4 = cosB2 * cosB2;
-            double t = Math.Tan(B);
-            double t2 = t * t;
-            double t4 = t2 * t2;
-            double g2 = eT2 * cosB * cosB;
-            double g4 = g2 * g2;
-            double l2 = l * l;
-            double l4 = l2 * l2;
+/// <summary>
+/// 高斯投影正算
+/// </summary>
+/// <param name="B">纬度,单位:弧度</param>
+/// <param name="L">经度,单位:弧度</param>
+/// <param name="L0">中央子午线经度,单位:弧度</param>
+/// <param name="x">高斯平面x坐标</param>
+/// <param name="y">高斯平面y坐标</param>
+public void BLtoXY(double B, double L, double L0,
+    out double x, out double y)
+{
+    double l = L - L0; //计算经差
 
-            double X = funX(B); //计算子午线弧长
-            double N = funN(sinB);
+    double sinB = Math.Sin(B);
+    double cosB = Math.Cos(B);
+    double cosB2 = cosB * cosB;
+    double cosB4 = cosB2 * cosB2;
+    double t = Math.Tan(B);
+    double t2 = t * t;
+    double t4 = t2 * t2;
+    double g2 = eT2 * cosB * cosB;
+    double g4 = g2 * g2;
+    double l2 = l * l;
+    double l4 = l2 * l2;
 
-           x = X + 0.5 * N * sinB * cosB * l2 * (1
-                + cosB2 / 12.0 * (5 - t2 + 9 * g2 + 4 * g4) * l2
-                + cosB4 / 360.0 * (61 - 58 * t2 + t4) * l4);
+    double X = funX(B); //计算子午线弧长
+    double N = funN(sinB);
+
+    x = X + 0.5 * N * sinB * cosB * l2 * (1
+        + cosB2 / 12.0 * (5 - t2 + 9 * g2 + 4 * g4) * l2
+        + cosB4 / 360.0 * (61 - 58 * t2 + t4) * l4);
 
 
-          y = N * cosB * l * (1
-                + cosB2 * (1 - t2 + g2) * l2 / 6.0
-                + cosB4 * (5 - 18 * t2 + t4 + 14 * g2 - 58 * g2 * t2)
-                        * l4 / 120.0);
-        }
- \end{lstlisting}
+   y = N * cosB * l * (1
+        + cosB2 * (1 - t2 + g2) * l2 / 6.0
+        + cosB4 * (5 - 18 * t2 + t4 + 14 * g2 - 58 * g2 * t2)
+                * l4 / 120.0);
+}
+\end{lstlisting}
 
 利用 BLtoXY 函数就可以进行高斯投影正算了，其算法流程为：
- \begin{lstlisting}[language=C]
-    //创建克拉索夫斯基参考椭球
-    Spheroid  spheroid = Spheroid.CreateBeiJing1954();
 
-    //传入点的纬度B、经度与中央子午线经度，单位为弧度
-    double B = ZXY.SMath.DMS2RAD(21.58470845);
-    double L = ZXY.SMath.DMS2RAD(113.25314880);
-    double L0 = ZXY.SMath.DMS2RAD(111);
-    double x, y;
+\begin{lstlisting}[language=C]
+//创建克拉索夫斯基参考椭球
+Spheroid  spheroid = Spheroid.CreateBeiJing1954();
 
-    spheroid.BLtoXY(B, L, L0, out x, out y);
+//传入点的纬度B、经度与中央子午线经度，单位为弧度
+double B = ZXY.SMath.DMS2RAD(21.58470845);
+double L = ZXY.SMath.DMS2RAD(113.25314880);
+double L0 = ZXY.SMath.DMS2RAD(111);
+double x, y;
+
+spheroid.BLtoXY(B, L, L0, out x, out y);
 \end{lstlisting}
 
 点的纬度、经度为：$ B = 21 \degree 58'47.0845'',  L= 113\degree 25'31.4880''$，
@@ -426,101 +429,102 @@ $$B= (X + \frac{a_2}{2}\sin 2B - \frac{a_4}{4}\sin 4B
 我们认为其值即为我们的解。
 
 因此底点纬度计算函数设计为：
- \begin{lstlisting}[language=C]
-        /// <summary>
-        /// 计算底点纬度
-        /// </summary>
-        /// <param name="x">高斯平面x坐标</param>
-        /// <returns>底点纬度</returns>
-        private double funBf(double x)
-        {
-            double sinB, sin2B, sin4B, sin6B, sin8B;
-            double Bf0 = x / a0, Bf = 0; //子午线弧长的初值
-            int i = 0;
-            while (i < 10000)//设定最大迭代次数
-            {
-                sinB = Math.Sin(Bf0);
-                sin2B = Math.Sin(2 * Bf0);
-                sin4B = Math.Sin(4 * Bf0);
-                sin6B = Math.Sin(6 * Bf0);
-                sin8B = Math.Sin(8 * Bf0);
-                Bf = (x
-                + a2 * sin2B / 2
-                - a4 * sin4B / 4
-                + a6 * sin6B / 6
-                - a8 * sin8B / 8) / a0;
 
-                if (Math.Abs(Bf - Bf0) < 1e-10) //计算精度
-                    return Bf;
-                else
-                {
-                    Bf0 = Bf;
-                    i++;
-                }
-            }
-            return -1e12;
+\begin{lstlisting}[language=C]
+/// <summary>
+/// 计算底点纬度
+/// </summary>
+/// <param name="x">高斯平面坐标x</param>
+/// <returns>底点纬度</returns>
+private double funBf(double x)
+{
+    double sinB, sin2B, sin4B, sin6B, sin8B;
+    double Bf0 = x / a0, Bf = 0; //子午线弧长的初值
+    int i = 0;
+    while (i < 10000)//设定最大迭代次数
+    {
+        sinB = Math.Sin(Bf0);
+        sin2B = Math.Sin(2 * Bf0);
+        sin4B = Math.Sin(4 * Bf0);
+        sin6B = Math.Sin(6 * Bf0);
+        sin8B = Math.Sin(8 * Bf0);
+        Bf = (x
+        + a2 * sin2B / 2
+        - a4 * sin4B / 4
+        + a6 * sin6B / 6
+        - a8 * sin8B / 8) / a0;
+
+        if (Math.Abs(Bf - Bf0) < 1e-10) //计算精度
+            return Bf;
+        else
+        {
+            Bf0 = Bf;
+            i++;
         }
+    }
+    return -1e12;
+}
 \end{lstlisting}
 
  在底点纬度计算出以后，高斯投影反算计算就没有难度了。
  我们将函数名命名为 XYtoBL，其函数设计为：
  \begin{lstlisting}[language=C]
-        public void XY2BL(double x, double y, double L0,
-            out double B, out double L)
-        {
-           double Bf = funBf(x);
+public void XY2BL(double x, double y, double L0,
+    out double B, out double L)
+{
+   double Bf = funBf(x);
 
-            double cosBf = Math.Cos(Bf);
-            double gf2 = eT2 * cosBf * cosBf;
-            double gf4 = gf2 * gf2;
-            double tf = Math.Tan(Bf);
-            double tf2 = tf * tf;
-            double tf4 = tf2 * tf2;
-            double sinB = Math.Sin(Bf);
-            double Nf = funN(sinB);
-            double Mf = funM(sinB);
-            double Nf2 = Nf * Nf;
-            double Nf4 = Nf2 * Nf2;
-            double y2 = y * y;
-            double y4 = y2 * y2;
+    double cosBf = Math.Cos(Bf);
+    double gf2 = eT2 * cosBf * cosBf;
+    double gf4 = gf2 * gf2;
+    double tf = Math.Tan(Bf);
+    double tf2 = tf * tf;
+    double tf4 = tf2 * tf2;
+    double sinB = Math.Sin(Bf);
+    double Nf = funN(sinB);
+    double Mf = funM(sinB);
+    double Nf2 = Nf * Nf;
+    double Nf4 = Nf2 * Nf2;
+    double y2 = y * y;
+    double y4 = y2 * y2;
 
-            B = Bf + tf * y2 / Mf / Nf * 0.5 * (
-               -1.0
-              + y2 * (5.0 + 3.0 * tf2 + gf2 - 9.0 * gf2 * tf2) / 12.0 / Nf2
-              - y4 * (61.0 + 90.0 * tf2 + 45.0 * tf4) / 360.0 / Nf4);
+    B = Bf + tf * y2 / Mf / Nf * 0.5 * (
+       -1.0
+      + y2 * (5.0 + 3.0 * tf2 + gf2 - 9.0 * gf2 * tf2) / 12.0 / Nf2
+      - y4 * (61.0 + 90.0 * tf2 + 45.0 * tf4) / 360.0 / Nf4);
 
-           double l = y / Nf / cosBf * (
-                1.0
-              - y2 / 6.0 / Nf2 * (1.0 + 2.0 * tf2 + gf2)
-             + y4 / 120.0 / Nf4
-             * (5.0 + 28.0 * tf2 + 24.0 * tf4 + 6.0 * gf2 + 8.0 * gf2 * tf2));
+   double l = y / Nf / cosBf * (
+        1.0
+      - y2 / 6.0 / Nf2 * (1.0 + 2.0 * tf2 + gf2)
+     + y4 / 120.0 / Nf4
+     * (5.0 + 28.0 * tf2 + 24.0 * tf4 + 6.0 * gf2 + 8.0 * gf2 * tf2));
 
-            L = L0 + l;
-        }
+    L = L0 + l;
+}
 \end{lstlisting}
 
 该函数中还有Nf与Mf需要计算，Nf的计算同前面的funN函数，Mf的计算函数为
  \begin{lstlisting}[language=C]
-        private double funM(double sinB)
-        {
-            return a * (1 - e2) * Math.Pow(1 - e2 * sinB * sinB, -1.5);
-        }
+private double funM(double sinB)
+{
+    return a * (1 - e2) * Math.Pow(1 - e2 * sinB * sinB, -1.5);
+}
 \end{lstlisting}
 
  有了高斯投影反算函数 XYtoBL， 就可以比较容易的写出其反算示例了，如以下代码所示：
 
 \begin{lstlisting}[language=C]
-     //创建克拉索夫斯基参考椭球
-    Spheroid  spheroid = Spheroid.CreateBeiJing1954();
+//创建克拉索夫斯基参考椭球
+Spheroid  spheroid = Spheroid.CreateBeiJing1954();
 
-    //传入点的X、Y坐标与中央子午线经度(单位为弧度)
-    double x=2433586.692, y=250547.403;
-    double L0 = ZXY.SMath.DMS2RAD(111);
+//传入点的X、Y坐标与中央子午线经度(单位为弧度)
+double x=2433586.692, y=250547.403;
+double L0 = ZXY.SMath.DMS2RAD(111);
 
-    double B, L;
-    spheroid.XYtoBL(x, y, L0, out B, out L);
-    //B= ZXY.SMath.RAD2DMS(B);
-    //L= ZXY.SMath.RAD2DMS(L);
+double B, L;
+spheroid.XYtoBL(x, y, L0, out B, out L);
+//B= ZXY.SMath.RAD2DMS(B);
+//L= ZXY.SMath.RAD2DMS(L);
 \end{lstlisting}
 
 传入的y坐标应为真实坐标值，应不包括500km与带号等。
@@ -543,36 +547,36 @@ $B=21 \degree 58'47.0845'', L=113\degree 25'31.4880''$
 该函数我们命名为 XYtoXY，其设计为如下代码：
 
 \begin{lstlisting}[language=C]
-        /// <summary>
-        /// 高斯投影换带
-        /// </summary>
-        /// <param name="ox">点在源坐标系的x坐标</param>
-        /// <param name="oy">点在源坐标系的y坐标</param>
-        /// <param name="oL0">源坐标系的中央子午线经度，单位:弧度</param>
-        /// <param name="nL0">目标坐标系的中央子午线经度，单位:弧度</param>
-        /// <param name="nx">点在目标坐标系的x坐标</param>
-        /// <param name="ny">点在目标坐标系的y坐标</param>
-        public void XYtoXY(double ox, double oy,
-            double oL0, double nL0,
-           out double nx, out double ny)
-        {
-            double B, L;
-            XYtoBL(ox, oy, oL0, out B, out L); //高斯投影反算
-            BLtoXY(B, L, nL0, out nx, out ny); //高斯投影正算
-        }
+/// <summary>
+/// 高斯投影换带
+/// </summary>
+/// <param name="ox">点在源坐标系的x坐标</param>
+/// <param name="oy">点在源坐标系的y坐标</param>
+/// <param name="oL0">源坐标系的中央子午线经度，单位:弧度</param>
+/// <param name="nL0">目标坐标系的中央子午线经度，单位:弧度</param>
+/// <param name="nx">点在目标坐标系的x坐标</param>
+/// <param name="ny">点在目标坐标系的y坐标</param>
+public void XYtoXY(double ox, double oy,
+    double oL0, double nL0,
+   out double nx, out double ny)
+{
+    double B, L;
+    XYtoBL(ox, oy, oL0, out B, out L); //高斯投影反算
+    BLtoXY(B, L, nL0, out nx, out ny); //高斯投影正算
+}
 \end{lstlisting}
 
 高斯投影换带的外部调用可以按如下方式写：
 
 \begin{lstlisting}[language=C]
-    double oldX = 3275110.535, oldY = 235437.233;
+double oldX = 3275110.535, oldY = 235437.233;
 
-    double oldL0 = zx::CSurMath::DmsToRad(117);
-    double newL0 = zx::CSurMath::DmsToRad(120);
+double oldL0 = zx::CSurMath::DmsToRad(117);
+double newL0 = zx::CSurMath::DmsToRad(120);
 
-    double newX, newY;
-    Spheroid  spheroid = Spheroid.CreateBeiJing1954();
-    spheroid.XYtoXY(oldX, oldY, oldL0, newL0, out newX, out newY);
+double newX, newY;
+Spheroid  spheroid = Spheroid.CreateBeiJing1954();
+spheroid.XYtoXY(oldX, oldY, oldL0, newL0, out newX, out newY);
 \end{lstlisting}
 
 计算出的点在新坐标系下的坐标为(3272782.315, -55299.545)。
@@ -581,10 +585,400 @@ $B=21 \degree 58'47.0845'', L=113\degree 25'31.4880''$
 使用了弧度的形式，在外部调用时可以利用前面所讲的度分秒化弧度和弧度化度分秒函数先行转换。
 
 \section{图形界面程序编写}
-以上我们已经将主要的算法编写完毕，下面我们将利用 C\# 的 WPF技术编写图形界面，让我们的程序
-变得更加实用。
+以上我们已经将主要的算法编写完毕，下面我们将用 C\# 的 WPF技术编写图形界面，让我们的程序
+变得更加实用与易用。
 
-\section{多点计算和文件读写}
+\subsection{单点高斯投影正反算图形界面编写}
+我们先设计一简单的界面进行高斯投影正反算计算，以验证程序功能。
+程序中我们默认的坐标系为1954北京坐标系，
+界面设计如图\ref{fig:GaussProjUI01}所示，界面我们采用Grid布局，将其划分成三行三列，
+将我们的控件布置在相应的单元格中，Textblock控件用来描述文字类的标题，TextBox用来输入
+经纬度与坐标数据，中间用Button控件响应事件。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=1]{gaussProj/UI01.png}
+    \caption{简单的高斯投影正反算界面}
+    \label{fig:GaussProjUI01}
+\end{figure}
+
+相应的主要界面代码如下：
+
+\begin{lstlisting}[language=xml]
+<TextBlock Text="大地坐标" HorizontalAlignment="Center"
+        VerticalAlignment="Center"/>
+<TextBlock  Text="B=" Grid.Row="1" Margin="5"/>
+<TextBox x:Name="textBox_B" Grid.Row="1"
+        Text=""
+        VerticalAlignment="Center"  Margin="25,0,0,0"/>
+<TextBlock  Text="L=" Margin="5" Grid.Row="2" />
+<TextBox x:Name="textBox_L"
+        Text=""
+        VerticalAlignment="Center" Margin="25,0,0,0" Grid.Row="2" />
+
+<TextBlock  Text="L0=" Grid.Column="1"
+        Margin="5,0,0,0" VerticalAlignment="Center"/>
+<TextBox x:Name="textBox_L0"
+        Text=""
+        Grid.Column="1"
+        Margin="30,0,3,0" VerticalAlignment="Center"/>
+<Button Content="(B,L)->(x,y)" Grid.Column="1" Grid.Row="1"
+		Click="BLtoXYButton_Click" Margin="3,3"/>
+<Button Content="(B,L)&lt;-(x,y)" Grid.Column="1" Grid.Row="2"
+		Click="XYtoBLButton_Click"  Margin="3,3"/>
+        
+<TextBlock Text="高斯投影坐标" Grid.Column="2"
+		HorizontalAlignment="Center" VerticalAlignment="Center"/>
+<TextBlock  Text="x=" Margin="5" Grid.Row="1" Grid.Column="2"/>
+<TextBox x:Name="textBox_x" Grid.Row="1" Grid.Column="2"
+		Text=""
+		Margin="25,0,0,0" VerticalAlignment="Center" />
+<TextBlock Text="y=" Grid.Row="2" Grid.Column="2" Margin="5,0,0,0"/>
+<TextBox x:Name="textBox_y"
+		Text=""
+		Grid.Row="2"  Grid.Column="2"
+		Margin="25,0,0,0" VerticalAlignment="Center" />       
+\end{lstlisting}
+
+请注意，在这段xaml界面代码中，由于我们的算法需要与界面上的TextBox控件进行数据交换，
+每个TextBox都需要命名（如上的每个TextBox控件都有一个 x:Name 属性）。
+
+相应的正算与反算按钮响应事件代码如下：
+
+\begin{lstlisting}[language=C]
+private void BLtoXYButton_Click(object sender, RoutedEventArgs e)
+{
+    double B, L, L0, x, y;
+    double.TryParse(this.textBox_B.Text, out B);
+    double.TryParse(this.textBox_L.Text, out L);
+    double.TryParse(this.textBox_L0.Text, out L0);
+
+    Spheroid proj = Spheroid.CreateBeiJing1954();
+    proj.BLtoXY(
+        ZXY.SMath.DMS2RAD(B),
+        ZXY.SMath.DMS2RAD(L),
+        ZXY.SMath.DMS2RAD(L0),
+        out x, out y);
+    this.textBox_x.Text = x.ToString();
+    this.textBox_y.Text = y.ToString();
+}
+
+private void XYtoBLsButton_Click(object sender, RoutedEventArgs e)
+{
+    double B, L, L0, x, y;
+    double.TryParse(this.textBox_x.Text, out x);
+    double.TryParse(this.textBox_y.Text, out y);
+    double.TryParse(this.textBox_L0.Text, out L0);
+
+    Spheroid proj = Spheroid.CreateBeiJing1954();
+    proj.XY2BL(x, y,
+        ZXY.SMath.DMS2RAD(L0),
+        out B, out L);
+    this.textBox_B.Text =ZXY.SMath.RAD2DMS(B).ToString();
+    this.textBox_L.Text = ZXY.SMath.RAD2DMS(L).ToString();
+}
+\end{lstlisting}
+
+在这个两个响应事件中，首先需要直接从界面上的TextBox控件中取值，
+由于TextBox的Text属性是文本（string类型），需要用double.TryParse
+函数将其转换为double类型。
+
+其次我们默认参考椭球为1954北京坐标系的参考椭球，需要将其创建，此处我们用
+类的静态函数可以方便创建，不必记忆其椭球的几何参数值。
+
+然后我们就可以调用我们前边写的正算与反算函数进行高斯投影正反算了，算完后
+将值再赋值给相应的TextBox控件的Text属性就可以了。注意传入函数的值如果是度分秒形式的角度，
+应该先调用我们前边的写的函数将其转换为弧度，如果算出的值也是角度，也应该调用我们
+前面所写的函数将其转换为度分秒形式。
+
+
+\subsection{界面程序的优化}
+上面的简单界面程序存在着一个很大的问题，就是从界面取数据时无法判断数据的有效性等，
+也无法发挥WPF界面技术。WPF界面技术里的数据绑定功能（binding）可以很好的简化这一过程。
+
+我们仔细分析前边的界面，这个程序的实质就是一个点的两种形式的坐标之间的转换，
+因此我们可以定义一个点类GeoPoint，其定义如下：
+
+\begin{lstlisting}[language=C]
+public class GeoPoint
+{
+    public string Name { get; set;} //点名
+    public double B { get; set;}    //纬度，单位：度分秒
+    public double L { get; set;}    //经度，单位：度分秒
+    public double L0 { get; set;}   //中央子午线经度，单位：度分秒
+    public double X { get; set;}    //X坐标
+    public double Y { get; set;}    //Y坐标
+}
+\end{lstlisting}
+
+则在界面代码中可对TextBox的Text做如下绑定：
+
+\begin{lstlisting}[language=C]
+<TextBlock Text="大地坐标" HorizontalAlignment="Center"
+        VerticalAlignment="Center"/>
+<TextBlock  Text="B=" Grid.Row="1" Margin="5"/>
+<TextBox x:Name="textBox_B" Grid.Row="1"
+        Text="{Binding B, StringFormat={}{0:##0.####}}"
+        VerticalAlignment="Center"  Margin="25,0,0,0"/>
+<TextBlock  Text="L=" Margin="5" Grid.Row="2" />
+<TextBox x:Name="textBox_L"
+        Text="{Binding L, StringFormat={}{0:##0.####}}"
+        VerticalAlignment="Center" Margin="25,0,0,0" Grid.Row="2" />
+
+<TextBlock  Text="L0=" Grid.Column="1"
+        Margin="5,0,0,0" VerticalAlignment="Center"/>
+<TextBox x:Name="textBox_L0"
+        Text="{Binding L0, StringFormat={}{0:##0.####}}" 
+        Grid.Column="1"
+        Margin="30,0,3,0" VerticalAlignment="Center"/>
+<Button Content="(B,L)->(x,y)" Grid.Column="1" Grid.Row="1"
+        Click="BLtoXYButton_Click" Margin="3,3"/>
+<Button Content="(B,L)&lt;-(x,y)" Grid.Column="1" Grid.Row="2"
+        Click="XYtoBLButton_Click"  Margin="3,3"/>
+        
+<TextBlock Text="高斯投影坐标" Grid.Column="2"
+        HorizontalAlignment="Center" VerticalAlignment="Center"/>
+<TextBlock  Text="x=" Margin="5" Grid.Row="1" Grid.Column="2"/>
+<TextBox x:Name="textBox_x" Grid.Row="1" Grid.Column="2"
+        Text="{Binding X, StringFormat={}{0:##0.###} }"
+        Margin="25,0,0,0" VerticalAlignment="Center" />
+<TextBlock Text="y=" Grid.Row="2" Grid.Column="2" Margin="5,0,0,0"/>
+<TextBox x:Name="textBox_y"
+        Text="{Binding Y , StringFormat={}{0:##0.###}}"
+        Grid.Row="2"  Grid.Column="2"
+        Margin="25,0,0,0" VerticalAlignment="Center" />  
+\end{lstlisting}
+
+以上代码中的TextBox控件中的x:Name属性甚至都可以省略。由于这些控件都是
+以这个窗体(Window)作为容器的，他们的数据源都可以这个窗体的DataContext
+一次性设置，让系统以冒泡的形式自动为属性绑定寻找数据源。窗体为之
+设定数据源的代码如下：
+
+\begin{lstlisting}[language=C]
+public partial class MainWindow : Window
+{
+    private GeoPoint geoPoint;
+    private Spheroid proj = Spheroid.CreateBeiJing1954();
+
+    public MainWindow()
+    {
+        InitializeComponent();
+        geoPoint = new GeoPoint(){ B= 21.58470845, L= 113.25314880 };
+        this.DataContext = geoPoint;
+    }
+    //.......省略了其他代码......
+}
+\end{lstlisting}
+
+程序中由于正反算都是基于相同的椭球基准，所以在类MainWindow中定义了
+geoPoint实例字段与proj实例字段。在构造函数中为其赋了初值以简化每次在
+界面输入数据，为这个窗体的DataContext指定点的各项属性绑定的数据源。
+
+相应的正反算按钮的响应事件修改为：
+
+\begin{lstlisting}[language=C]
+private void BLtoXYButton_Click(object sender, RoutedEventArgs e)
+{
+    double x, y;
+    proj.BLtoXY(
+        ZXY.SMath.DMS2RAD(geoPoint.B),
+        ZXY.SMath.DMS2RAD(geoPoint.L),
+        ZXY.SMath.DMS2RAD(geoPoint.L0),
+        out x, out y);
+    geoPoint.X = x; geoPoint.Y = y;
+}
+
+private void XYtoBLButton_Click(object sender, RoutedEventArgs e)
+{
+    double B, L;
+    proj.XYtoBL(geoPoint.X, geoPoint.Y,
+       ZXY.SMath.DMS2RAD(geoPoint.L0),
+       out B, out L);
+    geoPoint.B = ZXY.SMath.RAD2DMS(B);
+    geoPoint.L = ZXY.SMath.RAD2DMS(L);
+}
+\end{lstlisting}
+
+从响应事件可以看出，代码简洁了很多。运行程序时，TextBox框中都有默认数值，
+而且非数值数据也输入不进去了，也不需要将文本框中的Text属性转换为double类型了。
+一切看似都好，但你发现在点击正算或反算按钮时，界面上的数据没有变化，好像功能没有实现一样，
+问题出现在什么地方呢？
+
+我们回过头再看GeoPoint的定义，发现其属性定义过于简单。根据WPF知识可知，在对象属性发生改变时
+(如我们的计算中正算改变了X与Y，反算改变了B与L)，还需要一种机制通知系统需要刷新界面，
+这就需要类GeoPoint从接口 INotifyPropertyChanged 继承并实现它
+（该接口所在的命名空间为System.ComponentModel）。修改后的GeoPoint类如下：
+
+\begin{lstlisting}[language=C]
+public class GeoPoint : INotifyPropertyChanged
+{
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    public void RaisePropertyChange(string propertyName)
+    {
+        if (this.PropertyChanged != null)
+        {
+            this.PropertyChanged.Invoke(this, 
+                new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
+    private string _name;
+    public string Name //点名
+    {
+        get { return _name; }
+        set
+        {
+            _name = value;
+            RaisePropertyChange("Name");
+        }
+    }
+
+    private double _B;
+    public double B //纬度，单位：度分秒
+    {
+        get { return _B; }
+        set
+        {
+            _B = value;
+            RaisePropertyChange("B");
+        }
+    }
+
+    private double _L;
+    public double L //经度，单位：度分秒
+    {
+        get { return _L; }
+        set
+        {
+            _L = value;
+            RaisePropertyChange("L");
+        }
+    }
+
+    private double _L0;
+    public double L0 //中央子午线经度，单位：度分秒
+    {
+        get { return _L0; }
+        set
+        {
+            _L0 = value;
+            RaisePropertyChange("L0");
+        }
+    }
+
+    private double _X;
+    public double X //X坐标
+    {
+        get { return _X; }
+        set
+        {
+            _X = value;
+            RaisePropertyChange("X");
+        }
+    }
+  
+    private double _Y;
+    public double Y  //Y坐标
+    {
+        get { return _Y; }
+        set
+        {
+            _Y = value;
+            RaisePropertyChange("Y");
+        }
+    }
+}
+\end{lstlisting}
+
+与前面的GeoPoint类相比较，现在的这个类从 INotifyPropertyChanged 继承
+并实现了接口成员PropertyChanged，在属性值发生改变时利用该接口成员通知界面
+属性值发生了变化。
+
+运行程序，功能一切正常。
+
+
+\subsection{点类的进一步优化}
+
+我们再次审阅界面程序后的正反算代码，发现事实上的正反算都是基于点类的，
+也就是说只与GeoPoint类相关，因此我们将正反算功能移到GeoPoint类中，
+以进一步简化界面的方法调用。其代码如下：
+
+\begin{lstlisting}[language=C]
+public class GeoPoint : INotifyPropertyChanged
+{
+    //......其它代码.......
+    public void BLtoXY(Spheroid spheroid)
+    {
+        double x, y;
+        spheroid.BLtoXY(
+           ZXY.SMath.DMS2RAD(this.B),
+           ZXY.SMath.DMS2RAD(this.L),
+           ZXY.SMath.DMS2RAD(this.L0),
+           out x, out y);
+        this.X = x; this.Y = y;
+    }
+
+    public void XYtoBL(Spheroid spheroid)
+    {
+        double B, L;
+        spheroid.XYtoBL(X, Y, ZXY.SMath.DMS2RAD(this.L0),
+           out B, out L);
+        this.B = ZXY.SMath.RAD2DMS(B);
+        this.L = ZXY.SMath.RAD2DMS(L);
+    }
+}
+\end{lstlisting}
+
+界面正反算代码可以进一步简化为如下形式：
+
+\begin{lstlisting}[language=C]
+private void BLtoXYButton_Click(object sender, RoutedEventArgs e)
+{
+    geoPoint.BLtoXY(proj);
+}
+
+private void XYtoBLButton_Click(object sender, RoutedEventArgs e)
+{
+    geoPoint.XYtoBL(proj) ;
+}
+\end{lstlisting}
+
+至此，我们的算法与界面几乎是完全分离了，这符合我们第一章所讲的界面与算法相
+分离的原则，也为我们的算法进行单元测试和进一步优化迭代打下了基础。
+
+
+\section{更加实用的多点计算图形程序}
+
+上面的程序从编程的角度讲比较完美了，但从实用的角度来说还有很多缺点，
+比如不能选择椭球基准，不能进行多点的正反算，不能读取和写出文本文件数据。
+这一节我们将从算法和界面两个方面来构造这个更加实用的多点高斯投影计算的
+图形程序。
+
+\subsection{程序的功能}
+
+实用的高斯投影程序功能如下：
+
+\begin{enumerate}
+\item 椭球基准的选择：能够自由的选择参考椭球基准，或者自定义参考椭球；
+\item 能实现高斯投影正反算与换带功能；
+\item 高斯投影坐标的定义：能自动去除或添加点的Y坐标前的常数500km和带号；
+\item 数据的界面录入：能利用程序界面组织输入数据；
+\item 能导入导出文本数据：能将外部文本数据导入到程序中，能将程序中的数据导出为文本文件；
+\item 能实现多个点的批量计算。
+\end{enumerate}
+
+软件运行时的界面如图\ref{fig:GaussProjUI02}所示，该界面基本能满足以上功能。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=1]{gaussProj/UI02.png}
+    \caption{实用高斯投影程序界面}
+    \label{fig:GaussProjUI02}
+\end{figure}
+
+\subsection{程序的面向对象分析}
+
 以上我们的算法和测试验证程序均是针对一个点而言的，如果我们在一个文本形
 式的数据文件里存放有多个点，怎么计算呢？
 

@@ -1,0 +1,129 @@
+﻿<Window x:Class="CoordniateTransform.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CoordniateTransform"
+        mc:Ignorable="d"
+        Title="坐标转换" Height="450" Width="650">
+    <DockPanel LastChildFill="True">
+        <Menu  x:Name="mainmenu" DockPanel.Dock="Top" Background="AliceBlue">
+            <MenuItem Header="文件(F)">
+                <MenuItem Header="打开文本数据"
+					Click="menuItem_OpenTextFileData_Click"/>
+                <MenuItem Header="保存文本数据"
+					Click="menuItem_SaveTextFileData_Click"/>
+                <Separator/>
+                <MenuItem Header="退出" Click="menuItem_Exit_Click"/>
+            </MenuItem>
+            <MenuItem Header="数据处理(D)">
+                <MenuItem Header="计算转换参数" 
+					Click="menuItem_CalCoefficient_Click" />
+                <MenuItem Header="计算待计算点坐标" 
+					Click="menuItem_Cal_UnKnw_XY_Click" />
+                <Separator/>
+                <MenuItem Header="写出计算成果" 
+					Click="menuItem_Write_Result_Click" />
+            </MenuItem>
+        </Menu>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="150*"/>
+                <RowDefinition Height="75"/>
+                <RowDefinition Height="200*"/>
+            </Grid.RowDefinitions>
+            <GroupBox Header="公共点坐标" Grid.Row="0">
+                <DataGrid AutoGenerateColumns="False" Margin="2" 
+                    ItemsSource="{Binding KnwPointList}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="点名" MinWidth="60"
+                            Binding="{Binding Name}"  />
+                        <DataGridTextColumn Header="源X" MinWidth="100"
+                            Binding="{Binding OX, StringFormat={}{0:0.000}}"/>
+                        <DataGridTextColumn Header="源Y" MinWidth="100"
+                            Binding="{Binding OY, StringFormat={}{0:0.000}}"/>
+                        <DataGridTextColumn Header="新X"  MinWidth="100"
+                            Binding="{Binding NY, StringFormat={}{0:0.000}}"/>
+                        <DataGridTextColumn Header="新Y" MinWidth="100"
+                            Binding="{Binding NY, StringFormat={}{0:0.000}}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+
+            <GroupBox Header="转换参数" Grid.Row="1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="120*"/>
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="120*"/>
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="120*"/>
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="120*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="X平移量a=" Grid.Row="0" Grid.Column="0" 
+                        VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox x:Name="textBox_a" Grid.Row="0" Grid.Column="1" 
+                        Text="{Binding a}" 
+                        VerticalContentAlignment="Center"/>
+                    <TextBlock Text="Y平移量b=" Grid.Row="0" Grid.Column="2"  
+                        VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox x:Name="textBox_b" Grid.Row="0" Grid.Column="3"  
+                        Text="{Binding b}"
+                        VerticalContentAlignment="Center"/>
+                    <TextBlock Text="线性参数c=" Grid.Row="0" Grid.Column="4" 
+                        VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox x:Name="textBox_c" Grid.Row="0" Grid.Column="5" 
+                        Text="{Binding c}"
+                        VerticalContentAlignment="Center"/>
+                    <TextBlock Text="线性参数d=" Grid.Row="0" Grid.Column="6" 
+                        VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox x:Name="textBox_d" Grid.Row="0" Grid.Column="7"  
+                        Text="{Binding d}" 
+                        VerticalContentAlignment="Center"/>
+                    <TextBlock Text="旋转角度α=" Grid.Row="1" Grid.Column="0" 
+                        VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox x:Name="textBox_alpha" Grid.Row="1" Grid.Column="1"  
+                        Text="{Binding alpha}" 
+                        Grid.ColumnSpan="2"
+                        VerticalContentAlignment="Center"/>
+                    <TextBlock Text="(xxx°.xx′xx.xx″)" Grid.Row="1" Grid.Column="3" 
+                        VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBlock Text="尺度因子k=" Grid.Row="1" Grid.Column="4" 
+                        VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox x:Name="textBox_k" Grid.Row="1" Grid.Column="5" 
+                        Text="{Binding k}" 
+                        Grid.ColumnSpan="2"
+                        VerticalContentAlignment="Center"/>
+                    <Button x:Name="button_Cal_cd"  Content="计算c与d"
+						Grid.Row="1" Grid.Column="7" 
+                        Click="button_Cal_cd_Click"/>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Header="待计算点坐标" Grid.Row="2">
+                <DataGrid AutoGenerateColumns="False" Margin="2" 
+                    ItemsSource="{Binding UnKnwPointList}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="点名" MinWidth="60"
+                            Binding="{Binding Name}"  />
+                        <DataGridTextColumn Header="源X坐标"  MinWidth="100"
+                            Binding="{Binding OX, StringFormat={}{0:0.000}}"/>
+                        <DataGridTextColumn Header="源Y坐标" MinWidth="100"
+                            Binding="{Binding OY, StringFormat={}{0:0.000}}"/>
+                        <DataGridTextColumn Header="新X坐标" MinWidth="100"
+                            Binding="{Binding NY,StringFormat={}{0:0.000}}" />
+                        <DataGridTextColumn Header="新Y坐标" MinWidth="100"
+                            Binding="{Binding NY, StringFormat={}{0:0.000}}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+        </Grid>
+    </DockPanel>
+</Window>

@@ -663,7 +663,7 @@ private void BLtoXYButton_Click(object sender, RoutedEventArgs e)
     this.textBox_y.Text = y.ToString();
 }
 
-private void XYtoBLsButton_Click(object sender, RoutedEventArgs e)
+private void XYtoBLButton_Click(object sender, RoutedEventArgs e)
 {
     double B, L, L0, x, y;
     double.TryParse(this.textBox_x.Text, out x);
@@ -671,7 +671,7 @@ private void XYtoBLsButton_Click(object sender, RoutedEventArgs e)
     double.TryParse(this.textBox_L0.Text, out L0);
 
     Spheroid proj = Spheroid.CreateBeiJing1954();
-    proj.XY2BL(x, y,
+    proj.XYtoBL(x, y,
         ZXY.SMath.DMS2RAD(L0),
         out B, out L);
     this.textBox_B.Text =ZXY.SMath.RAD2DMS(B).ToString();
@@ -750,7 +750,7 @@ public class GeoPoint
 \end{lstlisting}
 
 以上代码中的TextBox控件中的x:Name属性甚至都可以省略。由于这些控件都是
-以这个窗体(Window)作为容器的，他们的数据源都可以这个窗体的DataContext
+以这个窗体(Window)作为容器的，他们的数据源都可用这个窗体的DataContext
 一次性设置，让系统以冒泡的形式自动为属性绑定寻找数据源。窗体为之
 设定数据源的代码如下：
 
@@ -1008,12 +1008,12 @@ public class CoordinateSystem : INotifyPropertyChanged
     /// </summary>
     public double L0
     {
-    	get { return _L0; }
-    	set
-    	{
-    		_L0 = value;
-    		RaisePropertyChange("L0");
-    	}
+        get { return _L0; }
+        set
+        {
+            _L0 = value;
+            RaisePropertyChange("L0");
+        }
     }
     
     /// <summary>
@@ -1026,30 +1026,30 @@ public class CoordinateSystem : INotifyPropertyChanged
     /// </summary>
     public int N
     {
-    	get { return _N; }
-    	set
-    	{
-    		_N = value;
-    		RaisePropertyChange("N");
-    	}
+        get { return _N; }
+        set
+        {
+            _N = value;
+            RaisePropertyChange("N");
+        }
     }
     
     /// <summary>
     /// Y坐标的加常数
     /// </summary>
-    public double _YKM;
+    private double _YKM;
     
     /// <summary>
     /// Y坐标的加常数
     /// </summary>
     public double YKM
     {
-    	get { return _YKM; }
-    	set
-    	{
-    		_YKM = value;
-    		RaisePropertyChange("YKM");
-    	}
+        get { return _YKM; }
+        set
+        {
+            _YKM = value;
+            RaisePropertyChange("YKM");
+        }
     }
     
     /// <summary>
@@ -1063,7 +1063,7 @@ public class CoordinateSystem : INotifyPropertyChanged
     /// </summary>
     public ObservableCollection<GeoPoint> GeoPointList
     {
-    	get { return geoPointList; }
+        get { return geoPointList; }
     }
     
     /// <summary>
@@ -1076,12 +1076,12 @@ public class CoordinateSystem : INotifyPropertyChanged
     /// </summary>
     public Spheroid ProjSpheroid
     {
-    	get { return spheroid; }
-    	set
-    	{
-    		spheroid = value;
-    		RaisePropertyChange("ProjSpheroid");
-    	}
+        get { return spheroid; }
+        set
+        {
+            spheroid = value;
+            RaisePropertyChange("ProjSpheroid");
+        }
     }
 
    public CoordinateSystem(){ }
@@ -1151,26 +1151,26 @@ public class CoordinateSystem : NotificationObject
     //省略其他代码
 
     /// <summary>
-     /// 多点高斯投影正算
-     /// </summary>
-     public void BLtoXY()
-     {
-         foreach (var pnt in this.geoPointList)
-         {
-             pnt.BLtoXY(spheroid, this);
-         }
-     }
+    /// 多点高斯投影正算
+    /// </summary>
+    public void BLtoXY()
+    {
+        foreach (var pnt in this.geoPointList)
+        {
+            pnt.BLtoXY(spheroid, this);
+        }
+    }
 
-     /// <summary>
-     /// 多点高斯投影反算
-     /// </summary>
-     public void XYtoBL()
-     {
-         foreach (var pnt in this.geoPointList)
-         {
-             pnt.XYtoBL(spheroid, this);
-         }
-     }
+    /// <summary>
+    /// 多点高斯投影反算
+    /// </summary>
+    public void XYtoBL()
+    {
+        foreach (var pnt in this.geoPointList)
+        {
+            pnt.XYtoBL(spheroid, this);
+        }
+    }
 }
 \end{lstlisting}
 
@@ -1285,7 +1285,7 @@ public class CoordinateSystem : NotificationObject
     /// </summary>
     /// <param name="fileName">文件名</param>
     /// <param name="format">点的坐标格式：BL-Name，B，L  
-    ///                                                               XY-Name，X，Y
+    ///                                 XY-Name，X，Y
     /// </param>
     public void ReadGeoPointData(string fileName, string format)
     {
@@ -1347,7 +1347,7 @@ public class GeoPoint : NotificationObject
 {
     public override string ToString()
     {
-        return string.Format("{0},{1:#0.####},{2:#0.####},{3:#0.###},{4:#0.###}", Name, B, L, X, Y);
+        return string.Format("{0},{1:0.0000},{2:0.0000},{3:0.000},{4:0.000}", Name, B, L, X, Y);
     }
 }
 \end{lstlisting}
@@ -1585,7 +1585,7 @@ public partial class GaussProjWin : Window
         if (this.radioButton_BLtoXY.IsChecked == true)
             myCoordinateSystem.ReadGeoPointData(dlg.FileName, "BL");
         else if(this.radioButton_XYtoBL.IsChecked == true)
-                myCoordinateSystem.ReadGeoPointData(dlg.FileName, "XY");
+            myCoordinateSystem.ReadGeoPointData(dlg.FileName, "XY");
     }
 
     private void Button_WriteGaussProjData_Click(object sender, 
@@ -1632,7 +1632,7 @@ public partial class GaussProjWin : Window
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[scale=0.6]{gaussProj/UI03.png}
+    \includegraphics[scale=0.8]{gaussProj/UI03.png}
     \caption{$6\degree$带第19带数据界面}
     \label{fig:GaussProjUI03}
 \end{figure}
@@ -1644,7 +1644,7 @@ public partial class GaussProjWin : Window
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[scale=0.6]{gaussProj/UI04.png}
+    \includegraphics[scale=0.8]{gaussProj/UI04.png}
     \caption{$6\degree$带第19带反算数据界面}
     \label{fig:GaussProjUI04}
 \end{figure}
@@ -1654,7 +1654,7 @@ public partial class GaussProjWin : Window
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[scale=0.6]{gaussProj/UI05.png}
+    \includegraphics[scale=0.8]{gaussProj/UI05.png}
     \caption{设置$3\degree$带第36带数据界面}
     \label{fig:GaussProjUI05}
 \end{figure}
@@ -1662,7 +1662,7 @@ public partial class GaussProjWin : Window
 点击计算按钮，计算出新坐标系下各点的坐标，如图\ref{fig:GaussProjUI06}所示：
 \begin{figure}[htbp]
     \centering
-    \includegraphics[scale=0.6]{gaussProj/UI06.png}
+    \includegraphics[scale=0.8]{gaussProj/UI06.png}
     \caption{$3\degree$带第36带正算数据界面}
     \label{fig:GaussProjUI06}
 \end{figure}
@@ -1720,7 +1720,7 @@ C\#知识与WPF界面技术实现了一个较为实用的高斯投影正反算�
 事件绑定等技术。
 
 这个程序从功能上讲还是有许多不足的，从易用性上也还有许多值得改进的
-地方。希望随着我们的C#知识与WPF技术的积累，能在以后将它优化得更好！
+地方。希望随着我们的C\#知识与WPF技术的积累，能在以后将它优化得更好！
 
 %%% Local Variables:
 %%% mode: latex

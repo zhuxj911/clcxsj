@@ -1,8 +1,113 @@
 ﻿%!TEX root = ../clcxsj.tex
 
 \chapter{线路要素计算程序设计}
-\section{111111}
-本章主要讲述C语言与C++的不同之处，学习完本章后，应该能够在 Visual C++
-编译器下基本能够正确的编译C语言程序和简单的具有C++特征的程序。
+
+\section{圆曲线与有缓和曲线的圆曲线}
+
+\subsection{圆曲线的数学模型}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=1]{route/CircleRoute.pdf}
+    \caption{圆曲线要素图}
+    \label{fig:CircleRoute}
+\end{figure}
 
  
+ 切线长：$$T = R \cdot \tan \frac{\alpha}{2}$$
+
+ 曲线长：$$L = \frac{\pi}{180}\alpha \cdot R$$
+
+ 外矢距：$$E=R \cdot (\sec \frac{\alpha}{2} - 1)$$
+
+ 切曲差：$$q = 2T - L$$
+
+ 
+ \subsection{缓和曲线的数学模型}
+
+ \begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=1]{route/HCircleRoute.pdf}
+    \caption{有缓和曲线的圆曲线要素图}
+    \label{fig:HCircleRoute}
+\end{figure}
+
+ 缓和曲线参数计算公式为：
+
+ $$\beta_0 = \frac{l_0}{2R} $$
+切垂距：
+$$m=\frac{l_0}{2} - \frac{l^3_0}{240R^2}$$
+内移距：
+$$p=\frac{l^2_0}{24R}$$
+
+ 
+ 切线长：$$T = m+ (R+p) \cdot \tan \frac{\alpha}{2}$$
+
+ 曲线全长：$$L = R \cdot (\alpha-2\beta_0)  + 2l_0$$
+
+ 圆曲线长：$$L_C = R \cdot (\alpha-2\beta_0)$$
+
+ 外矢距：$$E=(R+p) \cdot (\sec \frac{\alpha}{2} - 1)$$
+
+\begin{enumerate}
+
+\item  曲线在切线直角坐标系中的坐标计算(ZH段)
+
+\[
+\left \{ \begin{aligned}
+x_i &= l_i - \frac{l^5_i}{40R^2 l^2_0} + \frac{l^9_i}{3456R^4 l^4_0} - \frac{l^{13}_i}{599040R^6l^6_0} + ...  \\
+y_i &=  \frac{l^3_i}{6Rl_0} - \frac{l^7_i}{336R^3 l^3_0} + \frac{l^{11}_i}{42240R^5l^5_0} -\frac{l^{15}_i}{9676800R^7l^7_0}+ ...  
+\end{aligned} \right.
+\]
+
+以上公式在计算中取前两项或前三项即可。
+
+\item  缓圆点(HY)坐标计算公式为：
+
+\[
+\left \{ \begin{aligned}
+x_{HY} &= l_0 - \frac{l^3_0}{40R^2} + \frac{l^5_0}{3456R^4} - \frac{l^{7}_0}{599040R^6} + ...  \\
+y_{HY} &=  \frac{l^2_0}{6R} - \frac{l^4_0}{336R^3} + \frac{l^{6}_i}{42240R^5} -\frac{l^{8}_0}{9676800R^7}+ ...  
+\end{aligned} \right.
+\]
+
+\item  圆曲线上点的坐标计算公式为：
+
+\[
+\left \{ \begin{aligned}
+x_{j} &= R \sin \beta_j + m \\
+y_{j} &= R(1- \cos \beta_j) +p 
+\end{aligned} \right.
+\]
+
+\item  曲线在切线直角坐标系中的坐标计算(HZ段)
+
+建立以缓直点HZ为原点，过HZ点的缓和曲线切线为x轴，HZ点上缓和曲线的
+半径为y轴的直角坐标系，计算另一半曲线任意一点的坐标$(x'_i, y'_i)$。然后，
+将坐标转换为以ZH点为原点的直角坐标系中。
+
+HZ点的坐标为：
+\[
+\left \{ \begin{aligned}
+X_{HZ} &= T_1 + T_2 \cos \alpha \\
+Y_{HZ} &=  T_2 \sin \alpha 
+\end{aligned} \right.
+\]
+
+转换公式为：
+\[
+\left \{ \begin{aligned}
+x_i &= X_{HZ} - x'_i  \cos \alpha - y'_i \sin \alpha \\
+y_i &= Y_{HZ}  -  x'_i \sin \alpha + y'_i \cos \alpha 
+\end{aligned} \right.
+\]
+
+\item 曲线上点坐标转换为大地坐标的计算公式为：
+\[
+\left \{ \begin{aligned}
+X_{i} &= X_0 + x_i \cos \alpha - y_i \sin \alpha \\
+Y_{i} &= Y_0 + x_i \sin \alpha + y_i \cos \alpha 
+\end{aligned} \right.
+\]
+
+\end{enumerate}

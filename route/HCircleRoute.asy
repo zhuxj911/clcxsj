@@ -29,7 +29,7 @@ path p=z0..controls z1 and z2..z3;
 draw(p, red+1pt);
 
 dot("$ZH$",ZH, W);
-dot("$JD$",JD, S);
+dot("$JD$",JD, SW);
 dot("$p$",P, NW);
 dot("$HY$",HY, SE);
 

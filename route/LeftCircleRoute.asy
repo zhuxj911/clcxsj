@@ -31,23 +31,23 @@ pair O = (0,0);
 dot("$O$",O, N);
 
 pair QZ=(0,-R);
-dot("$QZ$",QZ, SE);
+dot("$QZ$",QZ, NE);
 
 pair JD =(0,-JDY);
-dot("$JD$",JD, S);
+dot("$JD$",JD, SW);
 
 pair ZY = JD + (-T*Cos(a2), T*Sin(a2));
-dot("$ZY$",ZY, SW);
-pair ZY0 = ZY + (-2*Cos(a2), 2*Sin(a2));
+dot("$ZY$",ZY, W+(-0.5,-0.5));
+pair ZY0 = ZY + (-1*Cos(a2), 1*Sin(a2));
 
 
 pair YZ = JD  + (T*Cos(a2), T*Sin(a2));
 dot("$YZ$", YZ, SE);
-pair YZ0 = YZ + (2*Cos(a2), 2*Sin(a2));
+pair YZ0 = YZ + (1*Cos(a2), 1*Sin(a2));
 
-draw(arc(O, YZ, ZY, direction=CW), magenta+linewidth(2)); //圆心，起点，方向点
+draw(arc(O, YZ, ZY, direction=CW), magenta+linewidth(1.5)); //圆心，起点，方向点
 //markangle("$\alpha$", O, ZY, YZ, radius = 1, red);
-draw(Label("$\alpha$", red), arc(ZY,O,YZ,1),red,Arrows);
+
 
 pair Li = rotate(25, O)*ZY; //将ZY点绕O点旋转-25°得到Li点
 dot("$l_i$", Li, S, darkblue+0.3mm, UnFill);
@@ -56,17 +56,23 @@ draw(Label("$\alpha_i$", blue), arc(ZY,O,Li,2),darkblue,Arrows);
 
 
 draw(O -- JD, orange);
-draw(Label("$R$",MidPoint), O -- ZY, orange);
+draw(Label("$R$",MidPoint), O -- ZY, darkblue);
 draw(O -- YZ, orange);
-draw(Label("$T$",MidPoint, S), JD--ZY, orange);
-draw(JD--ZY0, orange);
+draw(Label("$T$",MidPoint, SW), JD--ZY, darkblue);
+draw(ZY--ZY0, magenta+linewidth(2));
 
-draw(JD -- YZ0, orange);
+draw(JD -- YZ, orange);
+draw(YZ -- YZ0, magenta+linewidth(2));
 
-pair OX = JD + (2*Cos(a2), -2*Sin(a2));
-pair OY = O + (2*Sin(a2), 2*Cos(a2));
+pair OX = JD + (1*Cos(a2), -1*Sin(a2));
+pair OY = ZY + (-1*Sin(a2), -1*Cos(a2));
 
-draw(Label("$x$",EndPoint), ZY--OX, Arrow);
-draw(Label("$y$",EndPoint), ZY--OY, Arrow);
+draw(Label("$x$",EndPoint), ZY--OX, Arrow);//测量坐标系的y轴
+draw(Label("$y$",EndPoint), O--OY, Arrow);//测量坐标系的x轴
+
+draw(Label("$\alpha$", red, align=(0,0), filltype=Fill(white)),
+ arc(ZY,O,YZ,1),red,Arrows);
+draw(Label("$\alpha$", red, align=(0,0), filltype=Fill(white)),
+ arc(OX,JD,YZ,0.6),red,Arrows);
 
 

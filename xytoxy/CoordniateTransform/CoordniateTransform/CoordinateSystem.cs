@@ -241,21 +241,21 @@ namespace CoordniateTransform
             {
                 sr.WriteLine("#赫尔默特四参数转换法数据文件");
                 sr.WriteLine("#每行以“#”开头的行均被认为是注释行");
-                sr.WriteLine("#公共点在源坐标系中的坐标: 点名, x, y");
+                sr.WriteLine("#公共点在源坐标系中的坐标: 点名, X(N), Y(E)");
                 foreach (var pnt in this.knwPointList)
                 {
                     sr.WriteLine("{0}, {1}, {2}", pnt.Name, pnt.OX, pnt.OY);
                 }
 
                 sr.WriteLine();
-                sr.WriteLine("#公共点在新坐标系中的坐标: 点名, x, y");
+                sr.WriteLine("#公共点在新坐标系中的坐标: 点名, X(N), Y(E)");
                 foreach (var pnt in this.knwPointList)
                 {
                     sr.WriteLine("{0}, {1}, {2}", pnt.Name, pnt.NX, pnt.NY);
                 }
 
                 sr.WriteLine();
-                sr.WriteLine("#待转换点在源坐标系中的坐标: 点名, x, y");
+                sr.WriteLine("#待转换点在源坐标系中的坐标: 点名, X(N), Y(E)");
                 foreach (var pnt in this.unKnwPointList)
                 {
                     sr.WriteLine("{0}, {1}, {2}", pnt.Name, pnt.OX, pnt.OY);
@@ -272,7 +272,7 @@ namespace CoordniateTransform
             {
                 sr.WriteLine("#赫尔默特四参数转换法计算成果数据文件");
                 sr.WriteLine("# 公共点坐标");
-                sr.WriteLine("# 点名, 源X, 源Y, 新X, 新Y");
+                sr.WriteLine("# 点名, 源X(N), 源Y(E), 新X(N), 新Y(E)");
                 foreach (var pnt in this.knwPointList)
                 {
                     sr.WriteLine(pnt);
@@ -280,12 +280,12 @@ namespace CoordniateTransform
 
                 sr.WriteLine();
                 sr.WriteLine("# 转换参数");
-                sr.WriteLine("a={0}，b={1}, c={2}, d={3}\n α={4}， k={5}", 
+                sr.WriteLine("a={0}，b={1}, c={2}, d={3}\r\nα={4}，k={5}", 
                     this.a, this.b, this.c, this.d, this.alpha, this.k);
 
                 sr.WriteLine();
                 sr.WriteLine("# 待计算点的坐标");
-                sr.WriteLine("# 点名, 源X, 源Y, 新X, 新Y");
+                sr.WriteLine("# 点名, 源X(N), 源Y(E), 新X(N), 新Y(E)");
                 foreach (var pnt in this.unKnwPointList)
                 {
                     sr.WriteLine(pnt);
@@ -315,19 +315,27 @@ namespace CoordniateTransform
             double[,] N = new double[4, 4];
             double[] U = new double[4];
 
+            //组成系数阵B与l，此处应注意读入的坐标是测量坐标，
+            //应将测量坐标转换为数学坐标
+            double x, y, xT, yT;
             for (int i = 0; i < n0; i++)
             {
+                x = knwPointList[i].OY;//数学上的x，测量上的y
+                y = knwPointList[i].OX;//数学上的y，测量上的x
+                xT = knwPointList[i].NY;
+                yT = knwPointList[i].NX; 
+
                 B[(2 * i), 0] = 1.0;
                 B[(2 * i), 1] = 0.0;
-                B[(2 * i), 2] = knwPointList[i].OX;
-                B[(2 * i), 3] = knwPointList[i].OY;
-                l[2 * i] = knwPointList[i].NX;
+                B[(2 * i), 2] = x;
+                B[(2 * i), 3] = y;
+                l[2 * i] = xT;
 
                 B[(2 * i + 1), 0] = 0.0;
                 B[(2 * i + 1), 1] = 1.0;
-                B[(2 * i + 1), 2] = knwPointList[i].OY;
-                B[(2 * i + 1), 3] = -knwPointList[i].OX;
-                l[2 * i + 1] = knwPointList[i].NY;
+                B[(2 * i + 1), 2] = y; 
+                B[(2 * i + 1), 3] = -x; 
+                l[2 * i + 1] = yT;
             }
 
             for (int k = 0; k < 4; k++)
@@ -361,10 +369,16 @@ namespace CoordniateTransform
         /// </summary>
         public void CalUnKnwXY()
         {
+            //应将测量坐标转换为数学坐标
+            double x, y, xT, yT;
             foreach (var it in this.unKnwPointList)
             {
-                it.NX = this.a + this.c * it.OX + this.d * it.OY;
-                it.NY = this.b - this.d * it.OX + this.c * it.OY;
+                x = it.OY; y = it.OX;
+
+                xT = this.a + this.c * x + this.d * y;
+                yT = this.b + this.c * y - this.d * x;
+
+                it.NY = xT; it.NX = yT;
             }
         }
 

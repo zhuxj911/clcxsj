@@ -8,28 +8,127 @@
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[scale=1]{route/CircleRoute.pdf}
+    \subfloat[左偏]
+    {
+        \label{fig:CircleRoute-Left}
+        \includegraphics[scale=0.7]{route/LeftCircleRoute.pdf}
+    }
+    \hspace{1pt} %
+    \subfloat[右偏]
+    {
+        \label{fig:CircleRoute-Right}
+        \includegraphics[scale=0.7]{route/RightCircleRoute.pdf}
+    }
     \caption{圆曲线要素图}
     \label{fig:CircleRoute}
 \end{figure}
 
+
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[scale=0.8]{route/LeftCircleRoute.pdf}
+%     \caption{左偏-圆曲线要素图}
+%     \label{fig:LeftCircleRoute}
+% \end{figure}
+
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[scale=0.8]{route/RightCircleRoute.pdf}
+%     \caption{右偏-圆曲线要素图}
+%     \label{fig:RightCircleRoute}
+% \end{figure}
+
  
- 切线长：$$T = R \cdot \tan \frac{\alpha}{2}$$
+ 切线长：$T = R \cdot \tan (\alpha / 2)$
 
- 曲线长：$$L = \frac{\pi}{180}\alpha \cdot R$$
+ 曲线长：$L = R \cdot \alpha$
 
- 外矢距：$$E=R \cdot (\sec \frac{\alpha}{2} - 1)$$
+ 外矢距：$E=R \cdot (\sec (\alpha /2) - 1)$
 
- 切曲差：$$q = 2T - L$$
+ 切曲差：$q = 2T - L$
 
- 
+ \subsection{圆曲线上点的坐标计算}
+ 全站仪的坐标放样模式与GPS RTK可以十分方便的进行圆曲线上点的坐标放样。
+
+ 如图\ref{fig:CircleRoute}所示，以ZY点为原点，以ZY至JD切线方向为x轴，
+ 以ZY至O点方向为y轴建立ZY切线测量坐标系。从（a）与（b）两图可以看出
+无论圆曲线是左偏还是右偏的，其坐标系是一致的。
+ 在ZY切线坐标系中用极坐标法按如下公式可以计算出圆曲线上任意一点$l_i$的坐标。
+
+圆曲线偏左：
+
+\[
+\left . \begin{aligned}
+x_{i} &= R \sin \alpha_i   \\
+y_{i} &= -R(1- \cos \alpha_i)
+\end{aligned} \right \}
+\]
+
+圆曲线偏右：
+
+\[
+\left . \begin{aligned}
+x_{i} &= R \sin \alpha_i   \\
+y_{i} &= R(1- \cos \alpha_i)
+\end{aligned} \right \}
+\]
+
+式中：$\alpha_i = l_i / R,  \alpha_i \le \alpha $, $l_i$可用圆曲线上任意一点的里程桩号
+减去ZY点的里程桩号。
+
+已知JD的坐标与里程桩号，根据圆曲线的结合几何要素$R, \alpha$即可计算出圆曲线上特征点的
+里程桩号：
+
+$KNo_{ZY} = KNo_{JD} - T$
+
+$KNo_{QZ} = KNo_{ZY} + T/2$
+
+$KNo_{YZ} = KNo_{QZ} + T/2$
+
+在ZY切线坐标系中计算出圆曲线上各点的坐标之后，还需将其转换为测量坐标系
+（或更正式的称为大地坐标系或独立施工坐标系）。在前一章我们已经做过坐标系的
+转换了，在这个线路转换中，我们将ZY-JD边定义为x轴，因此两坐标系的夹角
+即为ZY-JD边的坐标方位角，其转换关系如图\ref{fig:xytoxyroute}所示：
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.8]{route/xytoxyroute.pdf}
+    \caption{ZY坐标系转测量坐标系}
+    \label{fig:xytoxyroute}
+\end{figure}
+
+转换公式如下：
+
+\[
+\left . \begin{aligned}
+x_{P} &= x_{ZH} + x'_P \cos \alpha - y'_P \sin \alpha  \\
+y_{P} &= y_{ZH} + x'_P \sin \alpha + y'_P \cos \alpha 
+\end{aligned} \right \}
+\]
+
  \subsection{缓和曲线的数学模型}
 
  \begin{figure}[htbp]
     \centering
-    \includegraphics[scale=1]{route/HCircleRoute.pdf}
-    \caption{有缓和曲线的圆曲线要素图}
-    \label{fig:HCircleRoute}
+    \includegraphics[scale=0.6]{route/HY01.png}
+    \caption{缓和曲线的定义}
+    \label{fig:HR01}
+\end{figure}
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.6]{route/HY02.png}
+    \caption{缓和曲线的内移距和切线增长}
+    \label{fig:HY02}
+\end{figure}
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.6]{route/HY03.png}
+    \caption{缓和曲线的坐标计算}
+    \label{fig:HR03}
 \end{figure}
 
  缓和曲线参数计算公式为：

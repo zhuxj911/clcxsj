@@ -39,13 +39,13 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="点名" MinWidth="60"
                             Binding="{Binding Name}"  />
-                        <DataGridTextColumn Header="源X" MinWidth="100"
+                        <DataGridTextColumn Header="源X(N)" MinWidth="100"
                             Binding="{Binding OX, StringFormat={}{0:0.000}}"/>
-                        <DataGridTextColumn Header="源Y" MinWidth="100"
+                        <DataGridTextColumn Header="源Y(E)" MinWidth="100"
                             Binding="{Binding OY, StringFormat={}{0:0.000}}"/>
-                        <DataGridTextColumn Header="新X"  MinWidth="100"
-                            Binding="{Binding NY, StringFormat={}{0:0.000}}"/>
-                        <DataGridTextColumn Header="新Y" MinWidth="100"
+                        <DataGridTextColumn Header="新X(N)"  MinWidth="100"
+                            Binding="{Binding NX, StringFormat={}{0:0.000}}"/>
+                        <DataGridTextColumn Header="新Y(E)" MinWidth="100"
                             Binding="{Binding NY, StringFormat={}{0:0.000}}"/>
                     </DataGrid.Columns>
                 </DataGrid>
@@ -67,12 +67,12 @@
                         <RowDefinition Height="25"/>
                         <RowDefinition Height="25"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="X平移量a=" Grid.Row="0" Grid.Column="0" 
+                    <TextBlock Text="E平移量a=" Grid.Row="0" Grid.Column="0" 
                         VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <TextBox x:Name="textBox_a" Grid.Row="0" Grid.Column="1" 
                         Text="{Binding a}" 
                         VerticalContentAlignment="Center"/>
-                    <TextBlock Text="Y平移量b=" Grid.Row="0" Grid.Column="2"  
+                    <TextBlock Text="N平移量b=" Grid.Row="0" Grid.Column="2"  
                         VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <TextBox x:Name="textBox_b" Grid.Row="0" Grid.Column="3"  
                         Text="{Binding b}"
@@ -113,13 +113,13 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="点名" MinWidth="60"
                             Binding="{Binding Name}"  />
-                        <DataGridTextColumn Header="源X坐标"  MinWidth="100"
+                        <DataGridTextColumn Header="源X(N)"  MinWidth="100"
                             Binding="{Binding OX, StringFormat={}{0:0.000}}"/>
-                        <DataGridTextColumn Header="源Y坐标" MinWidth="100"
+                        <DataGridTextColumn Header="源Y(E)" MinWidth="100"
                             Binding="{Binding OY, StringFormat={}{0:0.000}}"/>
-                        <DataGridTextColumn Header="新X坐标" MinWidth="100"
-                            Binding="{Binding NY,StringFormat={}{0:0.000}}" />
-                        <DataGridTextColumn Header="新Y坐标" MinWidth="100"
+                        <DataGridTextColumn Header="新X(N)" MinWidth="100"
+                            Binding="{Binding NX,StringFormat={}{0:0.000}}" />
+                        <DataGridTextColumn Header="新Y(E)" MinWidth="100"
                             Binding="{Binding NY, StringFormat={}{0:0.000}}" />
                     </DataGrid.Columns>
                 </DataGrid>

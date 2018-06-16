@@ -12,11 +12,12 @@ unitsize(1cm);
 pair O=(1.9,4.3);
 pair ZH=(0,0);
 pair JD=(8.3,0);
-pair P=(1.9,0);//pair P=(1.9,0.16);
+pair P=(1.9,0);
 
 pair CZ =(5.17,2.11);
 pair HY = rotate(-28,O)*CZ;
 pair QZ = rotate(28,O)*CZ;
+
 //pair HY=(3.7,0.8);
 //pair QZ=(5.8,3.75);
 //real R = 3.8;
@@ -49,7 +50,7 @@ draw(Label("$\beta_0$", blue), arc(P,O,HY,1),darkblue,Arrows);
 draw(Label("$R$",MidPoint), O--CZ, N, orange);
 
 draw(Label("$x$",EndPoint), ZH--(JD+(0.5,0)), E, black, Arrow);
-draw(Label("$y$",EndPoint), (ZH+(0, -1))--(0,5), N, black, Arrow);
+draw(Label("$y$",EndPoint), (0,5)--ZH+(0, -1.5), S, black, Arrow);
 
 //标注l0与li
 pair HO= O +(-1.5*Cos(34),1.5*Sin(34)); //画缓和曲线的圆心点

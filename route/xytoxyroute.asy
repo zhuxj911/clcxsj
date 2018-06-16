@@ -28,7 +28,7 @@ point P =(px, py);
 point PX =(px, 0);
 point PY =(0, py);
 
-dot("$ZH$", locate(0),SW, red);
+dot("$ZY$", locate(0),SW, red);
 dot("$P$", P);
 dot(PX, red);
 dot(PY, red);
@@ -64,9 +64,9 @@ draw(Label("$y$", EndPoint), locate(0)--(point)(9, 0), Arrow);
 draw(Label("$x$", EndPoint), locate(0)--(point)(0, 9), Arrow);
 dot("$O$", locate(0),SW);
 
-draw(Label("$x_{ZH}$", MidPoint, align=(0,0), filltype=Fill(white)),
+draw(Label("$x_{ZY}$", MidPoint, align=(0,0), filltype=Fill(white)),
  (ox,oy)--(ox, 0), dashed);
-draw(Label("$y_{ZH}$", MidPoint,align=(0,0), filltype=Fill(white)),
+draw(Label("$y_{ZY}$", MidPoint,align=(0,0), filltype=Fill(white)),
  (ox,oy)--(0, oy), dashed);
 
 draw((ox, oy)--(ox, oy)+(0,5), dashed);

@@ -57,21 +57,25 @@
 
 圆曲线偏左：
 
-\[
-\left . \begin{aligned}
+\begin{equation}
+\left . 
+\begin{aligned}
 x_{i} &= R \sin \alpha_i   \\
 y_{i} &= -R(1- \cos \alpha_i)
-\end{aligned} \right \}
-\]
+\end{aligned}
+\right \}
+\end{equation}
 
 圆曲线偏右：
 
-\[
-\left . \begin{aligned}
+\begin{equation}
+\left . 
+\begin{aligned}
 x_{i} &= R \sin \alpha_i   \\
 y_{i} &= R(1- \cos \alpha_i)
-\end{aligned} \right \}
-\]
+\end{aligned} 
+\right \}
+\end{equation}
 
 式中：$\alpha_i = l_i / R,  \alpha_i \le \alpha $, $l_i$可用圆曲线上任意一点的里程桩号
 减去ZY点的里程桩号。
@@ -99,12 +103,13 @@ $KNo_{YZ} = KNo_{QZ} + T/2$
 
 转换公式如下：
 
-\[
+\begin{equation}
 \left . \begin{aligned}
-x_{P} &= x_{ZH} + x'_P \cos \alpha - y'_P \sin \alpha  \\
-y_{P} &= y_{ZH} + x'_P \sin \alpha + y'_P \cos \alpha 
+x_{P} &= x_{ZY} + x'_P \cos \alpha - y'_P \sin \alpha  \\
+y_{P} &= y_{ZY} + x'_P \sin \alpha + y'_P \cos \alpha 
 \end{aligned} \right \}
-\]
+\label{eq:routexytoxy}
+\end{equation}
 
  \subsection{缓和曲线的数学模型}
 
@@ -150,63 +155,100 @@ $$p=\frac{l^2_0}{24R}$$
 
 \begin{enumerate}
 
-\item  曲线在切线直角坐标系中的坐标计算(ZH段)
+\item  缓和曲线在ZH切线直角坐标系中的坐标计算(ZH段)
 
-\[
-\left \{ \begin{aligned}
+以ZH为坐标系原点，ZH至JD方向为x轴，过ZH点垂直于ZH-JD方向为y轴
+建立坐标，如图\ref{fig:HY02}所示。则ZH部分缓和曲线上各点的坐标为：
+
+\begin{equation}
+\left .
+\begin{aligned}
 x_i &= l_i - \frac{l^5_i}{40R^2 l^2_0} + \frac{l^9_i}{3456R^4 l^4_0} - \frac{l^{13}_i}{599040R^6l^6_0} + ...  \\
 y_i &=  \frac{l^3_i}{6Rl_0} - \frac{l^7_i}{336R^3 l^3_0} + \frac{l^{11}_i}{42240R^5l^5_0} -\frac{l^{15}_i}{9676800R^7l^7_0}+ ...  
-\end{aligned} \right.
-\]
+\end{aligned} 
+\right \}
+\label{eq:routeZHXY}
+\end{equation}
 
 以上公式在计算中取前两项或前三项即可。
 
 \item  缓圆点(HY)坐标计算公式为：
 
-\[
-\left \{ \begin{aligned}
+\begin{equation}
+\left . \begin{aligned}
 x_{HY} &= l_0 - \frac{l^3_0}{40R^2} + \frac{l^5_0}{3456R^4} - \frac{l^{7}_0}{599040R^6} + ...  \\
 y_{HY} &=  \frac{l^2_0}{6R} - \frac{l^4_0}{336R^3} + \frac{l^{6}_i}{42240R^5} -\frac{l^{8}_0}{9676800R^7}+ ...  
-\end{aligned} \right.
-\]
+\end{aligned} \right \}
+\label{eq:routeHY}
+\end{equation}
 
 \item  圆曲线上点的坐标计算公式为：
 
-\[
-\left \{ \begin{aligned}
+\begin{equation}
+\left . \begin{aligned}
 x_{j} &= R \sin \beta_j + m \\
 y_{j} &= R(1- \cos \beta_j) +p 
-\end{aligned} \right.
-\]
+\end{aligned} \right \}
+\label{eq:routeYQXY}
+\end{equation}
 
-\item  曲线在切线直角坐标系中的坐标计算(HZ段)
+\item  缓和曲线在HZ切线直角坐标系中的坐标计算(HZ段)
 
-建立以缓直点HZ为原点，过HZ点的缓和曲线切线为x轴，HZ点上缓和曲线的
-半径为y轴的直角坐标系，计算另一半曲线任意一点的坐标$(x'_i, y'_i)$。然后，
-将坐标转换为以ZH点为原点的直角坐标系中。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.8]{route/RHY.pdf}
+    \caption{缓和曲线的HZ部分坐标计算}
+    \label{fig:RHY}
+\end{figure}
 
-HZ点的坐标为：
-\[
-\left \{ \begin{aligned}
-X_{HZ} &= T_1 + T_2 \cos \alpha \\
-Y_{HZ} &=  T_2 \sin \alpha 
-\end{aligned} \right.
-\]
+如图\ref{fig:RHY}所示建立以缓直点HZ为原点，过HZ至JD方向为x轴，
+过HZ点的缓和曲线切线为y轴的直角坐标系，计算另一半曲线任意一点的坐标$(x'_i, y'_i)$。
+然后，将坐标转换为以ZH点为原点的直角坐标系中。
 
-转换公式为：
-\[
-\left \{ \begin{aligned}
-x_i &= X_{HZ} - x'_i  \cos \alpha - y'_i \sin \alpha \\
-y_i &= Y_{HZ}  -  x'_i \sin \alpha + y'_i \cos \alpha 
-\end{aligned} \right.
-\]
+缓和曲线在HZ坐标系中的坐标可以先继续使用公式 \ref{eq:routeZHXY} 计算，然后由图\ref{fig:RHY}
+可知将其转换为HZ坐标系中的坐标计算公式为：
+
+\begin{equation}
+\left . \begin{aligned}
+x'_i &= x_i  \\
+y'_i &= - y_i 
+\end{aligned} \right \}
+\label{eq:routeHZXY}
+\end{equation}
+
+为了将HZ坐标系中的点坐标转换为ZH坐标中，我们引用公式\ref{eq:routexytoxy}来计算，
+请注意公式\ref{eq:routexytoxy}中的$\alpha$为$x'$轴的方位角(即x轴到$x'$轴的水平夹角)，
+因此图\ref{fig:RHY}应用到公式\ref{eq:routexytoxy}中的$\alpha$ 应为$\alpha + 180 \degree $。
+如果将其代入公式\ref{eq:routexytoxy}，则有转换公式为：
+
+\begin{equation}
+\left . \begin{aligned}
+x_i &= x_{HZ} - x'_i  \cos \alpha + y'_i \sin \alpha \\
+y_i &= y_{HZ}  -  x'_i \sin \alpha -  y'_i \cos \alpha 
+\end{aligned} \right \}
+\label{eq:routeHZtoZH}
+\end{equation}
+
+公式\ref{eq:routeHZtoZH}中的$(x_{HZ}, y_{HZ})$为HZ点在ZH坐标，其值为：
+
+\begin{equation}
+\left . \begin{aligned}
+x_{HZ} &= T (1 +  \cos \alpha) \\
+x_{HZ} &=  T \sin \alpha 
+\end{aligned} \right \}
+\label{eq:routeHZXY}
+\end{equation}
+
+也可以不用公式\ref{eq:routeHZtoZH}，直接将$\alpha+180\degree$代入到
+公式\ref{eq:routexytoxy}中进行计算。
+
+在以上计算中，我们以曲线右偏为例的，如果曲线左偏，同样的方法建立坐标系，
+x坐标是相同的， y坐标乘以 -1 即可。
 
 \item 曲线上点坐标转换为大地坐标的计算公式为：
-\[
-\left \{ \begin{aligned}
-X_{i} &= X_0 + x_i \cos \alpha - y_i \sin \alpha \\
-Y_{i} &= Y_0 + x_i \sin \alpha + y_i \cos \alpha 
-\end{aligned} \right.
-\]
+
+由于已经将曲线上的点坐标统一到ZH坐标系中了，我们继续引用公式\ref{eq:routexytoxy}
+将ZH切线坐标系坐标转换到大地坐标系（测量坐标系）中，公式中的$\alpha$为$ZH \rightarrow JD$
+的坐标方位角。
 
 \end{enumerate}

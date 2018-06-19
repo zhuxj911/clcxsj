@@ -56,73 +56,109 @@ $$P=b^2(L_2 - L_1) \left | sinB + \frac{2}{3}e^2 \sin ^3 B + \frac{3}{5}e^4 \sin
 公式引用自《大地测量学基础》第121页(4-142)，该公式为（4-140）的展开式。
 
 \item 子午线弧长
-$$X=a_0 B - \frac{a_2}{2}\sin 2B + \frac{a_4}{4}\sin 4B
-- \frac{a_6}{6} \sin 6B  + \frac{a_8}{8}\sin 8B$$
+\begin{equation}
+X=a_0 B - \frac{a_2}{2}\sin 2B + \frac{a_4}{4}\sin 4B
+- \frac{a_6}{6} \sin 6B  + \frac{a_8}{8}\sin 8B
+\end{equation}
 
 式中：
-\[
-\left \{ \begin{aligned}
+\begin{equation}
+\left  . \begin{aligned}
 a_0 &= m_0 + \frac{m_2}{2} + \frac{3}{8}m_4 + \frac{5}{16}m_6 + \frac{35}{128}m_8  \\
 a_2 &= \frac{m_2}{2} + \frac{m_4}{2} + \frac{15}{32}m_6 + \frac{7}{16}m_8  \\
 a_4 &= \frac{m_4}{8} + \frac{3}{16}m_6 + \frac{7}{32}m_8  \\
 a_6 &= \frac{m_6}{32} + \frac{m_8}{16}  \\
 a_8 &= \frac{m_8}{128}
-\end{aligned} \right.
-\]
+\end{aligned} \right \}
+\end{equation}
 
 式中$m_0, m_2, m_4, m_6, m_8$的值为：
-\[
-\left \{ \begin{aligned}
+
+\begin{equation}
+\left . 
+\begin{aligned}
 m_0 &= a(1-e^2) \\
 m_2 &= \frac{3}{2}e^2 m_0  \\
 m_4 &= \frac{5}{4}e^2 m_2   \\
 m_6 &= \frac{7}{6}e^2 m_4   \\
 m_8 &= \frac{9}{8}e^2 m_6
-\end{aligned} \right.
-\]
+\end{aligned} 
+\right \}
+\end{equation}
 
 公式引用自《大地测量学基础》第115页(4-101)、(4-100)与(4-72).
 
 或用很多书上都引用的公式：
 
-\[ X=c[\beta_0 B + (\beta_2 \cos B + \beta_4 \cos^3 B + \beta_6 \cos^5 B + \beta_8 \cos^7 B) \sin B] \]
+\begin{equation}
+X=c[\beta_0 B + (\beta_2 \cos B + \beta_4 \cos^3 B + \beta_6 \cos^5 B + \beta_8 \cos^7 B) \sin B] 
+\end{equation}
 
-式中$\beta_0, \beta_2, \beta_4, \beta_6, \beta_8$的值为：
-\[
-\left \{ \begin{aligned}
+式中 c 为极曲率半径，其值为： $c= a^2 / b$，
+$\beta_0, \beta_2, \beta_4, \beta_6, \beta_8$的值为：
+
+\begin{equation}
+\left .
+\begin{aligned}
 \beta_0 &= 1 - \frac{3}{4}e'^2 + \frac{45}{64}e'^4 - \frac{175}{256}e'^6 + \frac{11025}{16384}e'^8  \\
 \beta_2 &= \beta_0 -1  \\
 \beta_4 &= \frac{15}{32}e'^4 - \frac{175}{384}e'^6 + \frac{3675}{8192}e'^8   \\
 \beta_6 &= -\frac{35}{96}e'^6 + \frac{735}{2048}e'^8   \\
 \beta_8 &= \frac{315}{1024}e'^8
-\end{aligned} \right.  
-\]
+\end{aligned} 
+\right \}
+\end{equation}
 
 公式引用自《大地测量学基础》第115页(4-107)、与(4-108)。
 
+或用以下公式：
+
+\begin{equation}
+X=d [\alpha_0 B  - ( \alpha_2 \sin B + \alpha_4 \sin ^3 B + \alpha_6 \sin ^5 B + \alpha_8 \sin^7 ) \cos B]
+\end{equation}
+
+式中 d 为赤道子午曲率半径， 其值为 $d=b^2 / a $, 
+$\alpha_0, \alpha_2, \alpha_4, \alpha_6, \alpha_8$的值为：
+
+\begin{equation}
+\left .
+\begin{aligned}
+\alpha_0 &= 1+\frac{3}{4}e^2+\frac{45}{64}e^4+\frac{175}{256}e^6+\frac{11025}{16384}e^8  \\
+\alpha_2 &= \alpha_0 - 1 \\
+\alpha_4 &= \frac{15}{32}e^4+\frac{175}{384}e^6+\frac{3675}{8192}e^8 \\
+\alpha_6 &= \frac{35}{96}e^6+\frac{735}{2048}e^8 \\
+\alpha_8 &= \frac{315}{1024}e^8
+\end{aligned} 
+\right \}
+\end{equation}
+
 \item 坐标正算
-\[
-\left \{ \begin{aligned}
+\begin{equation}
+\left .
+\begin{aligned}
 x&=X+\frac{N}{2}sinBcosBl^2 +\frac{N}{24}sinBcos^3B(5-t^2 +9\eta^2+4\eta^4)l^4 \\
   &+\frac{N}{720}sinBcos^5 B(61-58t^2 +t^4)l^6  \\
 y&=NcosBl+\frac{N}{6}cos^3 B(1-t^2 +\eta^2 )l^3 \\
         &+\frac{N}{120}cos^5 B (5-18t^2+t^4 +14\eta^2 -58\eta^2t^2)l^5
-\end{aligned} \right.
-\]
-
+\end{aligned}
+ \right \}
+\end{equation}
 
 公式引用自《大地测量学基础》第169页(4-367)。
 
 \item 坐标反算
-\[
-\left \{ \begin{aligned}
+
+\begin{equation}
+\left  .
+\begin{aligned}
 B&=B_f - \frac{t_f}{2M_f N_f }y^2 +\frac{t_f}{24 M_f N_f ^3}
 (5 + 3t_f ^2  + \eta_f ^2 - 9\eta_f ^2 t_f^2)y^4 \\
  &- \frac{t_f}{720 M_f N_f ^5}(61 + 90t_f ^2 + 45t_f ^4)y^6 \\
 l&=\frac{1}{N_f cosB_f}y - \frac{1}{6N_f ^3 cosB_f}(1 + 2t_f ^2 + \eta_f ^2)y^3  \\
  &+ \frac{1}{120N_f ^5 cosB_f}(5 + 28t_f ^2 + 24t_f ^4 + 6\eta_f ^2 +8\eta_f ^2 t_f ^2)y^5
-\end{aligned} \right.
-\]
+\end{aligned} 
+\right \}
+\end{equation}
 
 公式引用自《大地测量学基础》第171页(4-383)。
 

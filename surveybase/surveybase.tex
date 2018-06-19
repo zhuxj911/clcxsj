@@ -1,6 +1,9 @@
 %!TEX root = ../clcxsj.tex
 
-\chapter{常用测量函数设计}
+\chapter{测量基础函数设计}
+
+\section{C\# 知识点}
+C\#中的类分为实例类与静态类。
 
 C\# 是纯面向对象语言，也就是说所有的常量与方法都需要以类$class$为载体，如同其他的数学软件包一样，
 我将其命名为$SMath(SurveyMath)$，保存在$SMath.cs$文件中，为了引用方便，我们需将常用的一些常量及方法定义为静态成员。
@@ -10,11 +13,10 @@ namespace ZXY
 {
     public static class SMath
     {
-        public const double PI=3.1415926535897932384626433832795;
-        public const double PI2=6.283185307179586476925286766559;
-        public const double TODEG=57.295779513082320876798154814105;
-        public const double TORAD=0.01745329251994329576923690768489;
-        public const double TOSECOND=206264.80624709635515647335733078;
+        public const double PI=Math.PI;
+        public const double TODEG=180.0/PI; 
+        public const double TORAD=PI/180.0;
+        public const double TOSECOND=180.0*3600.0/PI;
     
         public static double DMS2RAD(double dmsAngle)
         {
@@ -64,7 +66,7 @@ public static double DMS2RAD(double dmsAngle)
 \end{verbatim}
 但由于计算机中浮点数的表示方法的原因，以上函数并不能精确的将度分秒的角度转换为弧度。
 
- 如某一角度为$1°40'00''$，我们以1.4000形式的浮点数输入，计算机将表示为1.3999999999999999的形式。
+ 如某一角度为$1\degree 40'00''$，我们以1.4000形式的浮点数输入，计算机将表示为1.3999999999999999的形式。
  这在计算机中并没有什么错误，但以上函数在提取角度的分秒时，提取到的m值为39，提取到的s值为
  99.999999999999,即我们提取到的角度为$1°39'100''$，有40"的角度误差，这是我们测绘工程人员不能接受的。
  

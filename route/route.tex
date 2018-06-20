@@ -39,7 +39,7 @@
 % \end{figure}
 
 圆曲线的各个要素计算算法如下：
- 
+
  切线长：$T = R \cdot \tan (\alpha / 2)$
 
  曲线长：$L = R \cdot \alpha$
@@ -50,7 +50,7 @@
 
  \subsection{圆曲线上点的坐标计算算法分析}
 
- 全站仪的坐标放样模式与GPS RTK可以十分方便的进行圆曲线上点的坐标放样。
+ 全站仪的坐标放样模式与 GPS RTK 可以十分方便的进行圆曲线上点的坐标放样。
 
  尽管圆曲线的计算方法有很多，也比较简单，但为了与后边的缓和曲线计算方法相一致，
  我们在此采用圆心角加半径再加坐标系转换法进行圆曲线上点的坐标计算。
@@ -63,23 +63,25 @@
 圆曲线偏左：
 
 \begin{equation}
-\left . 
+\left .
 \begin{aligned}
 x_{i} &= R \sin \alpha_i   \\
 y_{i} &= -R(1- \cos \alpha_i)
 \end{aligned}
 \right \}
+\label{eq:ZYLeftXY}
 \end{equation}
 
 圆曲线偏右：
 
 \begin{equation}
-\left . 
+\left .
 \begin{aligned}
 x_{i} &= R \sin \alpha_i   \\
 y_{i} &= R(1- \cos \alpha_i)
-\end{aligned} 
+\end{aligned}
 \right \}
+\label{eq:ZYRightXY}
 \end{equation}
 
 式中：$\alpha_i = l_i / R,  \alpha_i \le \alpha $, $l_i$可用圆曲线上任意一点的里程桩号
@@ -112,10 +114,10 @@ $KNo_{YZ} = KNo_{QZ} + T/2$
 转换公式如下：
 
 \begin{equation}
-\left . 
+\left .
 \begin{aligned}
 x_{P} &= x_{ZY} + x'_P \cos \alpha - y'_P \sin \alpha  \\
-y_{P} &= y_{ZY} + x'_P \sin \alpha + y'_P \cos \alpha 
+y_{P} &= y_{ZY} + x'_P \sin \alpha + y'_P \cos \alpha
 \end{aligned}
 \right \}
 \label{eq:routexytoxy}
@@ -218,7 +220,7 @@ namespace Route.models
             _note = "";
         }
     }
-} 
+}
 \end{lstlisting}
 
 在上面GPoint类中，由于点的里程桩号是double类型，而我们常用的里程桩号是
@@ -248,7 +250,7 @@ public class GPoint : NotificationObject
 字符串输出。
 
 由于以上代码只涉及类中的 \_kno 字段，因此也可以写成如下的只读属性字段，
-调用可能更加方便。
+调用会更加方便。
 
 \begin{lstlisting}[language=C]
 public class GPoint : NotificationObject
@@ -303,7 +305,7 @@ public class CircleRoute : NotificationObject
             _R = value;
             RaisePropertyChange("R");
         }
-    }    
+    }
 
     double _T;
     /// <summary>
@@ -361,7 +363,7 @@ public class CircleRoute : NotificationObject
         }
     }
 
-    GPoint _JD = new GPoint(); 
+    GPoint _JD = new GPoint();
     /// <summary>
     /// 交点
     /// </summary>
@@ -389,7 +391,7 @@ public class CircleRoute : NotificationObject
         }
     }
 
-    GPoint _ZY = new GPoint(); 
+    GPoint _ZY = new GPoint();
     /// <summary>
     /// 直圆点
     /// </summary>
@@ -429,12 +431,12 @@ public class CircleRoute : NotificationObject
 				_isLeftRight = value;
 				RaisePropertyChange("IsLeftRight");
 			}
-    } 
-    
+    }
+
     /// <summary>
     /// 线路点集
     /// </summary>
-    protected ObservableCollection<GPoint> _pointList = 
+    protected ObservableCollection<GPoint> _pointList =
         new ObservableCollection<GPoint>();
 
     /// <summary>
@@ -455,7 +457,7 @@ public class CircleRoute : NotificationObject
 
 \subsection{ 任意桩号点的坐标计算 }
 
-给定任意一桩号，计算点的坐标，函数设计如下：
+给定任意一桩号，计算圆曲线上点的坐标，函数设计如下：
 \begin{lstlisting}[language=C]
 /// <summary>
 /// 计算任意里程桩号的点坐标
@@ -469,24 +471,45 @@ public void CalSinglePoint(double kno)
     E = R * (1 / Math.Cos(radAlpha * 0.5) - 1);
 
     ZY.KNo = JD.KNo - T;
-    QZ.KNo = ZY.KNo + L / 2;
-    YZ.KNo = QZ.KNo + L / 2;
-    
+    QZ.KNo = ZY.KNo + L/2;
+    YZ.KNo = QZ.KNo + L/2;
+
     double li = kno - ZY.KNo;
+    if( li<0 || li>L) return; //不是圆曲线上有效范围
     double alphai = li / R;
-    
+
     GPoint pt = new GPoint();
     pt.KNo = kno;
-    
+
     pt.X = R * Math.Sin(alphai);
     pt.Y = IsLeftRight * R * (1 - Math.Cos(alphai));
-    
+
     double A = ZXY.SMath.Azimuth(ZY.X, ZY.Y, JD.X, JD.Y);
     pt.TransformXY(ZY.X, ZY.Y, A); //转换到大地坐标
-    
+
     PointList.Add(pt); //将计算结果存入PointList
 }
 \end{lstlisting}
+
+在该算法中，第7行将度分秒形式的偏转角转换为弧度，再根据
+前边的算法计算圆曲线的几何要素T、L、E等。
+
+一般情况下JD的里程桩号与坐标是已知的，直圆点ZY的坐标也会已知，但里程桩号
+未知，所以需要首先计算出ZY点的里程桩号。同样的道理也可以计算出曲中点QZ与圆
+直点YZ点的里程桩号。
+
+第16行根据给定的里程桩号与ZY点的里程桩号计算圆曲线的弧长$l_i$，
+第17行做有效性判断:$0 \le l_i \le L$)，
+第18行根据弧长计算该点所在位置的圆心角$\alpha_i$。
+
+第23、24行根据公式 \ref{eq:ZYRightXY} 计算圆曲线上各点在ZY坐标系
+中的各点坐标。如果圆曲线偏左，根据公式 \ref{eq:ZYLeftXY} 将其Y坐标乘以
+ -1 即IsLeftRight的属性值即可。
+
+第26行计算出ZY点至JD点的坐标方位角，第27行根据公式\ref{eq:routexytoxy}将其
+转换到大地坐标系。
+
+第29行将其加入到PointList列表中，用于界面显示。
 
 \subsection{圆曲线算例与测试代码}
 
@@ -503,13 +526,13 @@ public void CalSinglePoint(double kno)
 \hline
 序号  &  里程    &     X       &   Y	 & 备注 \\
 \hline
-1    & K3+091.05 & 	6821.35   & 5999.38 &  ZY  \\
-2    & K3+100	& 	6826.56	  & 5606.66 &      \\
-3    & K3+120	&   6836.15	  & 5624.18 &      \\
-4    & K3+133.29 & 	6840.85	  & 5636.60 &  QZ  \\
-5    & K3+140	& 	6842.69	  & 5643.06 &      \\
-6    & K3+160	& 	6846.02	  & 5662.76 &      \\
-7    & K3+175.52 &  	6846.31	  & 5678.27 &  YZ  \\
+1    & K3+091.05 &  6821.35 & 5999.38 &  ZY \\
+2    & K3+100	    & 	 6826.56 & 5606.66 &        \\
+3    & K3+120	    &  6836.15 & 5624.18 &        \\
+4    & K3+133.29 &  6840.85 & 5636.60 &  QZ \\
+5    & K3+140	    & 	 6842.69 & 5643.06 &        \\
+6    & K3+160	    &  6846.02 & 5662.76 &        \\
+7    & K3+175.52 &  6846.31 & 5678.27 &  YZ  \\
 \hline
 \end{tabular}
 \end{table}
@@ -569,7 +592,7 @@ $$m=\frac{l_0}{2} - \frac{l^3_0}{240R^2}$$
 内移距：
 $$p=\frac{l^2_0}{24R}$$
 
- 
+
  切线长：$$T = m+ (R+p) \cdot \tan \frac{\alpha}{2}$$
 
  曲线全长：$$L = R \cdot (\alpha-2\beta_0)  + 2l_0$$
@@ -589,8 +612,8 @@ $$p=\frac{l^2_0}{24R}$$
 \left .
 \begin{aligned}
 x_i &= l_i - \frac{l^5_i}{40R^2 l^2_0} + \frac{l^9_i}{3456R^4 l^4_0} - \frac{l^{13}_i}{599040R^6l^6_0} + ...  \\
-y_i &=  \frac{l^3_i}{6Rl_0} - \frac{l^7_i}{336R^3 l^3_0} + \frac{l^{11}_i}{42240R^5l^5_0} -\frac{l^{15}_i}{9676800R^7l^7_0}+ ...  
-\end{aligned} 
+y_i &=  \frac{l^3_i}{6Rl_0} - \frac{l^7_i}{336R^3 l^3_0} + \frac{l^{11}_i}{42240R^5l^5_0} -\frac{l^{15}_i}{9676800R^7l^7_0}+ ...
+\end{aligned}
 \right \}
 \label{eq:routeZHXY}
 \end{equation}
@@ -602,7 +625,7 @@ y_i &=  \frac{l^3_i}{6Rl_0} - \frac{l^7_i}{336R^3 l^3_0} + \frac{l^{11}_i}{42240
 \begin{equation}
 \left . \begin{aligned}
 x_{HY} &= l_0 - \frac{l^3_0}{40R^2} + \frac{l^5_0}{3456R^4} - \frac{l^{7}_0}{599040R^6} + ...  \\
-y_{HY} &=  \frac{l^2_0}{6R} - \frac{l^4_0}{336R^3} + \frac{l^{6}_i}{42240R^5} -\frac{l^{8}_0}{9676800R^7}+ ...  
+y_{HY} &=  \frac{l^2_0}{6R} - \frac{l^4_0}{336R^3} + \frac{l^{6}_i}{42240R^5} -\frac{l^{8}_0}{9676800R^7}+ ...
 \end{aligned} \right \}
 \label{eq:routeHY}
 \end{equation}
@@ -612,7 +635,7 @@ y_{HY} &=  \frac{l^2_0}{6R} - \frac{l^4_0}{336R^3} + \frac{l^{6}_i}{42240R^5} -\
 \begin{equation}
 \left . \begin{aligned}
 x_{j} &= R \sin \beta_j + m \\
-y_{j} &= R(1- \cos \beta_j) +p 
+y_{j} &= R(1- \cos \beta_j) +p
 \end{aligned} \right \}
 \label{eq:routeYQXY}
 \end{equation}
@@ -636,7 +659,7 @@ y_{j} &= R(1- \cos \beta_j) +p
 \begin{equation}
 \left . \begin{aligned}
 x'_i &= x_i  \\
-y'_i &= - y_i 
+y'_i &= - y_i
 \end{aligned} \right \}
 \label{eq:routeHZPtXY}
 \end{equation}
@@ -651,7 +674,7 @@ y'_i &= - y_i
 \begin{equation}
 \left . \begin{aligned}
 x_i &= x_{HZ} - x'_i  \cos \alpha + y'_i \sin \alpha \\
-y_i &= y_{HZ}  -  x'_i \sin \alpha -  y'_i \cos \alpha 
+y_i &= y_{HZ}  -  x'_i \sin \alpha -  y'_i \cos \alpha
 \end{aligned} \right \}
 \label{eq:routeHZtoZH}
 \end{equation}
@@ -661,7 +684,7 @@ y_i &= y_{HZ}  -  x'_i \sin \alpha -  y'_i \cos \alpha
 \begin{equation}
 \left . \begin{aligned}
 x_{HZ} &= T (1 +  \cos \alpha) \\
-x_{HZ} &=  T \sin \alpha 
+x_{HZ} &=  T \sin \alpha
 \end{aligned} \right \}
 \label{eq:routeHZXY}
 \end{equation}

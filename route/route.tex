@@ -2,9 +2,9 @@
 
 \chapter{线路要素计算程序设计}
 
-\section{圆曲线与有缓和曲线的圆曲线}
+\section{圆曲线程序设计}
 
-\subsection{圆曲线的数学模型}
+\subsection{圆曲线的数学模型与算法分析}
 
 \begin{figure}[htbp]
     \centering
@@ -38,6 +38,7 @@
 %     \label{fig:RightCircleRoute}
 % \end{figure}
 
+圆曲线的各个要素计算算法如下：
  
  切线长：$T = R \cdot \tan (\alpha / 2)$
 
@@ -47,8 +48,12 @@
 
  切曲差：$q = 2T - L$
 
- \subsection{圆曲线上点的坐标计算}
+ \subsection{圆曲线上点的坐标计算算法分析}
+
  全站仪的坐标放样模式与GPS RTK可以十分方便的进行圆曲线上点的坐标放样。
+
+ 尽管圆曲线的计算方法有很多，也比较简单，但为了与后边的缓和曲线计算方法相一致，
+ 我们在此采用圆心角加半径再加坐标系转换法进行圆曲线上点的坐标计算。
 
  如图\ref{fig:CircleRoute}所示，以ZY点为原点，以ZY至JD切线方向为x轴，
  以ZY至O点方向为y轴建立ZY切线测量坐标系。从（a）与（b）两图可以看出
@@ -80,6 +85,9 @@ y_{i} &= R(1- \cos \alpha_i)
 式中：$\alpha_i = l_i / R,  \alpha_i \le \alpha $, $l_i$可用圆曲线上任意一点的里程桩号
 减去ZY点的里程桩号。
 
+如果我们以偏右为正、偏左为负，则可以将以上两公式统一，将偏左的Y坐标
+乘以 -1 即可。
+
 已知JD的坐标与里程桩号，根据圆曲线的结合几何要素$R, \alpha$即可计算出圆曲线上特征点的
 里程桩号：
 
@@ -104,14 +112,431 @@ $KNo_{YZ} = KNo_{QZ} + T/2$
 转换公式如下：
 
 \begin{equation}
-\left . \begin{aligned}
+\left . 
+\begin{aligned}
 x_{P} &= x_{ZY} + x'_P \cos \alpha - y'_P \sin \alpha  \\
 y_{P} &= y_{ZY} + x'_P \sin \alpha + y'_P \cos \alpha 
-\end{aligned} \right \}
+\end{aligned}
+\right \}
 \label{eq:routexytoxy}
 \end{equation}
 
- \subsection{缓和曲线的数学模型}
+
+\subsection{圆曲线坐标计算中的类设计}
+
+由以上分析可知，线路计算中至少应该有点类 GPoint 和 线路类 CircleRoute 。
+
+\begin{enumerate}
+\item 程序中的点类GPoint
+
+线路上的GPoint 类应包含序号、里程桩号、X坐标、Y坐标、备注信息等内容。
+我们设计如下：
+
+\begin{lstlisting}[language=C]
+using System;
+namespace Route.models
+{
+    /// <summary>
+    /// 点类
+    /// </summary>
+    public class GPoint : NotificationObject
+    {
+        private int _no;
+        /// <summary>
+        /// 序号
+        /// </summary>
+        public int No
+        {
+            get { return _no; }
+            set
+            {
+                _no = value;
+                RaisePropertyChange("No");
+            }
+        }
+
+        private double _kno;
+        /// <summary>
+        /// 里程桩号
+        /// </summary>
+        public double KNo
+        {
+            get { return _kno; }
+            set
+            {
+                _kno = value;
+                RaisePropertyChange("KNo");
+            }
+        }
+
+        private double _x;
+        /// <summary>
+        /// X坐标
+        /// </summary>
+        public double X
+        {
+            get { return _x; }
+            set
+            {
+                _x = value;
+                RaisePropertyChange("X");
+            }
+        }
+
+        private double _y;
+        /// <summary>
+        /// Y坐标
+        /// </summary>
+        public double Y
+        {
+            get { return _y; }
+            set
+            {
+                _y = value;
+                RaisePropertyChange("Y");
+            }
+        }
+
+        private string _note;
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string Note
+        {
+            get { return _note; }
+            set
+            {
+                _note = value;
+                RaisePropertyChange("Note");
+            }
+        }
+
+        public GPoint()
+        {
+            _no = 0;
+            _kno = _x = _y = 0;
+            _note = "";
+        }
+    }
+} 
+\end{lstlisting}
+
+在上面GPoint类中，由于点的里程桩号是double类型，而我们常用的里程桩号是
+``K5+200.00''这样的形式，因此我们在类GPoint中设计函数OutKNoInfo()
+将其转换输出，其代码如下所示：
+
+\begin{lstlisting}[language=C]
+public class GPoint : NotificationObject
+{
+    //......类中其它代码......
+
+    /// <summary>
+    /// 将double类型的kno分解为K5+200.00形式的里程桩号
+    /// </summary>
+    /// <returns>里程桩号</returns>
+    public string OutKNoInfo()
+    {
+        int k = (int)(_kno / 1000);
+        double klength = _kno - k * 1000;
+        return string.Format("k{0}+{1:0.000}", k, klength);
+    }
+}
+\end{lstlisting}
+
+以上代码的逻辑非常简单，double类型的里程除以1000，取出公里数，
+然后将不足整公里数的部分再取出，然后组合成形如``K5+200.00''这样的
+字符串输出。
+
+由于以上代码只涉及类中的 \_kno 字段，因此也可以写成如下的只读属性字段，
+调用可能更加方便。
+
+\begin{lstlisting}[language=C]
+public class GPoint : NotificationObject
+{
+    //......类中其它代码......
+
+    /// <summary>
+    /// 将double类型的kno分解为K5+200.00形式的里程桩号
+    /// </summary>
+    public string KNoInfo
+    {
+        get｛
+            int k = (int)(_kno / 1000);
+            double klength = _kno - k * 1000;
+            return string.Format("k{0}+{1:0.000}", k, klength);
+        ｝
+    }
+}
+\end{lstlisting}
+
+\item 程序中的圆曲线类CircleRoute
+
+圆曲线类中应包含偏转角$\alpha$、曲率半径R、切线长$T$等基本属性，
+还应包括JD点、ZY点、QZ点、YZ点等属性，设计代码如下：
+
+\begin{lstlisting}[language=C]
+public class CircleRoute : NotificationObject
+{
+    private double _alpha;
+    /// <summary>
+    /// 偏转角，单位:度分秒
+    /// </summary>
+    public double alpha
+    {
+        get { return _alpha; }
+        set
+        {
+            _alpha = value;
+            RaisePropertyChange("alpha");
+        }
+    }
+
+    protected double _R;
+    /// <summary>
+    /// 圆曲线半径
+    /// </summary>
+    public double R
+    {
+        get { return _R; }
+        set
+        {
+            _R = value;
+            RaisePropertyChange("R");
+        }
+    }    
+
+    double _T;
+    /// <summary>
+    /// 切线长
+    /// </summary>
+    public double T
+    {
+        get { return _T; }
+        set
+        {
+            _T = value;
+            RaisePropertyChange("T");
+        }
+    }
+
+    double _L;
+    /// <summary>
+    /// 曲线长
+    /// </summary>
+    public double L
+    {
+        get { return _L; }
+        set
+        {
+            _L = value;
+            RaisePropertyChange("L");
+        }
+    }
+
+    double _E;
+    /// <summary>
+    /// 外矢距
+    /// </summary>
+    public double E
+    {
+        get { return _E; }
+        set
+        {
+            _E = value;
+            RaisePropertyChange("E");
+        }
+    }
+
+    double _q;
+    /// <summary>
+    /// 切曲差
+    /// </summary>
+    public double q
+    {
+        get { return _q; }
+        set
+        {
+            _q = value;
+            RaisePropertyChange("q");
+        }
+    }
+
+    GPoint _JD = new GPoint(); 
+    /// <summary>
+    /// 交点
+    /// </summary>
+    public GPoint JD
+    {
+        get { return _JD; }
+        set
+        {
+            _JD = value;
+            RaisePropertyChange("JD");
+        }
+    }
+
+    GPoint _QZ = new GPoint();
+    /// <summary>
+    /// 曲中点
+    /// </summary>
+    public GPoint QZ
+    {
+        get { return _QZ; }
+        set
+        {
+            _QZ = value;
+            RaisePropertyChange("QZ");
+        }
+    }
+
+    GPoint _ZY = new GPoint(); 
+    /// <summary>
+    /// 直圆点
+    /// </summary>
+    public GPoint ZY
+	{
+		get { return _ZY; }
+		set
+		{
+			_ZY = value;
+			RaisePropertyChange("ZY");
+		}
+	}
+
+    GPoint _YZ = new GPoint();
+    /// <summary>
+    /// 圆直点
+    /// </summary>
+    public GPoint YZ
+	{
+		get { return _YZ; }
+		set
+		{
+			_YZ = value;
+			RaisePropertyChange("YZ");
+		}
+    }
+
+    private int _isLeftRight = 1;
+    /// <summary>
+    /// 左偏：-1 或 右偏：1
+    /// </summary>
+    public int IsLeftRight
+	{
+		get { return _isLeftRight; }
+		set
+			{
+				_isLeftRight = value;
+				RaisePropertyChange("IsLeftRight");
+			}
+    } 
+    
+    /// <summary>
+    /// 线路点集
+    /// </summary>
+    protected ObservableCollection<GPoint> _pointList = 
+        new ObservableCollection<GPoint>();
+
+    /// <summary>
+    /// 线路点集
+    /// </summary>
+    public ObservableCollection<GPoint> PointList
+    {
+        get { return _pointList; }
+    }
+}
+\end{lstlisting}
+
+在圆曲线计算时，由于左偏与右偏的计算是不完全相同的，在此设计一
+属性IsLeftRight用来标记。
+
+为了存储计算后的点坐标，我们设计了一点集属性PointList。
+\end{enumerate}
+
+\subsection{ 任意桩号点的坐标计算 }
+
+给定任意一桩号，计算点的坐标，函数设计如下：
+\begin{lstlisting}[language=C]
+/// <summary>
+/// 计算任意里程桩号的点坐标
+/// </summary>
+/// <param name="kno">里程桩号</param>
+public void CalSinglePoint(double kno)
+{
+    double radAlpha = ZXY.SMath.DMS2RAD(alpha);
+    T = R * Math.Tan(radAlpha * 0.5);
+    L = R * radAlpha;
+    E = R * (1 / Math.Cos(radAlpha * 0.5) - 1);
+
+    ZY.KNo = JD.KNo - T;
+    QZ.KNo = ZY.KNo + L / 2;
+    YZ.KNo = QZ.KNo + L / 2;
+    
+    double li = kno - ZY.KNo;
+    double alphai = li / R;
+    
+    GPoint pt = new GPoint();
+    pt.KNo = kno;
+    
+    pt.X = R * Math.Sin(alphai);
+    pt.Y = IsLeftRight * R * (1 - Math.Cos(alphai));
+    
+    double A = ZXY.SMath.Azimuth(ZY.X, ZY.Y, JD.X, JD.Y);
+    pt.TransformXY(ZY.X, ZY.Y, A); //转换到大地坐标
+    
+    PointList.Add(pt); //将计算结果存入PointList
+}
+\end{lstlisting}
+
+\subsection{圆曲线算例与测试代码}
+
+圆曲线的曲率半径为$R = 120$，偏转角为$\alpha = 40.20$, 交点.JD
+的坐标为$(6848.320, 5634.240)$，里程桩号为``K3+135.12''；
+直圆点ZY的坐标为$(6821.354，5599.381)$。计算出的圆曲线上各点坐标
+如表\ref{tab:YRoute}所示。
+
+\begin{table}[htbp]
+\centering
+\caption{圆曲线计算示例数据表}
+\label{tab:YRoute}
+\begin{tabular}{clccl}
+\hline
+序号  &  里程    &     X       &   Y	 & 备注 \\
+\hline
+1    & K3+091.05 & 	6821.35   & 5999.38 &  ZY  \\
+2    & K3+100	& 	6826.56	  & 5606.66 &      \\
+3    & K3+120	&   6836.15	  & 5624.18 &      \\
+4    & K3+133.29 & 	6840.85	  & 5636.60 &  QZ  \\
+5    & K3+140	& 	6842.69	  & 5643.06 &      \\
+6    & K3+160	& 	6846.02	  & 5662.76 &      \\
+7    & K3+175.52 &  	6846.31	  & 5678.27 &  YZ  \\
+\hline
+\end{tabular}
+\end{table}
+
+测试代码为：
+\begin{lstlisting}[language=C]
+models.CircleRoute route = new models.CircleRoute();
+route.R = 120;
+route.alpha = 40.20;
+route.IsLeftRight = 1;
+
+route.JD.X = 6848.320;
+route.JD.Y = 5634.240;
+route.JD.KNo = 3135.12;
+
+route.ZY.X = 6821.354;
+route.ZY.Y = 5599.381;
+
+route.CalSinglePoint(3175.52);
+\end{lstlisting}
+
+\section{有缓和曲线的圆曲线}
+
+有缓和曲线的圆曲线的数学模型与算法相对于圆曲线来说就复杂多了。
+下面我们将从算法到程序实现逐一分析。
+
+\subsection{缓和曲线的数学模型}
 
  \begin{figure}[htbp]
     \centering
@@ -205,7 +630,7 @@ y_{j} &= R(1- \cos \beta_j) +p
 过HZ点的缓和曲线切线为y轴的直角坐标系，计算另一半曲线任意一点的坐标$(x'_i, y'_i)$。
 然后，将坐标转换为以ZH点为原点的直角坐标系中。
 
-缓和曲线在HZ坐标系中的坐标可以先继续使用公式 \ref{eq:routeZHXY} 计算，然后由图\ref{fig:RHY}
+缓和曲线在HZ坐标系中的坐标可以继续使用公式 \ref{eq:routeZHXY} 计算，然后由图\ref{fig:RHY}
 可知将其转换为HZ坐标系中的坐标计算公式为：
 
 \begin{equation}
@@ -216,7 +641,9 @@ y'_i &= - y_i
 \label{eq:routeHZPtXY}
 \end{equation}
 
-为了将HZ坐标系中的点坐标转换为ZH坐标中，我们引用公式\ref{eq:routexytoxy}来计算，
+请注意在使用公式 \ref{eq:routeZHXY} 时应将$l_i$替换为 $L-l_i$。
+
+为了将HZ坐标系中的点坐标转换到ZH坐标系中，我们引用公式\ref{eq:routexytoxy}来计算，
 请注意公式\ref{eq:routexytoxy}中的$\alpha$为$x'$轴的方位角(即x轴到$x'$轴的水平夹角)，
 因此图\ref{fig:RHY}应用到公式\ref{eq:routexytoxy}中的$\alpha$ 应为$\alpha + 180 \degree $。
 如果将其代入公式\ref{eq:routexytoxy}，则有转换公式为：
@@ -229,7 +656,7 @@ y_i &= y_{HZ}  -  x'_i \sin \alpha -  y'_i \cos \alpha
 \label{eq:routeHZtoZH}
 \end{equation}
 
-公式\ref{eq:routeHZtoZH}中的$(x_{HZ}, y_{HZ})$为HZ点在ZH坐标，其值为：
+公式\ref{eq:routeHZtoZH}中的$(x_{HZ}, y_{HZ})$为HZ点在ZH坐标系中的坐标，其值为：
 
 \begin{equation}
 \left . \begin{aligned}
@@ -252,3 +679,39 @@ x坐标是相同的， y坐标乘以 -1 即可。
 的坐标方位角。
 
 \end{enumerate}
+
+
+\subsection{有缓和曲线的圆曲线算例}
+
+缓和曲线的曲率半径$R=1000$，偏转角$\alpha =10.1820$,
+缓和曲线长$l_0=80$，直缓点ZH的坐标为$(3088256.238, 66798.566)$，
+交点JD的坐标为$(3088386.436, 66798.566)$，里程桩号为``K5+''。
+计算出的曲线上各点坐标如表\ref{tab:HYRoute}所示。
+
+\begin{table}[htbp]
+\centering
+\caption{有缓和曲线的圆曲线计算示例数据表}
+\label{tab:HYRoute}
+\begin{tabular}{ccccl}
+\hline
+序号 & 里程	    &        X	     &      Y	   &  备注 \\
+\hline
+1  & K5+200.000 & 3088256.238 &  	66798.566 &  ZH  \\
+2  & K5+220.000 & 3088276.238 &  	66798.583 &      \\
+3  & K5+240.000 & 3088296.238 &  	66798.699 &      \\
+4  & K5+260.000 & 3088316.235 &  	66799.016 &      \\
+5  & K5+280.000 & 3088336.225 &  	66799.632 &  HY  \\
+6  & K5+300.000 & 3088356.200 &  	66800.632 &      \\
+7  & K5+320.000 & 3088376.150 &  	66802.031 &      \\
+8  & K5+329.933 & 3088386.048 &  	66802.874 &  QZ  \\
+9  & K5+339.866 & 3088395.936 &  	66803.815 &      \\
+10 & K5+359.866 & 3088415.815 &  	66806.008 &      \\
+11 & K5+379.866 & 3088435.646 &  	66808.598 &  YH  \\
+12 & K5+399.866 & 3088455.424 &  	66811.568 &      \\
+13 & K5+419.866 & 3088475.156 &  	66814.834 &      \\
+14 & K5+439.866 & 3088494.853 & 	66818.297 &      \\
+15 & K5+459.866 & 3088514.534 &  	66821.858 &  HZ \\
+\hline
+\end{tabular}
+
+\end{table}

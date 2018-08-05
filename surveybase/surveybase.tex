@@ -2,11 +2,19 @@
 
 \chapter{测量基础函数设计}
 
-\section{C\# 知识点}
-C\#中的类分为实例类与静态类。
+本章我们将编写一些测量程序设计中常用的函数，用于以后的测绘算法之中。
 
-C\# 是纯面向对象语言，也就是说所有的常量与方法都需要以类$class$为载体，如同其他的数学软件包一样，
-我将其命名为$SMath(SurveyMath)$，保存在$SMath.cs$文件中，为了引用方便，我们需将常用的一些常量及方法定义为静态成员。
+\section{C\# 知识点}
+
+C\# 是纯面向对象语言，也就是说所有的常量与方法都需要以类$class$为载体。
+
+C\#中的类分为实例类与静态类。实例类需要用关键字 new 将类实例化，在一些与类的实例成员操作无关的
+环境中，对类进行实例化的操作显得冗余，而静态类与类的静态成员可以很好的解决这个问题。 
+
+如果我们分析C\#系统中的System.Math类，我们会发现常用的一些数学函数都被设计成了静态函数。因此，我们也如同System.Math类一样，
+也将我们常用的测绘算法也用类名$SMath(SurveyMath)$命名，保存在$SMath.cs$文件中，
+将常用的一些常量及方法定义也定义为静态成员。
+
 示例代码如下所示：
 \begin{lstlisting}[language=C]
 namespace ZXY
@@ -14,16 +22,17 @@ namespace ZXY
     public static class SMath
     {
         public const double PI=Math.PI;
+        public const double TWOPI=2*Math.PI;
         public const double TODEG=180.0/PI; 
         public const double TORAD=PI/180.0;
         public const double TOSECOND=180.0*3600.0/PI;
     
-        public static double DMS2RAD(double dmsAngle)
+        public static double DMStoRAD(double dmsAngle)
         {
             ......
         }
     
-        public static double RAD2DMS(double radAngle)
+        public static double RADtoDMS(double radAngle)
         {
             ......
         }
@@ -31,31 +40,39 @@ namespace ZXY
 }
 \end{lstlisting}
 
-以上示例代码为了与其他的函数或符号相区别，也为了与其他的代码一起合作使用，
+以上示例代码为了与其他的函数或符号相区别，也为了与其他的代码一起配合使用，
 在此加入了自己的命名空间 ZXY （这是我用的名称空间，
 你当然也可以根据自己的习惯或爱好命名适当的名称空间）。
 
-\section{常用测量计算公式}
-角度、距离与高差是测量工程师工作的基本对象，度分秒形式的角度与弧度之间的转换是我们进行测量数据处理的基础。
-为了方便的进行测量数据处理，我们需要定义一些常量，如前述示例代码所示。
 
-$PI$表示$\pi$, $PI2$表示$2\pi$;
+\section{测绘常用算法设计}
+
+\subsection{测绘算法中的常量}
+角度、距离与高差是测量工程师工作的基本对象，度分秒形式的角度与弧度之间的转换是我们进行测量数据处理的基础。
+为了方便的进行测量数据处理，我们首先需要定义一些常量，如上述示例代码所示，其中：
+
+$PI$表示$\pi$, $TWOPI$表示$2\pi$;
 $TODEG$表示$180/\pi$，用于将弧度化为度；
 $TORAD$表示$\pi/180$，用于将度化为弧度；
 $TOSECOND$表示$180*3600/\pi$，用于将弧度转换为秒。
 
-\subsection{角度弧度互换函数：}
+在静态类SMath中我们采用常量const的形式定义了$\pi, 2\pi$等常用的数值，在 C\# 中 const类型的数据总是
+静态的(static)，而且是不需要static修饰符的。另外需注意，const类型的数据在声明时必须进行初始化，且其值
+必须在编译时就能确定计算出。
 
- 在测量工程中角度的常用习惯表示法是度分秒的形式，在计算程序中测量工程人员也常将度分秒形式的角度用格式为xxx.xxxxx的形式表示，
+\subsection{六十进制度分秒化弧度函数}
+
+ 在测量工程中角度的常用习惯表示法是度分秒的形式，
+ 在计算程序中测量工程人员也常将度分秒形式的角度用格式为xxx.xxxxx的形式表示，
  即以小数点前的整数部分表示度，小数点后两位数表示分，从小
  数点后第三位起表示秒。在计算机编程时所用的角度要以弧度表示的，因此需要
  设计函数相互转换。
 
-1．角度化弧度函数：
-
+ 
 角度化弧度函数的逻辑非常简单，许多测量编程人员将其写成如下的形式：
-\begin{verbatim}
-public static double DMS2RAD(double dmsAngle)
+
+\begin{lstlisting}[language=C]
+public static double DMStoRAD(double dmsAngle)
 {
    int d = (int)dmsAngle;
    dmsAngle = (dmsAngle - d) * 100.0;
@@ -63,12 +80,13 @@ public static double DMS2RAD(double dmsAngle)
    double s = (dmsAngle - m) * 100.0;
    return (d + m / 60.0 + s / 3600.0) * TORAD;
 }
-\end{verbatim}
+\end{lstlisting}
+
 但由于计算机中浮点数的表示方法的原因，以上函数并不能精确的将度分秒的角度转换为弧度。
 
- 如某一角度为$1\degree 40'00''$，我们以1.4000形式的浮点数输入，计算机将表示为1.3999999999999999的形式。
+ 如角值为$1\degree 40'00''$，以1.4000浮点数输入，计算机将表示为1.3999999999999999的形式。
  这在计算机中并没有什么错误，但以上函数在提取角度的分秒时，提取到的m值为39，提取到的s值为
- 99.999999999999,即我们提取到的角度为$1°39'100''$，有40"的角度误差，这是我们测绘工程人员不能接受的。
+ 99.999999999999,即我们提取到的角度为$1°39'100''$，有40"的角度误差，显然这是我们测绘工程人员不能接受的。
  
  有的软件设计人员在软件中发现这个问题后的处理的办法是让用户在角度后加减一秒，进行规避这种误差，显然，
  将软件人员的责任推给用户是极其不合适和不负责任的。还有许多的书籍中介绍了许多五花八门的处理方法，但奏效的小，
@@ -77,8 +95,8 @@ public static double DMS2RAD(double dmsAngle)
  虽然浮点数的表达不够精确，但我们知道在计算机中，整数的表达与计算却是精确的，因此在角度的度分秒值提取中，
  我们采用整数的运算方式进行计算，相应代码如下。
  
-\begin{verbatim}
-public static double DMS2RAD(double dmsAngle)
+\begin{lstlisting}[language=C]
+public static double DMStoRAD(double dmsAngle)
 {
     dmsAngle *= 10000; 
     int angle = (int)Math.Round(dmsAngle);
@@ -88,17 +106,24 @@ public static double DMS2RAD(double dmsAngle)
     double s = dmsAngle - d * 10000 - m * 100;
     return (d + m / 60.0 + s / 3600.0) * TORAD;
 }
-\end{verbatim}
+\end{lstlisting}
 
- 以上算法对于负的角度值的提取同样有效。
+首先将浮点形式的六十进制角度值乘以10000，如$1\degree 40'00''$表示为
+13999.999999999999的形式，然后将其四舍五入取整到整秒，其值为14000。
+再利用整数整除的精确算法将度(d)与分(m)提取出来。为了保持秒值的有效精度，
+我们用精度无损失的dmsAngle值减去d与m的值提取出秒值(s)。 这样既可以正确提取出度
+与分值，又可以保证秒值的有效精度。算法虽然简单，但确实需要保证这两个方面的需求。
+
+ 以上算法对于负的角度值的转换同样有效。
 
 
-2．弧度化角度函数
+\subsection{弧度函数化六十进制度分秒}
 
-同样的道理，以下函数将不能正确的将一些弧度值转换为度分秒形式的角度值，在某些情况下转换出的角度将出现$59'60''$或$59'59.9999''$的形式。
+同样的道理，以下函数将不能正确的将一些弧度值转换为度分秒形式的角度值，
+在某些情况下转换出的角度将出现$59'60''$或$59'59.9999''$的形式。
 
-\begin{verbatim}
-public static double RAD2DMS(double radAngle)
+\begin{lstlisting}[language=C]
+public static double RADtoDMS(double radAngle)
 {
     radAngle *= TODEG;
     int d = (int)radAngle;
@@ -107,12 +132,12 @@ public static double RAD2DMS(double radAngle)
     double s = (radAngle - m) * 60;
     return (d + m / 100.0 + s / 10000.0);
 }
-\end{verbatim}
+\end{lstlisting}
 
-同样，我们需要利用整数的精确表达能力与计算能力来进行转换，正确的代码如下：
+我们需要利用整数的精确表达能力与计算能力来进行转换，正确的代码如下：
 
-\begin{verbatim}
-public static double RAD2DMS(double radAngle)
+\begin{lstlisting}[language=C]
+public static double RADtoDMS(double radAngle)
 {
     radAngle *= TOSECOND;
     int angle = (int)Math.Round(radAngle); 
@@ -122,83 +147,179 @@ public static double RAD2DMS(double radAngle)
     double s = radAngle - d * 3600 - m * 60;
     return (d + m / 100.0 + s / 10000.0);
 }
-\end{verbatim}
+\end{lstlisting}
 
-\subsection{坐标方位角推算}
+首先我们将弧度转化为以秒为单位的double值，这个转换过程是精确的。其次，我们再将其四舍五入转换为
+整秒值(虽然这个过程有精度损失，但我们仅用这个值提取度与分值)。再利用整数的精确计算能力提取度与分值，
+最后用无精度损失的radAngle值减去度与分值就可以提取出正确的度分秒值了，而且也可以保证秒值的有效精度。
 
- 1.已知01边的坐标方位角$\alpha_0$和01边和12边间的水平角$\beta$，计算12边的坐标方位角。
- \begin{verbatim}
- double Azimuth(double azimuth0, double angle)
- {
-    return To0_2PI(azimuth0 + angle + _PI);
- }
-\end{verbatim}
+在这个算法中，将弧度值首先转换为秒为单位的值是关键，保证秒值的精确有效位数也很重要。
 
- 2.将角度规划到0～2π，单位为弧度
- \begin{verbatim}
- double To0_2PI(double rad)
+同样这个算法对负值也适用。
+
+\subsection{角度规划函数}
+
+在导线计算中，我们推算出的方位角值常常超出$0 -2\pi$的范围，这时我们就需要将角度规划到$0 -2\pi$范围内。
+函数代码如下所示，rad的单位为弧度。
+
+\begin{lstlisting}[language=C]
+ public static double To0_2PI(double rad)
  {
    int f = rad >= 0 ? 0 : 1;
-   int n = (int)(rad / TWO_PI);
+   int n = (int)(rad / TWOPI);
 
-   return rad - n * TWO_PI + f * TWO_PI;
+   return rad - n * TWOPI + f * TWOPI;
  }
- \end{verbatim}
+ \end{lstlisting}
 
-\subsection{平面坐标正反算}
-1.坐标正算：
+ 以上算法我们采用去整周角的算法，先计算出角度中所包含的$2\pi$个数n，
+ 然后减去这n个$2\pi$值。
 
-根据0->1点的坐标方位角和水平边长，计算0->1点的坐标增量。
-\begin{verbatim}
-void double dxdy(double azimuth, double distance,
-                 double& dx, double& dy)
+ 对于负的角度，以上算出的角度为负值，因此我们根据角度的符号性决定在角度为负值时再多加一个$2\pi$。
+
+
+\subsection{坐标方位角计算}
+
+在测量中，常常需要根据两点的坐标反算其坐标方位角，计算坐标方位角的关键是进行象限判断了。
+
+已知A点与B点的坐标: A(xA, yA), B(xB, yB)， 计算A->B的坐标方位角，函数名称定义为Azimuth，函数返回值为
+两点的坐标方位角，单位为弧度,相应的代码如下：
+
+\begin{lstlisting}[language=C]
+public static double Azimuth(double xA, double yA, double xB, double yB)
 {
-    dx = cos(azimuth) * distance;
-    dy = sin(azimuth) * distance;
+   double dx = xB - xA;
+   double dy = yB - yA;
+   return Math.Atan2(dy, dx) + (dy < 0 ? 1 : 0) * TWOPI;
 }
-\end{verbatim}
+\end{lstlisting}
 
-根据0点的坐标和0->i点的坐标方位角和水平边长，计算i点的坐标。
-\begin{verbatim}
-void Coordinate(double x0, double y0,
-        double azimuth, double distance,
-        double& xi, double& yi)
+在以上代码中，我们没有用常用的Math.Atan函数，该函数的取值范围为$-\pi /2 - \pi/2$，
+取值区间为$\pi$,与坐标方位角的取值区间$2\pi$不相符，将其转换
+到坐标方位角的取值范围内十分麻烦，而且还需要判断dx是否为0的情况。
+
+查阅MSDN中对Math.Atan2函数的解释，我们发现其取值范围为$-\pi - \pi$，刚好为$2\pi$区间，
+与坐标方位角的定义一致。且第一、第二象限的计算值为$0-\pi$， 与测量上的方位角定义一致；第三、第四象限的
+计算值为$-\pi - 0$， 我们将其平移$2\pi$区间就可以将其转换到测量的第三、第四象限内，使其
+与坐标方位角的定义一致。测量上第三、第四象限的判断条件为 $dy<0$，故只需要在Math.Atan2的计算值上
+用三目运算符``?~ : ~''加上修正值$(dy < 0 ? 1 : 0) * TWOPI$就可以了。这样可以最大程度的保持代码的简洁了。
+
+计算A、B两点的平距函数设计如下：
+\begin{lstlisting}[language=C]
+public static double Distance(double xA, double yA, double xB, double yB)
 {
-    xi = x0 + cos(azimuth) * distance;
-    yi = y0 + sin(azimuth) * distance;
+    double dx = xB - xA;
+    double dy = yB - yA;
+    return Math.Sqrt(dx * dx + dy * dy);
 }
-\end{verbatim}
+\end{lstlisting}
 
-根据1点的坐标和后视边(0->1)点的坐标方位角，水平角(0-1-i)，水平边长(1-i)，计算i点的坐标。
-\begin{verbatim}
-void Coordinate(double x0, double y0, double azimuth0,
-        double angle, double distance,
-        double& xi, double& yi)
+可以看出，Azimuth函数与Distance函数十分相似，为了提高效率，也可以将这两个函数合并在一起，代码如下所示：
+
+\begin{lstlisting}[language=C]
+public static double Azimuth(double xA, double yA, double xB, double yB, out double azimuth)
 {
-    double azimuthi = Azimuth(azimuth0, angle);
-    xi = x0 + cos(azimuthi) * distance;
-    yi = y0 + sin(azimuthi) * distance;
+   double dx = xB - xA;
+   double dy = yB - yA;
+   azimuth = Math.Atan2(dy, dx) + (dy < 0 ? 1 : 0) * TWOPI;
+   return Math.Sqrt(dx * dx + dy * dy);
 }
-\end{verbatim}
+\end{lstlisting}
 
-2.坐标反算：
+在测量计算中，往往方位角的计算更加常用和重要，因此我们用out形式回带计算出的坐标方位角值，以函数返回值的形式返回两点的
+平距，当不需要平距时，不接收函数返回值就可以了。
 
-计算0点至1点的坐标方位角，返回值单位为弧度。
-\begin{verbatim}
-double Azimuth(double x0, double y0, double x1, double y1)
+
+\section{算法的扩展}
+
+六十进制的ddd.mmsss值十分利于角度数据的组织与输入，但不利于正式场景的角度展示。因此，在很多情况下我们需要
+将角度表示为$23\degree 05'47.6324''$或$-23\degree 05'47.6324''$这种形式。
+我们可以将前面的函数拷贝改写成如下形式的代码:
+
+\begin{lstlisting}[language=C]
+public static string DMStoString(double dmsAngle)
 {
-   double dx = x1 - x0;
-   double dy = y1 - y0;
-   return atan2(dy, dx) + (dy < 0 ? 1 : 0) * _2PI;
+    dmsAngle *= 10000; 
+    int angle = (int)Math.Round(dmsAngle);
+    int d = angle / 10000;
+    angle -= d * 10000;
+    int m = angle / 100;
+    double s = dmsAngle - d * 10000 - m * 100;
+    return string.Format("{0}`$\degree$`{1:00}`'`{2:00.0####}`''`", d, m, s);
 }
-\end{verbatim}
+\end{lstlisting}
 
-计算两点间(0->1)的平距
-\begin{verbatim}
-double Distance(double x0, double y0, double x1, double y1)
+第9行语句利用string的Format函数将度分秒值组合为字符串形式，其中的分值我们保持为两位整数数据，
+不足两位的前面填0，同样的秒值整数部分也做这样的处理。秒值的小数部分保留五位小数，
+如果后边为零的话自动去掉相应的小数位，但至少保持到0.1''。
+
+这样在我们的代码中就存在着两份实现提取度分秒功能的代码了。在程序设计中，本着相同或相似的代码应尽可能的
+只写一次的原则，我们应该将这部分功能代码独立出来，如下所示：
+
+\begin{lstlisting}[language=C]
+public static void DMStoDMS(double dmsAngle, out int d, out int m, out double s)
 {
-    double dx = x1 - x0;
-    double dy = y1 - y0;
-    return sqrt(dx * dx + dy * dy);
+    dmsAngle *= 10000; 
+    int angle = (int)Math.Round(dmsAngle);
+    d = angle / 10000;
+    angle -= d * 10000;
+    m = angle / 100;
+    s = dmsAngle - d * 10000 - m * 100;
 }
-\end{verbatim}
+\end{lstlisting}
+
+然后在DMStoRAD函数和DMStoString函数中进行调用，保持功能代码的唯一性。
+
+\begin{lstlisting}[language=C]
+public static double DMStoRAD(double dmsAngle)
+{
+    DMStoDMS(dmsAngle, out int d, out int m, out double s);
+    return (d + m / 60.0 + s / 3600.0) * TORAD;
+}
+
+public static string DMStoString(double dmsAngle)
+{
+    DMStoDMS(dmsAngle, out int d, out int m, out double s);
+    return $"{d}`$\degree$`{m:00}`'`{s:00.0####}`''`";
+}
+\end{lstlisting}
+
+第10行代码是C\# 6的语法，相对于前面的string.Format函数的写法，更加简洁。
+
+同样的道理，我们对RADtoDMS函数与RADtoString函数也应做相应的处理，其代码如下：
+\begin{lstlisting}[language=C]
+public static void RADtoDMS(double radAngle, out int d, out int m, out double s)
+{
+    radAngle *= TOSECOND;
+    int angle = (int)Math.Round(radAngle);
+    d = angle / 3600;
+    angle -= d * 3600;
+    m = angle / 60;
+    s = radAngle - d * 3600 - m * 60;
+}
+
+public static double RADtoDMS(double radAngle)
+{
+    RADtoDMS(radAngle, out int d, out int m, out double s);
+    return (d + m / 100.0 + s / 10000.0);
+}
+
+public static string RADtoString(double radAngle)
+{
+    RADtoDMS(radAngle, out int d, out int m, out double s);
+    return $"{d}`$\degree$`{m:00}`'`{s:00.0####}`''`";
+}
+\end{lstlisting}
+
+
+\section*{作业}
+
+\begin{enumerate}
+\item 以上DMStoString函数与RADtoString函数可以正确的将角度值中的度分秒值提取出来并
+以更好阅读的字符串$23\degree 05'47.6324''$形式表达。但对于负的角度会表达为
+$-23\degree -05'-47.6324''$形式，对于追求完美的某些程序员来讲这似乎有些不可接受，
+他们仍然想将负的角度表达为$-23\degree 05'47.6324''$或$-0\degree 05'47.6324''$
+形式。请试着改进以上的DMStoString与RADtoString函数。
+    
+\item 请用Math.Atan函数编写两点坐标反算坐标方位角的函数Azimuth。
+\end{enumerate}

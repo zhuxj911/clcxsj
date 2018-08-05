@@ -280,7 +280,7 @@ namespace CoordniateTransform
 
                 sr.WriteLine();
                 sr.WriteLine("# 转换参数");
-                sr.WriteLine("a={0}，b={1}, c={2}, d={3}\r\nα={4}，k={5}", 
+                sr.WriteLine("东向(E)平移量a={0}，北向(N)平移量b={1}, c={2}, d={3}\r\n旋转角α={4}，尺度因子k={5}", 
                     this.a, this.b, this.c, this.d, this.alpha, this.k);
 
                 sr.WriteLine();

@@ -1,4 +1,4 @@
-﻿%!TEX root = ../clcxsj.tex
+%!TEX root = ../clcxsj.tex
 
 \chapter{线路要素计算程序设计}
 
@@ -512,9 +512,8 @@ public void CalSinglePoint(double kno)
 第29行将其加入到PointList列表中，用于界面显示。
 
 \subsection{圆曲线算例与测试代码}
-
-圆曲线的曲率半径为$R = 120$，偏转角为$\alpha = 40.20$, 交点.JD
-的坐标为$(6848.320, 5634.240)$，里程桩号为``K3+135.12''；
+圆曲线的曲率半径为$R=120m$，偏转角为$\alpha=40^{\degree}20'$, 交点JD
+的里程桩号为``K3+135.12''，坐标为$(6848.320, 5634.240)$；
 直圆点ZY的坐标为$(6821.354，5599.381)$。计算出的圆曲线上各点坐标
 如表\ref{tab:YRoute}所示。
 
@@ -636,6 +635,7 @@ y_i &=  \frac{l^3_i}{6Rl_0} - \frac{l^7_i}{336R^3 l^3_0}
 
 \item  缓圆点(HY)坐标计算公式为：
 
+将$l_i = l_0$代入公式\ref{eq:routeZHXY}中计算可得到下式：
 \begin{equation}
 \left . \begin{aligned}
 x_{HY} &= l_0 - \frac{l^3_0}{40R^2} + \frac{l^5_0}{3456R^4}
@@ -655,6 +655,8 @@ y_{j} &= R(1- \cos \beta_j) +p
 \end{aligned} \right \}
 \label{eq:routeYQXY}
 \end{equation}
+
+式中：$\beta_i = \beta_0 + (l_i - l_0)/R$
 
 \item  缓和曲线在HZ切线直角坐标系中的坐标计算(HZ段)
 
@@ -701,7 +703,7 @@ y_i &= y_{HZ}  -  x'_i \sin \alpha -  y'_i \cos \alpha
 \left .
 \begin{aligned}
 x_{HZ} &= T (1 +  \cos \alpha) \\
-x_{HZ} &=  T \sin \alpha
+y_{HZ} &=  T \sin \alpha
 \end{aligned}
 \right \}
 \label{eq:routeHZXY}
@@ -726,7 +728,7 @@ x坐标是相同的， y坐标乘以 -1 即可。
 
 缓和曲线的曲率半径$R=1000$，偏转角$\alpha =10.1820$, 右偏，
 缓和曲线长$l_0=80$，直缓点ZH的坐标为$(3088256.238, 66798.566)$，
-交点JD的坐标为$(3088386.436, 66798.566)$，里程桩号为``K5+''。
+交点JD的坐标为$(3088386.436, 66798.566)$，里程桩号为``K5+5330.198''。
 计算出的曲线上各点坐标如表\ref{tab:HYRoute}所示。
 
 \begin{table}[htbp]
@@ -756,3 +758,10 @@ x坐标是相同的， y坐标乘以 -1 即可。
 \end{tabular}
 
 \end{table}
+
+\section{较为完整的线路里程桩计算}
+
+以上曲线要素的计算是按曲线类型单独进行分析编写的，实际上一条线路
+是由无数段直线、圆曲线与缓和曲线组成。
+
+

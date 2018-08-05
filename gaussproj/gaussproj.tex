@@ -48,10 +48,12 @@ $$t=\tan B\qquad\eta=e'\cos B$$
 
 \item 椭球面梯形图幅面积计算
 
-$$P = \frac{b^2}{2}(L_2 - L_1) \left | \frac{\sin B}{1-e^2\sin^2 B} + \frac{1}{2e}\ln \frac{1+e\sin B}{1-e\sin B}\right |_{B1} ^{B2} $$
+$$P = \frac{b^2}{2}(L_2 - L_1) \left | \frac{\sin B}{1-e^2\sin^2 B} 
++ \frac{1}{2e}\ln \frac{1+e\sin B}{1-e\sin B}\right |_{B1} ^{B2} $$
 公式引用自《大地测量学基础》第121页(4-140)。
 
-$$P=b^2(L_2 - L_1) \left | sinB + \frac{2}{3}e^2 \sin ^3 B + \frac{3}{5}e^4 \sin^5 B + \frac{4}{7}e^6 \sin ^7 B \right | _{B_1} ^{B_2}$$
+$$P=b^2(L_2 - L_1) \left | sinB + \frac{2}{3}e^2 \sin ^3 B 
++ \frac{3}{5}e^4 \sin^5 B + \frac{4}{7}e^6 \sin ^7 B \right | _{B_1} ^{B_2}$$
 
 公式引用自《大地测量学基础》第121页(4-142)，该公式为（4-140）的展开式。
 
@@ -91,6 +93,7 @@ m_8 &= \frac{9}{8}e^2 m_6
 或用很多书上都引用的公式：
 
 \begin{equation}
+\label{eq:CX}
 X=c[\beta_0 B + (\beta_2 \cos B + \beta_4 \cos^3 B + \beta_6 \cos^5 B + \beta_8 \cos^7 B) \sin B] 
 \end{equation}
 
@@ -98,6 +101,7 @@ X=c[\beta_0 B + (\beta_2 \cos B + \beta_4 \cos^3 B + \beta_6 \cos^5 B + \beta_8 
 $\beta_0, \beta_2, \beta_4, \beta_6, \beta_8$的值为：
 
 \begin{equation}
+\label{eq:CXC}
 \left .
 \begin{aligned}
 \beta_0 &= 1 - \frac{3}{4}e'^2 + \frac{45}{64}e'^4 - \frac{175}{256}e'^6 + \frac{11025}{16384}e'^8  \\
@@ -111,26 +115,27 @@ $\beta_0, \beta_2, \beta_4, \beta_6, \beta_8$的值为：
 
 公式引用自《大地测量学基础》第115页(4-107)、与(4-108)。
 
-或用以下公式：
-
+可对公式\ref{eq:CXC}做进一步演化，令：
 \begin{equation}
-X=d [\alpha_0 B  - ( \alpha_2 \sin B + \alpha_4 \sin ^3 B + \alpha_6 \sin ^5 B + \alpha_8 \sin^7 ) \cos B]
+	\label{eq:CXCC}
+	\left .
+	\begin{aligned}
+		C_0 &= c \beta_0 = c(1 - \frac{3}{4}e'^2 + \frac{45}{64}e'^4 - \frac{175}{256}e'^6 + \frac{11025}{16384}e'^8) \\
+		C_2 &= c \beta_2 = c(\beta_0 -1)                                                                              \\
+		C_4 &= c \beta_4 = c(\frac{15}{32}e'^4 - \frac{175}{384}e'^6 + \frac{3675}{8192}e'^8)                         \\
+		C_6 &= c \beta_6 = c(-\frac{35}{96}e'^6 + \frac{735}{2048}e'^8)                                               \\
+		C_8 &= c \beta_8 = c(\frac{315}{1024}e'^8)
+	\end{aligned}
+	\right \}
 \end{equation}
 
-式中 d 为赤道子午曲率半径， 其值为 $d=b^2 / a $, 
-$\alpha_0, \alpha_2, \alpha_4, \alpha_6, \alpha_8$的值为：
+则子午线弧长公式\ref{eq:CX}可演化为：
 
 \begin{equation}
-\left .
-\begin{aligned}
-\alpha_0 &= 1+\frac{3}{4}e^2+\frac{45}{64}e^4+\frac{175}{256}e^6+\frac{11025}{16384}e^8  \\
-\alpha_2 &= \alpha_0 - 1 \\
-\alpha_4 &= \frac{15}{32}e^4+\frac{175}{384}e^6+\frac{3675}{8192}e^8 \\
-\alpha_6 &= \frac{35}{96}e^6+\frac{735}{2048}e^8 \\
-\alpha_8 &= \frac{315}{1024}e^8
-\end{aligned} 
-\right \}
+	\label{eq:CXX}
+	X=C_0 B + (C_2 \cos^2 B + C_4 \cos^4 B + C_6 \cos^6 B + C_8 \cos^8 B) \tan B
 \end{equation}
+
 
 \item 坐标正算
 \begin{equation}
@@ -214,9 +219,9 @@ $(a_0, a_2, a_4, a_6, a_8)$也就确定了，其中的$(m_0, m_2, m_4, m_6, m_8)
 
 我们新建一 WPF 项目，命名为GaussProj，程序中我们将应用WPF技术编写图形界面。
 
-在高斯投影中由于要处理角度与点等数据，我们可以将前面的角度处理函数DMS2RAD与RAD2DMS与SPoint点类
-拷贝到当前项目中来，也可以将其打包成一 Class Library(.NET Framework)即类库文件引用到当前项目中，
-在当前项目中尽量不修改前面的各个功能代码。
+在高斯投影中由于要处理角度与点等数据，我们可将前面的角度处理函数DMS2RAD、RAD2DMS
+与SPoint点类拷贝到当前项目中来，也可以将其打包成一 Class Library(.NET Framework)
+即类库文件引用到当前项目中，在当前项目中尽量不修改前面的各个功能代码。
 
 基于上一小节的分析，我们新建一椭球类$(Spheroid)$，在其中我们定义以上与椭球类型
 相关的元素。代码如下所示：
@@ -770,17 +775,17 @@ public class GeoPoint
         VerticalAlignment="Center"/>
 <TextBlock  Text="B=" Grid.Row="1" Margin="5"/>
 <TextBox x:Name="textBox_B" Grid.Row="1"
-        Text="{Binding B, StringFormat={}{0:##0.####}}"
+        Text="{Binding B}"
         VerticalAlignment="Center"  Margin="25,0,0,0"/>
 <TextBlock  Text="L=" Margin="5" Grid.Row="2" />
 <TextBox x:Name="textBox_L"
-        Text="{Binding L, StringFormat={}{0:##0.####}}"
+        Text="{Binding L}"
         VerticalAlignment="Center" Margin="25,0,0,0" Grid.Row="2" />
 
 <TextBlock  Text="L0=" Grid.Column="1"
         Margin="5,0,0,0" VerticalAlignment="Center"/>
 <TextBox x:Name="textBox_L0"
-        Text="{Binding L0, StringFormat={}{0:##0.####}}" 
+        Text="{Binding L0}" 
         Grid.Column="1"
         Margin="30,0,3,0" VerticalAlignment="Center"/>
 <Button Content="(B,L)->(x,y)" Grid.Column="1" Grid.Row="1"
@@ -792,11 +797,11 @@ public class GeoPoint
         HorizontalAlignment="Center" VerticalAlignment="Center"/>
 <TextBlock  Text="x=" Margin="5" Grid.Row="1" Grid.Column="2"/>
 <TextBox x:Name="textBox_x" Grid.Row="1" Grid.Column="2"
-        Text="{Binding X, StringFormat={}{0:##0.###} }"
+        Text="{Binding X}"
         Margin="25,0,0,0" VerticalAlignment="Center" />
 <TextBlock Text="y=" Grid.Row="2" Grid.Column="2" Margin="5,0,0,0"/>
 <TextBox x:Name="textBox_y"
-        Text="{Binding Y , StringFormat={}{0:##0.###}}"
+        Text="{Binding Y}"
         Grid.Row="2"  Grid.Column="2"
         Margin="25,0,0,0" VerticalAlignment="Center" />  
 \end{lstlisting}
@@ -1143,9 +1148,8 @@ public class CoordinateSystem : INotifyPropertyChanged
 在类GeoPoint中将属性L0的定义删除。在CoordinateSystem类中，由于
 N，L0，YKM需与界面交互，故须从接口 INotifyPropertyChanged 继承。
 
-为了与WPF界面中的DataGrid控件交互，点集需要用 
-ObservableCollection<GeoPoint> 表达，不能用List<GeoPoint>，而且默认状态
-下就应该生成其实例对象。注意二者的命名空间也不一样，
+为与WPF界面中的DataGrid控件交互，点集需要用ObservableCollection<GPoint> 表达，
+不能用List<GPoint>，而且默认状态下就应该生成其实例对象。注意二者的命名空间也不一样，
 前者为System.Collections.ObjectModel，
 用于界面交互较多，后者为 System.Collections.Generic，用于不需要界面的
 算法较多。
@@ -1564,12 +1568,12 @@ public class CoordinateSystem : NotificationObject
 
 在这段xaml代码中，除了功能按钮区外，实际上分为了三部分：
 
-第一部分为参考椭球定义，如第18行代码所示，我们将其属性布局到
+第一部分为参考椭球定义，如第18行代码所示，我们将其布局到
  groupBox\_spheroid中，数据绑定a与f，数据源设置在groupBox\_spheroid中，
  采用冒泡搜寻类CoordinateSystem中的ProjSpheroid属性。
 
- ComboBox中的参考椭球类型采用了硬编码方式直接写在其中了。通过SelectionChange
- 事件对不同选择进行响应。
+为了简化示例程序的编写，ComboBox中的参考椭球类型采用硬编码方式直接写在其中了。
+通过SelectionChange事件对不同的椭球类型选择进行响应。
 
 第二部分为坐标系定义，同样采用数据绑定的形式与界面交互数据，数据源来自
 类CoordinateSystem。
@@ -1735,32 +1739,62 @@ public partial class GaussProjWin : Window
 坐标进行相互转换。但应注意椭球膨胀后，各个点的纬度值也会发生变化，
 在这种换带过程中需要修正各个点的纬度值，大家可以参看这方面的资料。
 
-随着我国现在对CGCS2000大地坐标系的推广应用，大家还可以将大地坐标（B，L）
-与空间直角坐标（X，Y，Z）进行相互转换，这样就可以实现空间直角坐标（X，Y，Z）
-到高斯平面坐标之间的计算了。进而在桌面端电脑或移动设备上编程实现更多的功能应用。
+随着我国对CGCS2000大地坐标系的推广应用与北斗导航系统的日益成熟，将大地坐标 $(B, L, H)$
+与空间直角坐标 $(X, Y, Z)$ 进行相互转换的应用也会越来越多。如果能实现大地坐标 $(B, L, H)$
+与空间直角坐标 $(X, Y, Z)$ 的相互转换，也就可以实现空间直角坐标 $(X, Y, Z)$
+到高斯平面坐标的投影计算了，进而在桌面端电脑或移动设备上编程实现更多的功能应用。
 
-大地坐标（B，L，H）与空间直角坐标（X，Y，Z）的相互转换公式如下：
+大地坐标 $(B, L, H)$ 与空间直角坐标 $(X, Y, Z)$ 的相互转换公式如下：
 
 已知大地坐标计算空间直角坐标的公式:
-\[
-\left \{ \begin{aligned}
+\begin{equation}
+\left .
+\begin{aligned}
 X &= (N+H) \cos B \cos L \\
 Y &= (N+H) \cos B \sin L \\
 Z &= [N(1 - e^2) + H)] \sin B 
-\end{aligned} \right.
-\]
+\end{aligned} 
+\right \}
+\end{equation}
 
-已知空间直角坐标计算大地坐标的公式如下：
+已知空间直角坐标$(X,Y,Z)$计算大地坐标$(B, L, H)$的公式如下：
 
-\[
-\left \{ \begin{aligned}
+\begin{equation}
+\left . 
+\begin{aligned}
 L &= \arctan \frac{Y}{X} \\
 \tan B &= \frac{Z + Ne^2 \sin B}{\sqrt{X^2 + Y^2}} \\
-H &= \frac{Z}{sinB} - N(1-e^2) 
-\end{aligned} \right.
-\]
+H &= \frac{Z}{sinB} - N(1-e^2)  \\
+ or  \\
+H &=\frac{\sqrt{X^2 + Y^2}}{\cos B} - N 
+\end{aligned} 
+\right \}
+\end{equation}
 
-本处只是列出了计算公式，大家可以查找资料寻找更加高效的计算方法。
+由以上公式可以看出，L可以直接有X，Y算出，B则需要迭代计算。
+
+可对上面公式的B直接进行迭代计算，其过程如下：
+
+% \begin{equation}
+%     B = \arctan { \frac{Z+Ne^2 \sin B}{\sqrt{X^2 + Y^2}}}
+% \end{equation}
+
+先取B的初始值为：$B_0 =\arctan{ (Z / \sqrt{X^2 + Y^2} ) }$ 计算出$N$与$\sin B_0$，
+代入上式，计算出新的B值$B_1$。然后将新的$B_1$代入再计算，直到两次的B值满足所要求的
+精度。
+
+或将：
+$$N = \frac{c}{\sqrt{1+e'^2 \cos ^2 B}}$$
+与$$\frac{1}{\cos^2 B} = 1+ \tan^2 B$$
+
+代入到上式中，得到：
+\begin{equation}
+    \tan B = \frac{Z}{\sqrt{X^2 + Y^2}} + \frac{ce^2 \cdot \tan B}{\sqrt{X^2 + Y^2} \cdot \sqrt{1 + e'^2 + \tan^2 B}}
+\end{equation}
+
+则可令 $tB = \tan B$，对公式两边的 tB 进行迭代计算，当满足精度要求时，再求出B值$B=\arctan (tB)$即可。
+
+本处只是列出了基本的计算公式与计算思路，大家可以查找资料寻找更加高效的计算方法予以实现。
 
 \section*{小结}
 
@@ -1773,8 +1807,3 @@ C\#知识与WPF界面技术实现了一个较为实用的高斯投影正反算�
 
 这个程序从功能上讲还是有许多不足的，从易用性上也还有许多值得改进的
 地方。希望随着我们的C\#知识与WPF技术的积累，能在以后将它优化得更好！
-
-%%% Local Variables:
-%%% mode: latex
-%%% TeX-master: "../clcxsj"
-%%% End:

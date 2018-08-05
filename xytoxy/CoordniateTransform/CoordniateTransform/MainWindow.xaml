@@ -54,25 +54,25 @@
             <GroupBox Header="转换参数" Grid.Row="1">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="100"/>
                         <ColumnDefinition Width="120*"/>
-                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="100"/>
                         <ColumnDefinition Width="120*"/>
-                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="80"/>
                         <ColumnDefinition Width="120*"/>
-                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="80"/>
                         <ColumnDefinition Width="120*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="25"/>
                         <RowDefinition Height="25"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="E平移量a=" Grid.Row="0" Grid.Column="0" 
+                    <TextBlock Text="东向(E)平移量a=" Grid.Row="0" Grid.Column="0" 
                         VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <TextBox x:Name="textBox_a" Grid.Row="0" Grid.Column="1" 
                         Text="{Binding a}" 
                         VerticalContentAlignment="Center"/>
-                    <TextBlock Text="N平移量b=" Grid.Row="0" Grid.Column="2"  
+                    <TextBlock Text="北向(N)平移量b=" Grid.Row="0" Grid.Column="2"  
                         VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <TextBox x:Name="textBox_b" Grid.Row="0" Grid.Column="3"  
                         Text="{Binding b}"

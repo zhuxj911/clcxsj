@@ -128,7 +128,7 @@ $$k=\sqrt{c^2+d^2}$$
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[scale=1]{xytoxy/XYtoXYUI02.png}
+    \includegraphics[scale=0.8]{xytoxy/XYtoXYUI02.png}
     \caption{坐标转换程序界面}
     \label{fig:XYtoXYUI02}
 \end{figure}
@@ -150,48 +150,48 @@ $$k=\sqrt{c^2+d^2}$$
 整个界面布局xaml代码如下：
 \begin{lstlisting}[language=xml]
 <DockPanel LastChildFill="True">
-        <Menu  x:Name="mainmenu" DockPanel.Dock="Top" Background="AliceBlue">
-            <MenuItem Header="文件(F)">
-                <MenuItem Header="打开文本数据"
-                    Click="menuItem_OpenTextFileData_Click"/>
-                <MenuItem Header="保存文本数据"
-                    Click="menuItem_SaveTextFileData_Click"/>
-                <Separator/>
-                <MenuItem Header="退出" Click="menuItem_Exit_Click"/>
-            </MenuItem>
-            <MenuItem Header="数据处理(D)">
-                <MenuItem Header="计算转换参数" 
-                    Click="menuItem_CalCoefficient_Click" />
-                <MenuItem Header="计算待计算点坐标" 
-                    Click="menuItem_Cal_UnKnw_XY_Click" />
-                <Separator/>
-                <MenuItem Header="写出计算成果" 
-                    Click="menuItem_Write_Result_Click" />
-            </MenuItem>
-        </Menu>
+    <Menu  x:Name="mainmenu" DockPanel.Dock="Top" Background="AliceBlue">
+        <MenuItem Header="文件(F)">
+            <MenuItem Header="打开文本数据"
+               Click="menuItem_OpenTextFileData_Click"/>
+            <MenuItem Header="保存文本数据"
+                Click="menuItem_SaveTextFileData_Click"/>
+            <Separator/>
+            <MenuItem Header="退出" Click="menuItem_Exit_Click"/>
+       </MenuItem>
+        <MenuItem Header="数据处理(D)">
+            <MenuItem Header="计算转换参数" 
+                Click="menuItem_CalCoefficient_Click" />
+            <MenuItem Header="计算待计算点坐标" 
+                Click="menuItem_Cal_UnKnw_XY_Click" />
+            <Separator/>
+            <MenuItem Header="写出计算成果" 
+                Click="menuItem_Write_Result_Click" />
+        </MenuItem>
+    </Menu>
 
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="150*"/>
-                <RowDefinition Height="75"/>
-                <RowDefinition Height="200*"/>
-            </Grid.RowDefinitions>
-            <GroupBox Header="公共点坐标" Grid.Row="0">
-                <DataGrid AutoGenerateColumns="False" Margin="2" 
-                    ItemsSource="{Binding KnwPointList}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="点名" MinWidth="60"
-                            Binding="{Binding Name}"  />
-                        <DataGridTextColumn Header="源X(N)" MinWidth="100"
-                            Binding="{Binding OX, StringFormat={}{0:0.000}}"/>
-                        <DataGridTextColumn Header="源Y(E)" MinWidth="100"
-                            Binding="{Binding OY, StringFormat={}{0:0.000}}"/>
-                        <DataGridTextColumn Header="新X(N)"  MinWidth="100"
-                            Binding="{Binding NX, StringFormat={}{0:0.000}}"/>
-                        <DataGridTextColumn Header="新Y(E)" MinWidth="100"
-                            Binding="{Binding NY, StringFormat={}{0:0.000}}"/>
-                    </DataGrid.Columns>
-                </DataGrid>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="150*"/>
+            <RowDefinition Height="75"/>
+            <RowDefinition Height="200*"/>
+        </Grid.RowDefinitions>
+        <GroupBox Header="公共点坐标" Grid.Row="0">
+        <DataGrid AutoGenerateColumns="False" Margin="2" 
+            ItemsSource="{Binding KnwPointList}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="点名" MinWidth="60"
+                    Binding="{Binding Name}"  />
+                <DataGridTextColumn Header="源X(N)" MinWidth="100"
+                    Binding="{Binding OX, StringFormat={}{0:0.000}}"/>
+                <DataGridTextColumn Header="源Y(E)" MinWidth="100"
+                    Binding="{Binding OY, StringFormat={}{0:0.000}}"/>
+                <DataGridTextColumn Header="新X(N)"  MinWidth="100"
+                    Binding="{Binding NX, StringFormat={}{0:0.000}}"/>
+                <DataGridTextColumn Header="新Y(E)" MinWidth="100"
+                    Binding="{Binding NY, StringFormat={}{0:0.000}}"/>
+            </DataGrid.Columns>
+        </DataGrid>
             </GroupBox>
 
             <GroupBox Header="转换参数" Grid.Row="1">
@@ -297,7 +297,7 @@ $$k=\sqrt{c^2+d^2}$$
 
 我们设计成果文件的格式如下：
 
-\begin{verbatim}
+\begin{lstlisting}[language=C]
 #赫尔默特四参数转换法计算成果数据文件
 # 公共点坐标
 # 点名, 源X(N), 源Y(E), 新X(N), 新Y(E)
@@ -306,8 +306,9 @@ $$k=\sqrt{c^2+d^2}$$
 102,3928308.824,446388.500,328447.816,482788.977
 
 # 转换参数
-a=57613.4076806228，b=-3602385.71435623, c=1.00002870085641, d=-0.00540327780963763
-α=-0.183446321911374，k=1.00004329803646
+a=57613.4076806228，b=-3602385.71435623, c=1.00002870085641,
+d=-0.00540327780963763
+`$\alpha$`=-0.183446321911374，k=1.00004329803646
 
 # 待计算点的坐标
 # 点名, 源X(N), 源Y(E), 新X(N), 新Y(E)
@@ -317,7 +318,7 @@ a=57613.4076806228，b=-3602385.71435623, c=1.00002870085641, d=-0.0054032778096
 103,3927002.191,449256.848,327156.645,485664.466
 100,3928471.180,451589.920,328638.282,487989.668
 102,3928308.824,446388.500,328447.817,482788.976
-\end{verbatim}
+\end{lstlisting}
 
 \subsection{程序流程}
 根据以上分析，程序流程如下：

@@ -312,6 +312,467 @@ public static string RADtoString(double radAngle)
 \end{lstlisting}
 
 
+\section{具有图形界面的坐标方位角计算程序编写}
+
+前面我们编写了坐标方位角计算算法函数与角度弧度互相转换的函数。这节我们将借助于
+WPF界面编写技术完成一个较为完整的图形界面的坐标方位角程序的编写。
+
+\subsection{建立解决方案与项目}
+启动Visual Studio（本书中所用版本为2017英文版），依次点击菜单File -> New -> Project...，
+在弹出的对话框中按图\ref{fig:AzimuthApp1}所示输入新建项目名称、选择项目类型等。
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[scale=0.6]{surveybase/AzimuthApp1.png}
+	\caption{新建项目示意图}
+	\label{fig:AzimuthApp1}
+\end{figure}
+
+建好后的项目如图\ref{fig:AzimuthApp2}所示：
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[scale=0.6]{surveybase/AzimuthApp2.png}
+	\caption{方位角计算项目示意图}
+	\label{fig:AzimuthApp2}
+\end{figure}
+
+由图\ref{fig:AzimuthApp2}可以看出，Visual Studio是以Solution、Project、File
+的形式组织管理的。一个Solution可以包括一个至多个Project，一个Project中包含多个文件，
+且一个Project编译为一个exe或dll文件，C\#中所有的对象与数据均以文件的形式组织。
+
+图\ref{fig:AzimuthApp2}中的1区为Solution Explorer区，可对Project及File进行各种
+操作。2、3区为代码与界面编写区，文件类型不同，呈现的内容也会不一样。
+
+现代软件开发应遵循界面与算法分离的原则，因此我们再新建一类库项目SMath，用于
+组织我们的算法，如图\ref{fig:AzimuthApp3}所示：
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[scale=0.6]{surveybase/AzimuthApp3.png}
+	\caption{新建类库项目示意图}
+	\label{fig:AzimuthApp3}
+\end{figure}
+
+在该步操作中除了项目类型应选择Class Library之外，与图\ref{fig:AzimuthApp1}
+不同的是此处Solution项应选择Add to solution而不是原来的 Create new solution。
+
+现代软件开发的另一个原则是保证代码的可测试性，在增加类库项目后，
+再增加一单元测试项目UnitTestSMath。鼠标右击图\ref{fig:AzimuthApp2}中的Solution Explorer区
+中的Solution 'AzimuthApp'项，在弹出的右键快捷菜单中选择 Add，
+在 Add 的下级菜单中选择 New Project..., 将弹出如图\ref{fig:AzimuthApp6}所示的添加单元测试项目的
+对话框。
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[scale=0.6]{surveybase/AzimuthApp6.png}
+	\caption{添加单元测试项目示意图}
+	\label{fig:AzimuthApp6}
+\end{figure}
+
+在图\ref{fig:AzimuthApp6}的操作中，应在左侧选择Test，在右边选择 Unit Test Project，
+
+整个操作完成后，我们的解决方案Solution就拥有三个项目了，如图\ref{fig:AzimuthApp7}所示。
+项目AzimuthApp为我们的界面编写项目，是启动项目(StartUp Project)。
+项目SMath为我们的算法项目，项目UnitTestSMath为
+对算法项目SMath进行单元测试的项目。
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[scale=0.7]{surveybase/AzimuthApp7.png}
+	\caption{完整的Solution示意图}
+	\label{fig:AzimuthApp7}
+\end{figure}
+
+下面我们通过添加引用或参考(Add Reference)为三个项目建立关系。
+
+SMath项目为基础算法，AzimuthApp需要用到其中的算法，因此应该向AzimuthApp项目
+添加对SMath项目的引用。点击AzimuthApp项目将其展开，鼠标右击项目中的References
+项，弹出如图\ref{fig:AzimuthApp4}所示的快捷菜单：
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[scale=0.8]{surveybase/AzimuthApp4.png}
+	\caption{引用类库项目示意图}
+	\label{fig:AzimuthApp4}
+\end{figure}
+
+点击Add Reference...项，弹出如图\ref{fig:AzimuthApp5}所示的对话框。
+在对话框左侧确保选中Projects，在右侧选中SMath项目，单击OK按钮就将引用添加完毕。
+同样的方法向UnitTestSMath项目添加对SMath项目的引用。
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[scale=0.7]{surveybase/AzimuthApp5.png}
+	\caption{选择引用类库项目示意图}
+	\label{fig:AzimuthApp5}
+\end{figure}
+
+至此，我们的项目构建完成，整个程序的架构已经搭建好了。
+在SMath项目中将原来的Class1.cs文件删除，新添一SMath.cs
+文件，在SMath.cs文件中将我们前边讲解的SMath类加入其中，将各个函数组织进来，
+对该项目执行构建(build)操作生成Dll类库文件，在另两个项目中就可以使用了。
+
+\subsection{对算法进行单元测试}
+
+SMath项目中的各个函数是我们的基础测量算法函数，必须保证它们的正确性。
+为此对其编写单元测试函数进行严格的测试。如果以后需要对这些算法进行优化，
+执行这些单元测试函数也可确保优化后的算法正确性。
+
+点击展开UnitTestSMath项目，鼠标右键点击原来的文件UnitTest1.cs，
+在弹出的菜单中选择Rename命令，将其改名为UnitTestSMath.cs，
+在弹出的确认对话框中选择按钮 `是(Y)'就可以将其中的类名改为UnitTestSMath了。
+
+我们首先编写DMStoDMS函数的测试函数，其代码如下：
+
+\begin{lstlisting}[language=C]
+//UnitTestSMath.cs文件内容
+using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace UnitTestSMath
+{
+    [TestClass]
+    public class UnitTestSMath
+    {
+        [TestMethod]
+        public void TestDMStoDMS()
+        {
+            ZXY.SMath.DMStoDMS(1.4, out int d, out int m, out double s);
+            Assert.AreEqual(1, d);
+            Assert.AreEqual(40, m);
+            Assert.AreEqual(0, s, 1e-8);
+
+            ZXY.SMath.DMStoDMS(-1.4, out d, out m, out s);
+            Assert.AreEqual(-1, d);
+            Assert.AreEqual(-40, m);
+            Assert.AreEqual(0, s, 1e-8);
+
+            ZXY.SMath.DMStoDMS(235.07492345, out d, out m, out s);
+            Assert.AreEqual(235, d);
+            Assert.AreEqual(7, m);
+            Assert.AreEqual(49.2345, s, 1e-8);
+
+            ZXY.SMath.DMStoDMS(-235.07492345, out d, out m, out s);
+            Assert.AreEqual(-235, d);
+            Assert.AreEqual(-7, m);
+            Assert.AreEqual(-49.2345, s, 1e-8);
+        }
+    }
+}
+\end{lstlisting}
+
+测试的原理非常简单，那就是已知一个值，让它经过一系列的运算得到期望的值。如果算法结果
+与期望值相符，则测试通过，否则测试就不通过。
+
+在Visual Studio系统中，单元测试的主要函数在Assert类中，其静态重载函数AreEqual
+用于判断期望值(expected)与实际运算值(actual)是否相等。对于上述代码中d与m，由于
+是整数，可以直接判断是否相等，而s是double类型，需给出一定的容错范围，不能直接判断
+是否相等。
+
+在测试代码中，我们分别用$1^{\degree} 40'$、$-1^{\degree} 40'$、
+$235^{\degree} 07'49.2345''$、$-235^{\degree} 07'49.2345''$进行
+测试，确保秒后第8位小数的准确性。
+
+依次点击菜单栏上的Test -> Run -> All Tests 菜单项，在左侧的侧栏Test Explorer中
+就可以显示测试结果，如图\ref{fig:AzimuthApp8}所示，图中左侧Test Explorer中测试项
+显示为绿色，表明测试通过。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.65]{surveybase/AzimuthApp8.png}
+    \caption{执行单元测试成功的示意图}
+    \label{fig:AzimuthApp8}
+\end{figure}
+
+如果我们将第30行代码中的-7改为-8，再执行测试命令，执行结果如图\ref{fig:AzimuthApp9}，
+图中左侧Test Explorer中测试项显示为红色的``×''，表明相应测试项未通过。
+
+在Test Explorer下部显示了未通过测试的函数名称，位于源代码的哪一行，期望值是-8，
+而实际值为-7。我们就可以根据这些信息去修正未通过测试的函数。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.65]{surveybase/AzimuthApp9.png}
+    \caption{执行单元测试失败的示意图}
+    \label{fig:AzimuthApp9}
+\end{figure}
+
+由图\ref{fig:AzimuthApp8}与图\ref{fig:AzimuthApp9}可看出，测试通过，相应函数测试项
+显示为绿色，测试项中之一不能通过，则相应函数测试项显示为红色。这就免去了我们人工再去比对的
+环节，也利于机器的自动测试实施。
+
+\subsection{界面编写}
+
+在确保基本算法的正确性后，我们就可以编写界面程序了。我们编写一简单界面，如图\ref{fig:AzimuthUI1}
+所示。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=1]{surveybase/AzimuthUI1.png}
+    \caption{坐标方位角计算设计界面}
+    \label{fig:AzimuthUI1}
+\end{figure}
+
+相应的XAML设计代码如下：
+
+\begin{lstlisting}[language=C]
+<Window x:Class="AzimuthApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AzimuthApp"
+        mc:Ignorable="d"
+        Title="坐标方位角计算" Height="100" Width="400">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="80*"/>
+            <ColumnDefinition Width="3"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="100*"/>
+            <ColumnDefinition Width="3"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="100*"/>
+            <ColumnDefinition Width="3"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="3"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="3"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="点名:" Grid.Row="0" Grid.Column="0" />
+        <TextBox x:Name="textBoxAName" Grid.Row="0" Grid.Column="1" />
+        <TextBlock Text="X=" TextAlignment="Right" Grid.Row="0" Grid.Column="3"/>
+        <TextBox x:Name="textBoxAX" Grid.Row="0" Grid.Column="4"/>
+        <TextBlock Text="Y=" TextAlignment="Right" Grid.Row="0" Grid.Column="6"/>
+        <TextBox x:Name="textBoxAY" Grid.Row="0" Grid.Column="7" />
+
+        <TextBlock Text="点名:" Grid.Row="2" Grid.Column="0" />
+        <TextBox x:Name="textBoxBName" Grid.Row="2" Grid.Column="1" />
+        <TextBlock Text="X=" TextAlignment="Right" Grid.Row="2" Grid.Column="3"/>
+        <TextBox x:Name="textBoxBX" Grid.Row="2" Grid.Column="4" />
+        <TextBlock Text="Y=" TextAlignment="Right" Grid.Row="2" Grid.Column="6"/>
+        <TextBox x:Name="textBoxBY" Grid.Row="2" Grid.Column="7" />
+
+        <Button x:Name="buttonAzimuth" Content="计算" Grid.Row="5" 
+            Grid.Column="0" Grid.ColumnSpan="2" Click="buttonAzimuth_Click"/>
+        <TextBlock x:Name="textBlockAzimuth" 
+            Text="坐标方位角:" TextAlignment="Right" Grid.Row="5" Grid.Column="3"/>
+        <TextBox x:Name="textBoxAzimuth" Grid.Row="5" Grid.Column="4" />
+        <TextBlock Text="距离:" TextAlignment="Right" Grid.Row="5" Grid.Column="6" />
+        <TextBox x:Name="textBoxDistance" Grid.Row="5" Grid.Column="7" />
+    </Grid>
+</Window>
+\end{lstlisting}
+
+计算按钮的Click事件代码如下：
+\begin{lstlisting}[language=C]
+private void buttonAzimuth_Click(object sender, RoutedEventArgs e)
+{
+    double.TryParse(textBoxAX.Text, out double xA);
+    double.TryParse(textBoxAY.Text, out double yA);
+    double.TryParse(textBoxBX.Text, out double xB);
+    double.TryParse(textBoxBY.Text, out double yB);
+
+    double distanceAB = ZXY.SMath.Azimuth(xA, yA, xB, yB, out double azimuthAB);
+
+    textBoxAzimuth.Text = ZXY.SMath.RADtoString(azimuthAB);
+    textBoxDistance.Text = distanceAB.ToString();
+    textBlockAzimuth.Text = $"{textBoxAName.Text}->{textBoxBName.Text}坐标方位角:";
+}
+\end{lstlisting}
+
+程序的运行结果如图\ref{fig:AzimuthUI2}所示。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=1]{surveybase/AzimuthUI2.png}
+    \caption{坐标方位角计算运行界面}
+    \label{fig:AzimuthUI2}
+\end{figure}
+
+\subsection{界面程序的优化}
+
+WPF技术的核心是绑定(Binding)，以上程序虽然简单，但也涉及数据与界面的交互问题。
+我们对其界面稍加抽象，改写一下。
+
+我们新建一个类AzimuthUI，其代码如下：
+\begin{lstlisting}[language=C]
+using System.ComponentModel;
+
+namespace AzimuthApp
+{
+    class AzimuthUI : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void RaisePropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        private string _AName = "";
+        public string AName
+        {
+            get => _AName;
+            set
+            {
+                _AName = value;
+                RaisePropertyChanged("AName");
+            }
+        }
+
+        private double _xA;
+        public double XA
+        {
+            get => _xA;
+            set
+            {
+                _xA = value;
+                RaisePropertyChanged("XA");
+            }
+        }
+
+
+        private double _yA;
+        public double YA
+        {
+            get => _yA;
+            set
+            {
+                _yA = value;
+                RaisePropertyChanged("YA");
+            }
+        }
+
+        private string _BName = "";
+        public string BName
+        {
+            get => _BName;
+            set
+            {
+                _BName = value;
+                RaisePropertyChanged("BName");
+            }
+        }
+
+        private double _xB;
+        public double XB
+        {
+            get => _xB;
+            set
+            {
+                _xB = value;
+                RaisePropertyChanged("XB");
+            }
+        }
+
+        private double _yB;
+        public double YB
+        {
+            get => _yB;
+            set
+            {
+                _yB = value;
+                RaisePropertyChanged("YB");
+            }
+        }
+
+        public string AzimuthName
+        {
+            get => $"{AName}->{BName}坐标方位角:";
+        }
+
+        private double _azimuthAB;
+        public string AzimuthAB
+        {
+            get => ZXY.SMath.RADtoString(_azimuthAB);
+        }
+
+        private double _distanceAB;
+        public double DistanceAB
+        {
+            get => _distanceAB;
+        }
+
+        public void CalAzimuthDistanceAB()
+        {
+            _distanceAB = ZXY.SMath.Azimuth(XA, YA, XB, YB, out _azimuthAB);
+            RaisePropertyChanged("AzimuthAB");
+            RaisePropertyChanged("DistanceAB");
+            RaisePropertyChanged("AzimuthName");
+        }
+    }
+}
+\end{lstlisting}
+
+界面代码做如下修改：
+\begin{lstlisting}[language=XML]
+<TextBlock Text="点名:" Grid.Row="0" Grid.Column="0" />
+    <TextBox x:Name="textBoxAName" Text="{Binding AName}" 
+         Grid.Row="0" Grid.Column="1" />
+    <TextBlock Text="X=" TextAlignment="Right"
+         Grid.Row="0" Grid.Column="3"/>
+    <TextBox x:Name="textBoxAX" Text="{Binding XA}" 
+         Grid.Row="0" Grid.Column="4"/>
+    <TextBlock Text="Y=" TextAlignment="Right" 
+         Grid.Row="0" Grid.Column="6"/>
+    <TextBox x:Name="textBoxAY" Text="{Binding YA}" 
+         Grid.Row="0" Grid.Column="7" />
+
+    <TextBlock Text="点名:" Grid.Row="2" Grid.Column="0" />
+    <TextBox x:Name="textBoxBName" Text="{Binding BName}" 
+         Grid.Row="2" Grid.Column="1" />
+    <TextBlock Text="X=" TextAlignment="Right" Grid.Row="2" Grid.Column="3"/>
+    <TextBox x:Name="textBoxBX" Text="{Binding XB}" 
+         Grid.Row="2" Grid.Column="4" />
+    <TextBlock Text="Y=" TextAlignment="Right" Grid.Row="2" Grid.Column="6"/>
+    <TextBox x:Name="textBoxBY"  Text="{Binding YB}" 
+         Grid.Row="2" Grid.Column="7" />
+
+    <Button x:Name="buttonAzimuth" Content="计算" Grid.Row="5" 
+        Grid.Column="0" Grid.ColumnSpan="2"
+        Click="buttonAzimuth_Click"/>
+    <TextBlock x:Name="textBlockAzimuth" 
+        Text="{Binding AzimuthName, Mode=OneWay}" 
+        TextAlignment="Right" Grid.Row="5" Grid.Column="3"/>
+    <TextBox x:Name="textBoxAzimuth" Text="{Binding AzimuthAB, Mode=OneWay}" 
+        Grid.Row="5" Grid.Column="4" />
+    <TextBlock Text="距离:" TextAlignment="Right" Grid.Row="5" Grid.Column="6" />
+    <TextBox x:Name="textBoxDistance" Text="{Binding DistanceAB, Mode=OneWay}"
+        Grid.Row="5" Grid.Column="7" />
+\end{lstlisting}
+
+MainWindow窗体的后代代码做如下修改：
+
+\begin{lstlisting}[language=C]
+namespace AzimuthApp
+{
+    public partial class MainWindow : Window
+    {
+        AzimuthUI azimuthUI;
+        public MainWindow()
+        {
+            InitializeComponent();
+
+            azimuthUI = new AzimuthUI();
+            this.DataContext = azimuthUI;
+        }
+
+        private void buttonAzimuth_Click(object sender, RoutedEventArgs e)
+        {
+            azimuthUI.CalAzimuthDistanceAB();
+        }
+    }
+}
+\end{lstlisting}
+
+
 \section*{作业}
 
 \begin{enumerate}
@@ -322,4 +783,7 @@ $-23\degree -05'-47.6324''$形式，对于追求完美的某些程序员来讲�
 形式。请试着改进以上的DMStoString与RADtoString函数。
     
 \item 请用Math.Atan函数编写两点坐标反算坐标方位角的函数Azimuth。
+
+\item 请将单元测试项目UnitTestSMath中的测试函数TestAzimuth与TestRADtoDMS等补充
+编写完整。
 \end{enumerate}

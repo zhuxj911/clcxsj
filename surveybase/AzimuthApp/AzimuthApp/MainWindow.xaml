@@ -1,0 +1,123 @@
+﻿<Window x:Class="AzimuthApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AzimuthApp"
+        mc:Ignorable="d"
+        Title="坐标方位角计算" Height="100" Width="400">
+    <!--<Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="80*"/>
+            <ColumnDefinition Width="3"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="100*"/>
+            <ColumnDefinition Width="3"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="100*"/>
+            <ColumnDefinition Width="3"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="3"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="3"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="点名:" Grid.Row="0" Grid.Column="0" />
+        <TextBox x:Name="textBoxAName" 
+                 Grid.Row="0" Grid.Column="1" />
+        <TextBlock Text="X=" TextAlignment="Right"
+                   Grid.Row="0" Grid.Column="3"/>
+        <TextBox x:Name="textBoxAX" 
+                 Grid.Row="0" Grid.Column="4"/>
+        <TextBlock Text="Y=" TextAlignment="Right" 
+                   Grid.Row="0" Grid.Column="6"/>
+        <TextBox x:Name="textBoxAY" 
+                 Grid.Row="0" Grid.Column="7" />
+
+        <TextBlock Text="点名:" 
+                   Grid.Row="2" Grid.Column="0" />
+        <TextBox x:Name="textBoxBName" 
+                 Grid.Row="2" Grid.Column="1" />
+        <TextBlock Text="X=" TextAlignment="Right"
+                   Grid.Row="2" Grid.Column="3"/>
+        <TextBox x:Name="textBoxBX" Grid.Row="2" 
+                 Grid.Column="4" />
+        <TextBlock Text="Y=" TextAlignment="Right" 
+                   Grid.Row="2" Grid.Column="6"/>
+        <TextBox x:Name="textBoxBY" 
+                 Grid.Row="2" Grid.Column="7" />
+
+        <Button x:Name="buttonAzimuth" Content="计算" Grid.Row="5" 
+                Grid.Column="0" Grid.ColumnSpan="2"
+                Click="buttonAzimuth_Click"/>       
+        <TextBlock x:Name="textBlockAzimuth" 
+                   Text="坐标方位角:" TextAlignment="Right" 
+                   Grid.Row="5" Grid.Column="3"/>
+        <TextBox x:Name="textBoxAzimuth" 
+                 Grid.Row="5" Grid.Column="4" />
+        <TextBlock Text="距离:" TextAlignment="Right" 
+                   Grid.Row="5" Grid.Column="6" />
+        <TextBox x:Name="textBoxDistance" 
+                 Grid.Row="5" Grid.Column="7" />
+    </Grid>-->
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="80*"/>
+            <ColumnDefinition Width="3"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="100*"/>
+            <ColumnDefinition Width="3"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="100*"/>
+            <ColumnDefinition Width="3"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="3"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="3"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="点名:" Grid.Row="0" Grid.Column="0" />
+        <TextBox x:Name="textBoxAName" Text="{Binding AName}" 
+                 Grid.Row="0" Grid.Column="1" />
+        <TextBlock Text="X=" TextAlignment="Right"
+                   Grid.Row="0" Grid.Column="3"/>
+        <TextBox x:Name="textBoxAX" Text="{Binding XA}" 
+                 Grid.Row="0" Grid.Column="4"/>
+        <TextBlock Text="Y=" TextAlignment="Right" 
+                   Grid.Row="0" Grid.Column="6"/>
+        <TextBox x:Name="textBoxAY" Text="{Binding YA}" 
+                 Grid.Row="0" Grid.Column="7" />
+
+        <TextBlock Text="点名:" 
+                   Grid.Row="2" Grid.Column="0" />
+        <TextBox x:Name="textBoxBName" Text="{Binding BName}" 
+                 Grid.Row="2" Grid.Column="1" />
+        <TextBlock Text="X=" TextAlignment="Right"
+                   Grid.Row="2" Grid.Column="3"/>
+        <TextBox x:Name="textBoxBX" Text="{Binding XB}" 
+                 Grid.Row="2" Grid.Column="4" />
+        <TextBlock Text="Y=" TextAlignment="Right" 
+                   Grid.Row="2" Grid.Column="6"/>
+        <TextBox x:Name="textBoxBY"  Text="{Binding YB}" 
+                 Grid.Row="2" Grid.Column="7" />
+
+        <Button x:Name="buttonAzimuth" Content="计算" Grid.Row="5" 
+                Grid.Column="0" Grid.ColumnSpan="2"
+                Click="buttonAzimuth_Click"/>
+        <TextBlock x:Name="textBlockAzimuth" 
+                   Text="{Binding AzimuthName, Mode=OneWay}" TextAlignment="Right" 
+                   Grid.Row="5" Grid.Column="3"/>
+        <TextBox x:Name="textBoxAzimuth" Text="{Binding AzimuthAB, Mode=OneWay}" 
+                 Grid.Row="5" Grid.Column="4" />
+        <TextBlock Text="距离:" TextAlignment="Right"  
+                   Grid.Row="5" Grid.Column="6" />
+        <TextBox x:Name="textBoxDistance" Text="{Binding DistanceAB, Mode=OneWay}"
+                 Grid.Row="5" Grid.Column="7" />
+    </Grid>
+</Window>

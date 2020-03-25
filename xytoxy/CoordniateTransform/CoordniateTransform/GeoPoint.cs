@@ -14,54 +14,54 @@
         }       
 
         private double _oX;
-        public double OX //源X坐标
+        public double oX //源X坐标
         {
             get { return _oX; }
             set
             {
                 _oX = value;
-                RaisePropertyChange("OX");
+                RaisePropertyChange("oX");
             }
         }
   
         private double _oY;
-        public double OY  //源Y坐标
+        public double oY  //源Y坐标
         {
             get { return _oY; }
             set
             {
                 _oY = value;
-                RaisePropertyChange("OY");
+                RaisePropertyChange("oY");
             }
         }
 
 
-        private double _nX;
-        public double NX //新X坐标
+        private double _X;
+        public double X //新X坐标
         {
-            get { return _nX; }
+            get { return _X; }
             set
             {
-                _nX = value;
-                RaisePropertyChange("NX");
+                _X = value;
+                RaisePropertyChange("X");
             }
         }
 
-        private double _nY;
-        public double NY  //新Y坐标
+        private double _Y;
+        public double Y  //新Y坐标
         {
-            get { return _nY; }
+            get { return _Y; }
             set
             {
-                _nY = value;
-                RaisePropertyChange("NY");
+                _Y = value;
+                RaisePropertyChange("Y");
             }
         }
 
  
         public override string ToString()
         {
-            return string.Format("{0},{1:0.000},{2:0.000},{3:0.000},{4:0.000}", Name, OX, OY, NX, NY);
+            return $"{Name},{oX:0.000},{oY:0.000},{X:0.000},{Y:0.000}";
         }
     }
 }

@@ -31,8 +31,8 @@
 变换方程为：
 $$\left.
 \begin{array}{l}
-\textrm{$x=a+k(x'\cos\alpha+y'\sin\alpha)$} \\
-\textrm{$y=b+k(-x'\sin\alpha+y'\cos\alpha)$}
+\textrm{$x=dx + k(x'\cos\alpha - y'\sin\alpha)$} \\
+\textrm{$y=dy + k(x'\sin\alpha + y'\cos\alpha)$} 
 \end{array}\right\}$$
 
 式中$a$，$b$表示平移，$\alpha$是旧网$x'$轴逆转至新网$x$轴的转角，$k$为尺度因子。
@@ -41,35 +41,35 @@ $$\left.
 因此必须至少有两个公共点，列出四个方程式，解算出这四个未知参数值。如果具有两个以
 上的公共点时，就应该应用最小二乘平差方法，求解最或是参数值。
 
-为解算出这些参数，我们引入参数$c$、$d$：
+为解算出这些参数，我们引入参数$a$、$b$、$c$、$d$：
 
-$c=k\cos\alpha$，$d=k\sin\alpha$
+$a=dx, b=dy, c=k\cos\alpha, d=k\sin\alpha$
 
 将公式转换为：
 $$\left.
 \begin{array}{l}
-\textrm{$x=a+x'c+y'd$}\\
-\textrm{$y=b+y'c-x'd￥$}
+\textrm{$x = a + x'c - y'd$}\\
+\textrm{$y = b + y'c + x'd$}
 \end{array}\right\}$$
 
 由于新旧网都存在测量误差，设新旧坐标$x$，$y$和$x'$，$y'$的误差分别为
 $v_x$，$v_y$和$v_{x'}$，$v_{y'}$，因此上式改写为：
 
 $$\left.\begin{array}{l}
-\textrm{$x+v_x=a+(x'+v_{x'})c+(y'+v_{y'})d$} \\
-\textrm{$y+v_y=b+(y'+v_{y'})c-(x'+v_{x'})d$}
+\textrm{$x + v_x = a + (x'+v_{x'})c - (y'+v_{y'})d$} \\
+\textrm{$y + v_y = b + (y'+v_{y'})c + (x'+v_{x'})d$}
 \end{array}\right\}$$
 
 设：
 $$\left.\begin{array}{l}
-\textrm{$n_x=-v_x+cv_{x'}+dv_{y'}$} \\
-\textrm{$n_y=-v_y-dv_{x'}+cv_{y'}$}
+\textrm{$n_x = -v_x + cv_{x'} - dv_{y'}$} \\
+\textrm{$n_y = -v_y + cv_{y'} + dv_{x'}$}
 \end{array}\right\}$$
 
 则有：
 $$\left.\begin{array}{l}
-\textrm{$-n_x=a+x'c+y'd-x$} \\
-\textrm{$-n_y=b+y'c-x'd-y$}
+\textrm{$-n_x = a + x'c - y'd - x$} \\
+\textrm{$-n_y = b + y'c + x'd - y$}
 \end{array}\right\}$$
 
 若有$r$个新旧网的公共点，则可组成$r$对方程：
@@ -84,11 +84,11 @@ $\mathbf{V}=
 \end{array}\right)$
 $\mathbf{B}=
 \left(\begin{array}{cccc}
-1 & 0 & x'_1 & y'_1 \\
-0 & 1 & y'_1 & -x'_1 \\
+1 & 0 & x'_1 & -y'_1 \\
+0 & 1 & y'_1 &  x'_1 \\
 \dots & \dots & \ldots & \ldots \\
-1 & 0 & x'_r & y'_r \\
-0 & 1 & y'_r & -x'_r
+1 & 0 & x'_r & -y'_r \\
+0 & 1 & y'_r &  x'_r
 \end{array}\right)$
 $\mathbf{X}=
 \left(\begin{array}{c}
@@ -110,8 +110,9 @@ $$\alpha=\arctan\frac{d}{c}$$
 $$k=\sqrt{c^2+d^2}$$
 之后，就可计算旧网中所有待转换点的新坐标。
 
-请注意，以上图及公式推导是按数学坐标系进行的，在用测量坐标代入计算时
-应将测量坐标$(x,y)$以$(y,x)$形式代入，否则应对以上图形与公式进行变换。
+计算出系数$a,b,c,d$ 或 $dx, dy, k, \alpha$ 后可带入前面相应的公式
+计算出其它点由源坐标系坐标转换到目标坐标系中的坐标。
+
 
 \section{程序设计与实现}
 
@@ -919,7 +920,39 @@ namespace CoordniateTransform
 \end{lstlisting}
 
 
-%%% Local Variables:
-%%% mode: latex
-%%% TeX-master: "../clcxsj"
-%%% End:
+
+%%TODO
+%%以上方法容易产生病态矩阵，导致计算出的结果与参数不争取
+%%本人设想：
+%%根据新旧坐标系统的已知公共点，求出其中心坐标点，
+%%将数据规化后再组成 系数阵、法方程 进行计算
+%%此处教材中应该改写这部分内容与程序
+
+\section{算法与程序的优化}
+在上面的计算中，由于误差方程$V=BX-l$中的系数阵B中直接是由点的坐标X、Y组成的，
+而一般X、Y的数值都比较大，非常容易形成病态矩阵，从而导致法方程N中的数值更大，
+在计算系数阵X时得不到正确的结果。
+
+变换方程为：
+$$\left.
+\begin{array}{l}
+\textrm{$x-kx =dx + k[(x'-kx') \cos\alpha - (y'-ky') \sin\alpha]$} \\
+\textrm{$y-ky =dy + k[(x'-kx') \sin\alpha + (y'-ky') \cos\alpha]$} 
+\end{array}
+\right\}$$
+
+
+将公式做一变换：
+令 $DX = dx+kx, DY=dy+ky, X'=x'-kx', Y'=y'-ky'$
+
+则上式变为：
+
+$$\left.
+\begin{array}{l}
+\textrm{$x =DX + k[X' \cos\alpha - Y' \sin\alpha]$} \\
+\textrm{$y =DY + k[X' \sin\alpha + Y' \cos\alpha]$} 
+\end{array}
+\right\}$$
+
+则该算法与前边算法没有本质上的区别，但可以将公式中的X、Y坐标中的大数值变小。
+

@@ -5,13 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CoordniateTransform"
         mc:Ignorable="d"
-        Title="坐标转换" Height="450" Width="650">
+        Title="平面坐标四参数转换--朱学军--2020" Height="450" Width="650">
     <DockPanel LastChildFill="True">
         <Menu  x:Name="mainmenu" DockPanel.Dock="Top" Background="AliceBlue">
             <MenuItem Header="文件(F)">
-                <MenuItem Header="打开文本数据"
+                <MenuItem Header="打开数据文件"
 					Click="menuItem_OpenTextFileData_Click"/>
-                <MenuItem Header="保存文本数据"
+                <MenuItem Header="保存数据文件"
 					Click="menuItem_SaveTextFileData_Click"/>
                 <Separator/>
                 <MenuItem Header="退出" Click="menuItem_Exit_Click"/>
@@ -21,9 +21,10 @@
 					Click="menuItem_CalCoefficient_Click" />
                 <MenuItem Header="计算待计算点坐标" 
 					Click="menuItem_Cal_UnKnw_XY_Click" />
+              
+                <MenuItem Header="写出计算成果" Click="menuItem_Out_Cal_Detail_Click" />
                 <Separator/>
-                <MenuItem Header="写出计算成果" 
-					Click="menuItem_Write_Result_Click" />
+                <MenuItem Header="输出计算过程数据" Click="menuItem_Out_Cal_Detail_Click" />
             </MenuItem>
         </Menu>
 
@@ -40,13 +41,13 @@
                         <DataGridTextColumn Header="点名" MinWidth="60"
                             Binding="{Binding Name}"  />
                         <DataGridTextColumn Header="源X(N)" MinWidth="100"
-                            Binding="{Binding OX, StringFormat={}{0:0.000}}"/>
+                            Binding="{Binding oX, StringFormat={}{0:0.000}}"/>
                         <DataGridTextColumn Header="源Y(E)" MinWidth="100"
-                            Binding="{Binding OY, StringFormat={}{0:0.000}}"/>
-                        <DataGridTextColumn Header="新X(N)"  MinWidth="100"
-                            Binding="{Binding NX, StringFormat={}{0:0.000}}"/>
-                        <DataGridTextColumn Header="新Y(E)" MinWidth="100"
-                            Binding="{Binding NY, StringFormat={}{0:0.000}}"/>
+                            Binding="{Binding oY, StringFormat={}{0:0.000}}"/>
+                        <DataGridTextColumn Header="X(N)"  MinWidth="100"
+                            Binding="{Binding X, StringFormat={}{0:0.000}}"/>
+                        <DataGridTextColumn Header="Y(E)" MinWidth="100"
+                            Binding="{Binding Y, StringFormat={}{0:0.000}}"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </GroupBox>
@@ -67,12 +68,12 @@
                         <RowDefinition Height="25"/>
                         <RowDefinition Height="25"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="东向(E)平移量a=" Grid.Row="0" Grid.Column="0" 
+                    <TextBlock Text="北向(N)平移量ΔX=" Grid.Row="0" Grid.Column="0" 
                         VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <TextBox x:Name="textBox_a" Grid.Row="0" Grid.Column="1" 
                         Text="{Binding a}" 
                         VerticalContentAlignment="Center"/>
-                    <TextBlock Text="北向(N)平移量b=" Grid.Row="0" Grid.Column="2"  
+                    <TextBlock Text="东向(E)平移量ΔY=" Grid.Row="0" Grid.Column="2"  
                         VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <TextBox x:Name="textBox_b" Grid.Row="0" Grid.Column="3"  
                         Text="{Binding b}"
@@ -93,8 +94,8 @@
                         Text="{Binding alpha}" 
                         Grid.ColumnSpan="2"
                         VerticalContentAlignment="Center"/>
-                    <TextBlock Text="(xxx°.xx′xx.xx″)" Grid.Row="1" Grid.Column="3" 
-                        VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBlock Text="°(源->逆时针->目)" Grid.Row="1" Grid.Column="3" 
+                        VerticalAlignment="Center" HorizontalAlignment="Left"/>
                     <TextBlock Text="尺度因子k=" Grid.Row="1" Grid.Column="4" 
                         VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <TextBox x:Name="textBox_k" Grid.Row="1" Grid.Column="5" 
@@ -114,13 +115,13 @@
                         <DataGridTextColumn Header="点名" MinWidth="60"
                             Binding="{Binding Name}"  />
                         <DataGridTextColumn Header="源X(N)"  MinWidth="100"
-                            Binding="{Binding OX, StringFormat={}{0:0.000}}"/>
+                            Binding="{Binding oX, StringFormat={}{0:0.000}}"/>
                         <DataGridTextColumn Header="源Y(E)" MinWidth="100"
-                            Binding="{Binding OY, StringFormat={}{0:0.000}}"/>
-                        <DataGridTextColumn Header="新X(N)" MinWidth="100"
-                            Binding="{Binding NX,StringFormat={}{0:0.000}}" />
-                        <DataGridTextColumn Header="新Y(E)" MinWidth="100"
-                            Binding="{Binding NY, StringFormat={}{0:0.000}}" />
+                            Binding="{Binding oY, StringFormat={}{0:0.000}}"/>
+                        <DataGridTextColumn Header="X(N)" MinWidth="100"
+                            Binding="{Binding X,StringFormat={}{0:0.000}}" />
+                        <DataGridTextColumn Header="Y(E)" MinWidth="100"
+                            Binding="{Binding Y, StringFormat={}{0:0.000}}" />
                     </DataGrid.Columns>
                 </DataGrid>
             </GroupBox>

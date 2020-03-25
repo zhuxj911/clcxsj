@@ -8,11 +8,11 @@ using System.Windows;
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
 [assembly: AssemblyTitle("CoordniateTransform")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("平面坐标四参数转换")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("CoordniateTransform")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyProduct("平面坐标四参数转换")]
+[assembly: AssemblyCopyright("Copyright ©  2020 朱学军")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

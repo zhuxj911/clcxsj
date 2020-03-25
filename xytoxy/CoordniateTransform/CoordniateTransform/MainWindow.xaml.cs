@@ -59,8 +59,19 @@ namespace CoordniateTransform
         {
             cs.CalUnKnwXY();
         }
+                
+        private void menuItem_Out_Cal_Detail_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.DefaultExt = ".txt";
+            dlg.Filter = "平面坐标相似变换计算过程数据|*.txt|All File(*.*)|*.*";
+            if (dlg.ShowDialog() != true) return;
 
-        private void menuItem_Write_Result_Click(object sender, RoutedEventArgs e)
+            cs.OutDetailTextFile(dlg.FileName);
+        }
+
+
+    private void menuItem_Write_Result_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog dlg = new SaveFileDialog();
             dlg.DefaultExt = ".txt";

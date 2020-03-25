@@ -59,12 +59,14 @@ $$P=b^2(L_2 - L_1) \left | sinB + \frac{2}{3}e^2 \sin ^3 B
 
 \item 子午线弧长
 \begin{equation}
+\label{eq:xx}
 X=a_0 B - \frac{a_2}{2}\sin 2B + \frac{a_4}{4}\sin 4B
 - \frac{a_6}{6} \sin 6B  + \frac{a_8}{8}\sin 8B
 \end{equation}
 
 式中：
 \begin{equation}
+\label{eq:xxaa}
 \left  . \begin{aligned}
 a_0 &= m_0 + \frac{m_2}{2} + \frac{3}{8}m_4 + \frac{5}{16}m_6 + \frac{35}{128}m_8  \\
 a_2 &= \frac{m_2}{2} + \frac{m_4}{2} + \frac{15}{32}m_6 + \frac{7}{16}m_8  \\
@@ -77,64 +79,100 @@ a_8 &= \frac{m_8}{128}
 式中$m_0, m_2, m_4, m_6, m_8$的值为：
 
 \begin{equation}
+\label{eq:xxmm}
 \left . 
 \begin{aligned}
 m_0 &= a(1-e^2) \\
 m_2 &= \frac{3}{2}e^2 m_0  \\
-m_4 &= \frac{5}{4}e^2 m_2   \\
-m_6 &= \frac{7}{6}e^2 m_4   \\
-m_8 &= \frac{9}{8}e^2 m_6
+m_4 &= \frac{5}{4}e^2 m_2  = \frac{15}{8} e^4 m_0 \\
+m_6 &= \frac{7}{6}e^2 m_4   = \frac{35}{16} e^6 m_0 \\
+m_8 &= \frac{9}{8}e^2 m_6 = \frac{315}{128} e^8 m_0
 \end{aligned} 
 \right \}
 \end{equation}
 
-公式引用自《大地测量学基础》第115页(4-101)、(4-100)与(4-72).
+以上公式引用自《大地测量学基础》第115页(4-101)、(4-100)与(4-72).
 
-或用很多书上都引用的公式：
+将公式 \ref{eq:xxmm} 代入公式  \ref{eq:xxaa}可得到如下公式：
 
-\begin{equation}
-\label{eq:CX}
-X=c[\beta_0 B + (\beta_2 \cos B + \beta_4 \cos^3 B + \beta_6 \cos^5 B + \beta_8 \cos^7 B) \sin B] 
+ \begin{equation}
+\label{eq:xxaamm}
+\left  . \begin{aligned}
+a_0 &=(1 + \frac{3}{4} e^2 + \frac{45}{64} e^4 + \frac{175}{256} e^6 + \frac{11025}{16384} e^8) m_0  \\
+a_2 &=(\frac{3}{4} e^2 + \frac{15}{16} e^4 + \frac{525}{512} e^6 + \frac{2205}{2048} e^8) m_0  \\
+a_4 &=(\frac{15}{64} e^4 + \frac{105}{256} e^6 + \frac{2205}{4096} e^8) m_0  \\
+a_6 &=(\frac{35}{512} e^6 + \frac{315}{2048} e^8) m_0  \\
+a_8 &= \frac{315}{16384} e^8 m_0
+\end{aligned} \right \}
 \end{equation}
 
-式中 c 为极曲率半径，其值为： $c= a^2 / b$，
-$\beta_0, \beta_2, \beta_4, \beta_6, \beta_8$的值为：
-
+若令：
 \begin{equation}
-\label{eq:CXC}
-\left .
-\begin{aligned}
-\beta_0 &= 1 - \frac{3}{4}e'^2 + \frac{45}{64}e'^4 - \frac{175}{256}e'^6 + \frac{11025}{16384}e'^8  \\
-\beta_2 &= \beta_0 -1  \\
-\beta_4 &= \frac{15}{32}e'^4 - \frac{175}{384}e'^6 + \frac{3675}{8192}e'^8   \\
-\beta_6 &= -\frac{35}{96}e'^6 + \frac{735}{2048}e'^8   \\
-\beta_8 &= \frac{315}{1024}e'^8
-\end{aligned} 
-\right \}
+\label{eq:xxAAA}
+\left  . \begin{aligned}
+A_0 &=a_0 = (1 + \frac{3}{4} e^2 + \frac{45}{64} e^4 + \frac{175}{256} e^6 + \frac{11025}{16384} e^8) m_0  \\
+A_2 &=-\frac{a2}{2} =-\frac{1}{2}  (\frac{3}{4} e^2 + \frac{15}{16} e^4 + \frac{525}{512} e^6 + \frac{2205}{2048} e^8) m_0  \\
+A_4 &=\frac{a_4}{4}=\frac{1}{4} (\frac{15}{64} e^4 + \frac{105}{256} e^6 + \frac{2205}{4096} e^8) m_0  \\
+A_6 &=-\frac{a_6}{6}=-\frac{1}{6} (\frac{35}{512} e^6 + \frac{315}{2048} e^8) m_0  \\
+A_8 &= \frac{a_8}{8}=\frac{1}{8} \times \frac{315}{16384} e^8 m_0
+\end{aligned} \right \}
 \end{equation}
 
-公式引用自《大地测量学基础》第115页(4-107)、与(4-108)。
-
-可对公式\ref{eq:CXC}做进一步演化，令：
+则子午线弧长公式 \ref{eq:xx}可以演变为如下公式：
 \begin{equation}
-	\label{eq:CXCC}
-	\left .
-	\begin{aligned}
-		C_0 &= c \beta_0 = c(1 - \frac{3}{4}e'^2 + \frac{45}{64}e'^4 - \frac{175}{256}e'^6 + \frac{11025}{16384}e'^8) \\
-		C_2 &= c \beta_2 = c(\beta_0 -1)                                                                              \\
-		C_4 &= c \beta_4 = c(\frac{15}{32}e'^4 - \frac{175}{384}e'^6 + \frac{3675}{8192}e'^8)                         \\
-		C_6 &= c \beta_6 = c(-\frac{35}{96}e'^6 + \frac{735}{2048}e'^8)                                               \\
-		C_8 &= c \beta_8 = c(\frac{315}{1024}e'^8)
-	\end{aligned}
-	\right \}
+\label{eq:AAAxxAAA}
+X= A_0 B + A_2 \sin 2B + A_4 \sin 4B + A_6 \sin 6B  + A_8 \sin 8B
 \end{equation}
 
-则子午线弧长公式\ref{eq:CX}可演化为：
+公式 \ref{eq:AAAxxAAA} 将作为我们进行程序设计时进行子午线弧长与底点纬度计算的基本公式。
 
-\begin{equation}
-	\label{eq:CXX}
-	X=C_0 B + (C_2 \cos^2 B + C_4 \cos^4 B + C_6 \cos^6 B + C_8 \cos^8 B) \tan B
-\end{equation}
+由公式 \ref{eq:xxAAA}看出，其值只与椭球的定义有关，一旦椭球的参数确定，这些值也就被确定。
+
+% 或用很多书上都引用的公式：
+
+% \begin{equation}
+% \label{eq:CX}
+% X=c[\beta_0 B + (\beta_2 \cos B + \beta_4 \cos^3 B + \beta_6 \cos^5 B + \beta_8 \cos^7 B) \sin B] 
+% \end{equation}
+
+% 式中 c 为极曲率半径，其值为： $c= a^2 / b$，
+% $\beta_0, \beta_2, \beta_4, \beta_6, \beta_8$的值为：
+
+% \begin{equation}
+% \label{eq:CXC}
+% \left .
+% \begin{aligned}
+% \beta_0 &= 1 - \frac{3}{4}e'^2 + \frac{45}{64}e'^4 - \frac{175}{256}e'^6 + \frac{11025}{16384}e'^8  \\
+% \beta_2 &= \beta_0 -1  \\
+% \beta_4 &= \frac{15}{32}e'^4 - \frac{175}{384}e'^6 + \frac{3675}{8192}e'^8   \\
+% \beta_6 &= -\frac{35}{96}e'^6 + \frac{735}{2048}e'^8   \\
+% \beta_8 &= \frac{315}{1024}e'^8
+% \end{aligned} 
+% \right \}
+% \end{equation}
+
+% 公式引用自《大地测量学基础》第115页(4-107)、与(4-108)。
+
+% 可对公式\ref{eq:CXC}做进一步演化，令：
+% \begin{equation}
+% 	\label{eq:CXCC}
+% 	\left .
+% 	\begin{aligned}
+% 		C_0 &= c \beta_0 = c(1 - \frac{3}{4}e'^2 + \frac{45}{64}e'^4 - \frac{175}{256}e'^6 + \frac{11025}{16384}e'^8) \\
+% 		C_2 &= c \beta_2 = c(\beta_0 -1)                                                                              \\
+% 		C_4 &= c \beta_4 = c(\frac{15}{32}e'^4 - \frac{175}{384}e'^6 + \frac{3675}{8192}e'^8)                         \\
+% 		C_6 &= c \beta_6 = c(-\frac{35}{96}e'^6 + \frac{735}{2048}e'^8)                                               \\
+% 		C_8 &= c \beta_8 = c(\frac{315}{1024}e'^8)
+% 	\end{aligned}
+% 	\right \}
+% \end{equation}
+
+% 则子午线弧长公式\ref{eq:CX}可演化为：
+
+% \begin{equation}
+% 	\label{eq:CXX}
+% 	X=C_0 B + (C_2 \cos^2 B + C_4 \cos^4 B + C_6 \cos^6 B + C_8 \cos^8 B) \tan B
+% \end{equation}
 
 
 \item 坐标正算

@@ -37,12 +37,12 @@ namespace CoordniateTransform
         }
 
         /// <summary>
-        ///X方向平移量
+        ///X(N)方向平移量dx
         /// </summary>
         private double _a;
 
         /// <summary>
-        /// X方向平移量
+        /// X(N)方向平移量dx
         /// </summary>
         public double a
         {
@@ -55,12 +55,12 @@ namespace CoordniateTransform
         }
 
         /// <summary>
-        /// Y方向平移量
+        /// Y(E)方向平移量dy
         /// </summary>
         private double _b;
 
         /// <summary>
-        /// Y方向平移量
+        /// Y(E)方向平移量dy
         /// </summary>
         public double b
         {
@@ -73,12 +73,12 @@ namespace CoordniateTransform
         }
 
         /// <summary>
-        /// 线性方程计算系数c
+        /// 线性方程计算系数c = k*cos(α)
         /// </summary>
         public double _c;
 
         /// <summary>
-        /// 线性方程计算系数c
+        /// 线性方程计算系数c = k*cos(α)
         /// </summary>
         public double c
         {
@@ -91,12 +91,12 @@ namespace CoordniateTransform
         }
 
         /// <summary>
-        /// 线性方程计算系数d
+        /// 线性方程计算系数d = k*sin(α)
         /// </summary>
         public double _d;
 
         /// <summary>
-        /// 线性方程计算系数d
+        /// 线性方程计算系数d = k*cos(α)
         /// </summary>
         public double d
         {
@@ -109,12 +109,12 @@ namespace CoordniateTransform
         }
 
         /// <summary>
-        /// 旋转角度α
+        /// 旋转角度α=atan(d/c)
         /// </summary>
         public double _alpha;
 
         /// <summary>
-        ///  旋转角度α
+        ///  旋转角度α=atan(d/c)
         /// </summary>
         public double alpha
         {
@@ -127,12 +127,12 @@ namespace CoordniateTransform
         }
 
         /// <summary>
-        /// 尺度比因子k
+        /// 尺度比因子k=sqrt(c^2 + d^2)
         /// </summary>
         public double _k;
 
         /// <summary>
-        ///  尺度比因子k
+        ///  尺度比因子k=sqrt(c^2 + d^2)
         /// </summary>
         public double k
         {
@@ -144,7 +144,21 @@ namespace CoordniateTransform
             }
         }
 
-        public CoordinateSystem(){ }
+
+        //计算过程数据
+        private double[,] B;     //系数阵
+        private double[] l;      //常数项  
+        private double[,] N;     //法方程  NX=U
+        private double[] U;
+        private double[] X;      //未知数  
+
+
+        public CoordinateSystem(){
+            B = null;
+            l = null;
+            N = null;
+            U = null;
+        }
 
         /// <summary>
         /// 读入坐标转换数据文件
@@ -170,8 +184,8 @@ namespace CoordniateTransform
                     {
                         GeoPoint pnt = new GeoPoint();
                         pnt.Name = its[0].Trim();
-                        pnt.OX = double.Parse(its[1]);
-                        pnt.OY = double.Parse(its[2]);
+                        pnt.oX = double.Parse(its[1]);
+                        pnt.oY = double.Parse(its[2]);
                         this.KnwPointList.Add(pnt);
                     }
                 }
@@ -188,8 +202,9 @@ namespace CoordniateTransform
                     {
                         string name = its[0].Trim();
                         GeoPoint pnt = GetGeoPoint(name);
-                        pnt.NX = double.Parse(its[1]);
-                        pnt.NY = double.Parse(its[2]);
+                        if (pnt == null) continue;
+                        pnt.X = double.Parse(its[1]);
+                        pnt.Y = double.Parse(its[2]);
                     }
                 }
 
@@ -206,8 +221,8 @@ namespace CoordniateTransform
                     {
                         GeoPoint pnt = new GeoPoint();
                         pnt.Name = its[0].Trim();
-                        pnt.OX = double.Parse(its[1]);
-                        pnt.OY = double.Parse(its[2]);
+                        pnt.oX = double.Parse(its[1]);
+                        pnt.oY = double.Parse(its[2]);
 
                         this.UnKnwPointList.Add(pnt);
                     }
@@ -244,21 +259,21 @@ namespace CoordniateTransform
                 sr.WriteLine("#公共点在源坐标系中的坐标: 点名, X(N), Y(E)");
                 foreach (var pnt in this.knwPointList)
                 {
-                    sr.WriteLine("{0}, {1}, {2}", pnt.Name, pnt.OX, pnt.OY);
+                    sr.WriteLine("{0}, {1}, {2}", pnt.Name, pnt.oX, pnt.oY);
                 }
 
                 sr.WriteLine();
-                sr.WriteLine("#公共点在新坐标系中的坐标: 点名, X(N), Y(E)");
+                sr.WriteLine("#公共点在目标坐标系中的坐标: 点名, X(N), Y(E)");
                 foreach (var pnt in this.knwPointList)
                 {
-                    sr.WriteLine("{0}, {1}, {2}", pnt.Name, pnt.NX, pnt.NY);
+                    sr.WriteLine("{0}, {1}, {2}", pnt.Name, pnt.X, pnt.Y);
                 }
 
                 sr.WriteLine();
                 sr.WriteLine("#待转换点在源坐标系中的坐标: 点名, X(N), Y(E)");
                 foreach (var pnt in this.unKnwPointList)
                 {
-                    sr.WriteLine("{0}, {1}, {2}", pnt.Name, pnt.OX, pnt.OY);
+                    sr.WriteLine("{0}, {1}, {2}", pnt.Name, pnt.oX, pnt.oY);
                 }
             }
         }
@@ -272,7 +287,7 @@ namespace CoordniateTransform
             {
                 sr.WriteLine("#赫尔默特四参数转换法计算成果数据文件");
                 sr.WriteLine("# 公共点坐标");
-                sr.WriteLine("# 点名, 源X(N), 源Y(E), 新X(N), 新Y(E)");
+                sr.WriteLine("# 点名, 源X(N), 源Y(E), X(N), Y(E)");
                 foreach (var pnt in this.knwPointList)
                 {
                     sr.WriteLine(pnt);
@@ -280,12 +295,12 @@ namespace CoordniateTransform
 
                 sr.WriteLine();
                 sr.WriteLine("# 转换参数");
-                sr.WriteLine("东向(E)平移量a={0}，北向(N)平移量b={1}, c={2}, d={3}\r\n旋转角α={4}，尺度因子k={5}", 
-                    this.a, this.b, this.c, this.d, this.alpha, this.k);
+                sr.WriteLine("北向(N)平移量a={0}，东向(E)平移量b={1}, c={2}, d={3}", this.a, this.b, this.c, this.d);
+                sr.WriteLine("北向(N)平移量dx={0}，东向(E)平移量dy={1}, 旋转角α={2}°，尺度因子k={3}", this.a, this.b, this.alpha, this.k);
 
                 sr.WriteLine();
                 sr.WriteLine("# 待计算点的坐标");
-                sr.WriteLine("# 点名, 源X(N), 源Y(E), 新X(N), 新Y(E)");
+                sr.WriteLine("# 点名, 源X(N), 源Y(E), X(N), Y(E)");
                 foreach (var pnt in this.unKnwPointList)
                 {
                     sr.WriteLine(pnt);
@@ -298,8 +313,9 @@ namespace CoordniateTransform
         /// </summary>
         public void CalCd()
         {
-            this.c = this.k * Math.Cos(ZXY.SMath.DMS2RAD(this.alpha));
-            this.d = this.k * Math.Sin(ZXY.SMath.DMS2RAD(this.alpha));
+            double ap = this.alpha / 180.0 * Math.PI;
+            this.c = this.k * Math.Cos( ap );
+            this.d = this.k * Math.Sin( ap );
         }
 
         /// <summary>
@@ -310,34 +326,36 @@ namespace CoordniateTransform
             int n0 = this.knwPointList.Count;
             if (n0 < 2) return; //少于两个公共点，无法计算
 
-            double[,] B = new double[2 * n0, 4];
-            double[] l = new double[2 * n0];
-            double[,] N = new double[4, 4];
-            double[] U = new double[4];
+            B = new double[2 * n0, 4];
+            l = new double[2 * n0];
+            N = new double[4, 4];
+            U = new double[4];
+            X = new double[4];
 
             //组成系数阵B与l，此处应注意读入的坐标是测量坐标，
             //应将测量坐标转换为数学坐标
-            double x, y, xT, yT;
+            double ox, oy, x, y;
             for (int i = 0; i < n0; i++)
             {
-                x = knwPointList[i].OY;//数学上的x，测量上的y
-                y = knwPointList[i].OX;//数学上的y，测量上的x
-                xT = knwPointList[i].NY;
-                yT = knwPointList[i].NX; 
+                ox = knwPointList[i].oX;//测量上的源x
+                oy = knwPointList[i].oY;//测量上的源y
+                x = knwPointList[i].X;
+                y = knwPointList[i].Y; 
 
                 B[(2 * i), 0] = 1.0;
                 B[(2 * i), 1] = 0.0;
-                B[(2 * i), 2] = x;
-                B[(2 * i), 3] = y;
-                l[2 * i] = xT;
+                B[(2 * i), 2] = ox;
+                B[(2 * i), 3] = -oy;
+                l[2 * i] = x;
 
                 B[(2 * i + 1), 0] = 0.0;
                 B[(2 * i + 1), 1] = 1.0;
-                B[(2 * i + 1), 2] = y; 
-                B[(2 * i + 1), 3] = -x; 
-                l[2 * i + 1] = yT;
+                B[(2 * i + 1), 2] = oy; 
+                B[(2 * i + 1), 3] = ox; 
+                l[2 * i + 1] = y;
             }
 
+			//N = B' * B
             for (int k = 0; k < 4; k++)
             {
                 for (int j = 0; j < 4; j++)
@@ -345,22 +363,24 @@ namespace CoordniateTransform
                     N[k, j] = 0.0;
                     for (int i = 0; i < 2 * n0; i++)
                     {
-                        N[k, j] += B[i, k] * B[i, j];
+                        N[k, j] += B[i, k] * B[i, j]; 
                     }
                 }
 
                 U[k] = 0.0;
                 for (int i = 0; i < 2 * n0; i++)
                     U[k] += B[i, k] * l[i];
+
+               X[k] = U[k];
             }
 
-            NegativeMatrix(N, U, 4);
+            NegativeMatrix(N, X, 4);
 
-            this.a = U[0];
-            this.b = U[1];
-            this.c = U[2];
-            this.d = U[3];
-            this.alpha = ZXY.SMath.RAD2DMS(Math.Atan2(d, c));
+            this.a = X[0];
+            this.b = X[1];
+            this.c = X[2];
+            this.d = X[3];
+            this.alpha = Math.Atan2(d, c) * 180.0/Math.PI;
             this.k = Math.Sqrt(d * d + c * c);
         }
 
@@ -369,16 +389,16 @@ namespace CoordniateTransform
         /// </summary>
         public void CalUnKnwXY()
         {
-            //应将测量坐标转换为数学坐标
-            double x, y, xT, yT;
+            //测量坐标
+            double ox, oy, x, y;
             foreach (var it in this.unKnwPointList)
             {
-                x = it.OY; y = it.OX;
+                ox = it.oX; oy = it.oY;
 
-                xT = this.a + this.c * x + this.d * y;
-                yT = this.b + this.c * y - this.d * x;
+                x = a + c * ox - d * oy;
+                y = b + c * oy + d * ox;
 
-                it.NY = xT; it.NX = yT;
+                it.Y = y; it.X = x;
             }
         }
 
@@ -411,6 +431,75 @@ namespace CoordniateTransform
                     s += A[i, j] * B[j];
                 }
                 B[i] = (B[i] - s) / A[i, i];
+            }
+        }
+
+        
+        /// <summary>
+        /// 输出计算过程数据文件
+        /// </summary>
+        /// <param name="fileName">文件名</param>
+        public void OutDetailTextFile(string fileName)
+        {
+            if(B is null || l is null || N is null || U is null || X is null) return;
+
+                using (System.IO.StreamWriter sr = new System.IO.StreamWriter(fileName))
+            {
+                sr.WriteLine("赫尔默特四参数转换法计算过程数据：");
+                sr.WriteLine("公共点坐标");
+                sr.WriteLine("点名, 源X(N), 源Y(E), X(N), Y(E)");
+                sr.WriteLine("---------------------------------");
+                foreach (var pnt in this.knwPointList)
+                {
+                    sr.WriteLine(pnt);
+                }
+
+                sr.WriteLine();
+
+                int n0 = this.knwPointList.Count;
+                sr.WriteLine("误差方程式V=BX - l");
+                sr.WriteLine("误差方程式: B[i,0],B[i,1],B[i,2],B[i,3],l[i]");
+                sr.WriteLine("--------------------------------------------");
+                for (int i = 0; i < 2 * n0; i++)
+                {
+                    sr.WriteLine($"{B[i, 0]}, {B[i, 1]}, {B[i, 2]}, {B[i, 3]}, {l[i]}");
+                }
+
+                sr.WriteLine();
+
+                sr.WriteLine("法方程式NX - U = 0");
+                sr.WriteLine("误差方程式: N[i,0],N[i,1],N[i,2],N[i,3],U[i]");
+                sr.WriteLine("--------------------------------------------");
+                for (int i = 0; i < 4; i++)
+                {
+                    sr.WriteLine($"{N[i, 0]}, {N[i, 1]}, {N[i, 2]}, {N[i, 3]}, {U[i]}");
+                }
+
+                sr.WriteLine();
+
+                sr.WriteLine("系数: X[0], X[1], X[2], X[3]");
+                sr.WriteLine("---------------------------------");
+                sr.WriteLine($"{X[0]}, {X[1]}, {X[2]}, {X[3]}");
+
+                sr.WriteLine();
+
+                sr.WriteLine("转换参数");
+                sr.WriteLine("---------------------------------------------------------------");
+                sr.WriteLine("北向(N)平移量a={0}，东向(E)平移量b={1}, c={2}, d={3}", this.a, this.b, this.c, this.d);
+                sr.WriteLine("北向(N)平移量dx={0}，东向(E)平移量dy={1}, 旋转角α={2}°，尺度因子k={3}", this.a, this.b, this.alpha, this.k);
+
+                sr.WriteLine();
+
+                sr.WriteLine("待计算点的坐标:");
+                sr.WriteLine("待计算点坐标计算公式:");
+                sr.WriteLine($"x = {a} + x'*{c} - y' * {d}");
+                sr.WriteLine($"y = {b} + y'*{c} + x' * {d}");
+                sr.WriteLine("-------------------------------------------------------------");
+                sr.WriteLine("点名, 源X(N), 源Y(E), X(N), Y(E)");
+                foreach (var pnt in this.unKnwPointList)
+                {
+                    sr.WriteLine(pnt);
+                }
             }
         }
     }

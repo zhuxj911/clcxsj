@@ -5,4 +5,77 @@
 数据验证是图形界面程序设计的重要内容，也是保证数据输入正确的重要手段。
 
  \section{数据验证的基础知识}
+数据输入事，为保证输入的数据正确、合法，就会有数据校验的需求。
+比如输入的字符串不能超长或不能为空或需将其限制在一定的范围之内等等。
 
+较为基础的处理办法是采用前端验证，也就是在向数据库或服务前提交前写大量的重复的 if else 语句进行判断。
+
+解决的办法是在业务层进行验证，验证的基本方法就是使用 Attribute 进行。
+
+AttributeValidate
+
+将其标在需要验证的业务层类的字段属性上，比如：
+
+\begin{lstlisting}[language=C]
+
+[ReuiredAttribute]
+public string Name{
+    get => name；
+}
+
+\end{lstlisting}
+
+表单验证是MVVM体系中的重要一块。而绑定除了推动 Model-View-ViewModel (MVVM) 模式松散耦合 逻辑、数据 和 UI定义 的关系之外，还为业务数据验证方案提供强大而灵活的支持。
+
+WPF 中的数据绑定机制包括多个选项，可用于在创建可编辑视图时校验输入数据的有效性。
+
+常见的表单验证机制有如下几种：
+\begin{table}[h]
+\centering
+\caption{WPF数据验证}\label{tab:wpfdatavalidate}
+\begin{tabular}{cp{11.2cm}}
+\hline
+验证类型  &   说明 \\
+\hline
+Exception           &   通过在某个 Binding 对象上设置 ValidatesOnExceptions 属性，
+                                如果源对象属性设置已修改的值的过程中引发异常，
+                                则抛出错误并为该 Binding 设置验证错误。 \\
+ValidationRule   &   Binding 类具有一个用于提供 ValidationRule 派生类实例的集合的属性。
+                                这些 ValidationRules 需要覆盖某个 Validate 方法，
+                                该方法由 Binding 在每次绑定控件中的数据发生更改时进行调用。
+                                如果 Validate 方法返回无效的 ValidationResult 对象，
+                                则将为该 Binding 设置验证错误。 \\
+IDataErrorInfo    &  通过在绑定数据源对象上实现 IDataErrorInfo 接口并在 Binding 对象上设置 ValidatesOnDataErrors 属性，
+                                Binding 将调用从绑定数据源对象公开的 IDataErrorInfo API。
+                                如果从这些属性调用返回非 null 或非空字符串，则将为该 Binding 设置验证错误。 \\
+\hline
+\end{tabular}
+\end{table}
+
+ 
+   
+ 
+
+
+
+
+
+
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+验证交互的关系模式如图：

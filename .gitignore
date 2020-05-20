@@ -9,3 +9,6 @@
 *.log
 *.los
 *.gz
+.vs
+obj
+bin

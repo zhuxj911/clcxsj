@@ -1,5 +1,6 @@
-\documentclass[a4paper]{ctexbook}
-\usepackage{clcxsj-style}
+%!TEX program = xelatex 
+\documentclass[UTF8]{ctexbook}
+\usepackage{clcxsj}
 
 \makeindex
 
@@ -14,16 +15,20 @@
 \tableofcontents
 
 \mainmatter
-\include{introduction/introduction}             %%从C走向C\#
-\include{csbase/csbae}                          %% C\# 基础
-\include{csobject/csobject}                     %% C\# 之面向对象
-\include{wpfBase/wpfBase}                       %% wpf基础
-\include{wpfDataBinding/wpfDataBinding}         %% wpf数据绑定
-\include{wpfDataValidate/wpfDataValidate}       %% wpf数据验证
-\include{surveybase/surveybase}                 %% 测量基础函数
-\include{connectingtraverse/connectingtraverse} %%附合导线近似平差程序设计
-\include{gaussproj/gaussproj}                   %%高斯投影程序设计
-\include{xytoxy/xytoxy}                         %%坐标转换程序设计
-\include{route/route}                           %%线路要素计算程序设计
+\include{chapter/csenv/csenv}            %%C#开发环境 与 从C走向C\#
+\include{chapter/csbase/csbase}          %% C# 基础/
+\include{chapter/csobject/csobject}      %% C# 之面向对象
+
+\include{chapter/surveybase/surveybase}  %% 测量基础函数
+
+\include{chapter/objectbase/objectbase}  %% 面向对象设计原则
+\include{chapter/uibase/uibase}          %% wpf UI 基础, 将wpf基础、wpf数据绑定、wpf数据验证合并到这一章中，并以坐标方位角计算程序作为例子
+
+\include{chapter/gaussproj/gaussproj}                   %%高斯投影程序设计
+
+
+\include{chapter/xytoxy/xytoxy}                         %%坐标转换程序设计
+\include{chapter/connectingtraverse/connectingtraverse} %%附合导线近似平差程序设计
+\include{chapter/route/route}                           %%线路要素计算程序设计
 
 \end{document}

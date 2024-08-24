@@ -1,0 +1,97 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{clcxsj}[2022/04/12 为测量程序设计定制模板，用于c\#编程]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%调用的宏包
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% 基本工具宏包
+% 
+\RequirePackage{amsmath,amsthm}
+\RequirePackage{hologo,ulem,verbatim,fancyvrb,fancyhdr,layout,multicol}
+\RequirePackage{colortbl,tabularx,multirow,makecell,booktabs}
+\RequirePackage{graphicx,xcolor,float,subfig}
+\RequirePackage{makeidx}
+\RequirePackage[inner=1in,outer=1.5in,vmargin=1in,marginparwidth=1in]{geometry}
+\RequirePackage{tikz}
+\RequirePackage{hyperref} %%加入url定位到网页或者邮箱
+
+\RequirePackage{lmodern} %%消除minipage中的警告
+
+%%设置字体：借助宏包 fontspec 可选参数[no-math]
+%%\setmainfont[<可选参数>]{<字体名>} %正文罗马字体族
+%%\setsansfont[<可选参数>]{<字体名>} %无衬线字体族
+%%\setmonofont[<可选参数>]{<字体名>} %打印机字体族
+%%\newfontfamily<命令>[]{} %设置新的字体族命令
+%%在CTeX套件中对应设置项为：
+%%\setCJKmainfont[<可选参数>]{<字体名>} %正文罗马字体族
+%%\setCJKsansfont[<可选参数>]{<字体名>} %无衬线字体族
+%%\setCJKmonofont[<可选参数>]{<字体名>} %打印机字体族
+%%\setCJKfamilyfont{<中文字体族名称>}[]{<字体名>}
+%%如下例：\setCJKmainfont[BoldFont=SimHei,ItalicFont=KaiTi,BoldItalicFont=LiShu]{SimSun}
+%%\setCJKmainfont[BoldFont=SimHei,ItalicFont=KaiTi,BoldItalicFont=LiShu]{SimSun}
+
+\pagestyle{fancy}
+ \fancyhf{} % delete current setting for header and footer
+ \fancyhead[LE,RO]{\bfseries\thepage}
+ \fancyhead[LO]{\bfseries\rightmark}
+ \fancyhead[RE]{\bfseries\leftmark}
+
+ \renewcommand{\headrulewidth}{0.5pt}
+ \renewcommand{\footrulewidth}{0pt}
+ \addtolength{\headheight}{1pt} % make space for the rule
+ \fancypagestyle{plain}{ \fancyhead{}  \renewcommand{\headrulewidth}{0pt} }
+
+ \ctexset { chapter = { number={\arabic {chapter}} } }%%对章的编号用1，2，3等数字
+ \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+ \renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+
+\newcommand\degree{^\circ} %%度的符号
+ %% \textrm : Roman Family 罗马字体  
+ %% \textsf :Scan Serif Family 无衬线字体
+ %% \texttt :Typewriter Family 打字机字体
+\newcommand\cs{\texttt{C\#}} %%C#
+\newcommand\cpp{\texttt{C++}} %%C++
+
+\captionsetup[figure]{labelsep=space} %%去掉图标中的 :
+\captionsetup[table]{labelsep=space}  %%去掉表标题中的 ：
+ 
+\RequirePackage{listings} %%专用于代码排版的LaTeX宏包， 可对关键字、注释、字符串等
+                          %%使用不同的字体和颜色，也可为代码添加边框、北京背景等风格
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+% \setmonofont{Consolas}
+
+\lstdefinestyle{cs}{
+    language=[Sharp]C,
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    % morekeywords={*,using, namespace}, 
+    numberstyle=\small\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=4,  
+    escapeinside={``} %%用于代码中特殊符号的显示
+}
+
+\lstset{style=cs}  %%默认全局设为 cs
+                   %% 否则应使用 \begin{lstlisting}[language=C] 指定语言
+                   %% 或使用 [style=cs] 指定语言样式
+	                  
+
+
+
+\endinput

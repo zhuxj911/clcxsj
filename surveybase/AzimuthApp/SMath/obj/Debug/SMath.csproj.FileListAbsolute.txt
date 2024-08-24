@@ -1,5 +1,0 @@
-C:\Users\xazhu\source\repos\AzimuthApp\SMath\obj\Debug\SMath.csproj.CoreCompileInputs.cache
-C:\Users\xazhu\source\repos\AzimuthApp\SMath\bin\Debug\SMath.dll
-C:\Users\xazhu\source\repos\AzimuthApp\SMath\bin\Debug\SMath.pdb
-C:\Users\xazhu\source\repos\AzimuthApp\SMath\obj\Debug\SMath.dll
-C:\Users\xazhu\source\repos\AzimuthApp\SMath\obj\Debug\SMath.pdb

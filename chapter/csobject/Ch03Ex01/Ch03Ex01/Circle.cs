@@ -15,37 +15,33 @@ namespace Ch03Ex01
                 if(value != r && value >= 0)
                 {
                     r = value;
-                    CalArea(); //r的值发生改变，重新计算圆的面积
+                    Calculate(); //r的值发生改变，重新计算圆的面积
                 }
             }
         }
-
-        private double area;
-        public double Area
-        {
-            get { return area; }
-        }
-
-        private double length;
+        
 
         public Circle(double x, double y, double r)
         {
             Center = new Point(x, y);
-
             this.R = r;  //赋值给R而不是this.r，确保计算圆的面积
         }
 
-        //计算圆的面积
-        private void CalArea()
+        public override void Calculate()
         {
-            area = Math.PI * r * r;
+            this.length = Math.PI * r * 2;
+            this.area = Math.PI * r * r;
+
         }
 
-        //判断两圆是否相交
-        public bool IsIntersectWithCircle(Circle c2)
+        public override void Draw()
         {
-            double d = this.Center.Distance(c2.Center);
-            return d <= (r + c2.r);
+            Console.WriteLine("Circle Draw ......");
+        }
+
+        public override string ToString()
+        {
+            return $"Circle's Area ={Area}, Length ={Length}";
         }
     }
 }

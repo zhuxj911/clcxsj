@@ -10,66 +10,52 @@ namespace Ch03Ex01
     {
         private List<Point> points = new List<Point>();
 
-        public double Length
+        public double CalLength()
         {
-            get
+            if (points.Count < 2) return 0;
+            double sum = 0;
+            for (int i = 0; i < points.Count; i++)
             {
-                if (points.Count < 2) return 0;
-                double sum = 0;
-                for (int i = 0; i < points.Count-1; i++)
-                {
-                    double dx = points[i+1].X - points[i].X;
-                    double dy = points[i + 1].Y - points[i].Y;
-                    sum += Math.Sqrt(dx*dx + dy*dy);
-                }
-                return sum;
+                int j = (i + 1) % points.Count;
+                double dx = points[j].X - points[i].X;
+                double dy = points[j].Y - points[i].Y;
+                sum += Math.Sqrt(dx * dx + dy * dy);
             }
+            return sum;
         }
-        public double Area
+
+        public double CalArea()
         {
-            get
+            if (points.Count < 3) return 0;
+            double s = 0;
+            for (int i = 0; i < points.Count; i++)
             {
-                if(points.Count < 3) return 0;
-                double s = 0;
-                for(int i=0; i< points.Count; i++)
-                {
-                    int j = i + 1;
-                    if (j == points.Count) j = 0;
-                    s += points[i].X * points[j].Y - points[j].X * points[i].Y;
-                }
-                return 0.5 * Math.Abs(s);
+                int j = i + 1;
+                if (j == points.Count) j = 0;
+                s += points[i].X * points[j].Y - points[j].X * points[i].Y;
             }
+            return 0.5 * Math.Abs(s);
         }
 
         public void Add(double x, double y)
         {
             points.Add(new Point(x, y));
         }
-
-        public void Insert(int index, double x, double y)
+        
+        public override void Calculate()
         {
-            points.Insert(index, new Point(x, y));
+            this.length = CalLength();
+            this.area = CalArea();
         }
 
-
-        public Polyline()
+        public override void Draw()
         {
+            Console.WriteLine("Polygon Draw ......");
         }
 
-        public Polyline(Point[] pts)
+        public override string ToString()
         {
-            foreach (var pt in pts)
-            {
-                points.Add(pt);
-            }
-        }
-
-        public Polyline(double[ ,] xy)
-        {
-            for (var i=0; i<xy.GetLength(0); i++)
-            {
-                points.Add(new Point(xy[i, 0], xy[i,1]) );
-            }
+            return $"Polygon's Area ={Area}, Length ={Length}";
         }
     }
 }

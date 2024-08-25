@@ -6,55 +6,31 @@ using System.Threading.Tasks;
 
 namespace Ch03Ex01
 {
-    public class Point : Shape
-    {
-        private string name;
-        public string Name
-        {
-            get { return name; }
-            set { name = value; }
-        }
-
-        private double x;
-        public double X
-        {
-            get { return x; }
-            set { x = value; }
-        }
-        private double y;
-        public double Y
-        {
-            get { return y; }
-            set { y = value; }
-        }
-        private double z;
-        public double Z
-        {
-            get { return z; }
-            set { z = value; }
-        }
+    public sealed class Point : Shape
+    {      
+        public double X { get; set; }
+        public double Y { get; set; }        
 
         public Point(double x, double y)
-        {
-            this.name = "";
-            this.x = x;
-            this.y = y;
-            this.z = 0;
+        {          
+            this.X = x;
+            this.Y = y;          
         }
 
-        public Point(string name, double x, double y, double z)
+        public override void Calculate()
         {
-            this.name = name;
-            this.x = x;
-            this.y = y;
-            this.z = z;
+            this.area = 0.0;
+            this.length = 0.0;
         }
 
-        public double Distance(Point p2)
+        public override void Draw()
         {
-            double dx = X - p2.X;
-            double dy = Y - p2.Y;
-            return Math.Sqrt(dx * dx + dy * dy);
+            Console.WriteLine("Point Draw ......");
+        }
+
+        public override string ToString()
+        {
+            return $"Point's Area ={Area}, Length ={Length}";
         }
     }
 }

@@ -1209,37 +1209,725 @@ class B : A
 
 \verb| A a = new A(1, 2, 3); | 或 \verb| B b = new B(1, 2, 3, 10); |
 
-不同。 在此情况下，如果我们执行 \verb| a.Sum(); | 语句，大家猜想其值为 6 还是 16 ？
+不同。 在此情况下，如果我们执行 \verb| a.Sum() | 语句，大家猜想其值为 6 还是 16 ？
 
 这里的语境含义应该是： 基类 A 的变量 a 指向基类 A 的实例时，希望执行的是基类 A 中的 Sum()，其值应为 6 ；基类 A 的变量 a 指向派生类 B 的实例时，希望执行的是派生类 B 中的 Sum()，其值应为 16， 但上述语句执行的结果却是 6 ，也就是执行的是基类 A 中的 Sum() 函数， 显然不符合期望。
 
-
-如何实现
-
+所谓的多态 (polymorphism), 就是同样的消息 \verb| a.Sum() | ，所指向的实例不一样，则呈现出不同的行为姿态，而且这是在运行时呈现的。 如此，在编程语言中，多态（polymorphism）就可以为不同数据类型的实体提供统一的接口，从而简化编码。
 
 
-在编程语言和类型论中，多态（polymorphism）是指为不同数据类型的实体提供统一的接口。
+如何实现这种多态行为呢？ 在面向对象程序设计语言中的基本处理方法是将基类中需呈现多态的方法定义为虚函数 (virtual)，派生类中需表现出不同行为时，将其覆盖 (override) 。 如以下代码所示：
+
+\begin{lstlisting}
+class A 
+{
+	private int a1;
+	protected int a2;
+	public int a3;	
+	
+	public A(int a1, int a2, int a3)
+	{
+		this.a1 = a1;
+		this.a2 = a2;
+		this.a3 = a3;
+	}
+	
+	public virtual int Sum()
+	{
+		return a1+a2+a3;
+	}
+}
+
+class B : A
+{
+	private int b1;
+	
+	public B(int a1, int a2, int a3, int b1) : base(a1, a2, a3)
+	{
+		this.b1 = b1;
+	}
+	
+	public override int Sum()
+	{
+		return base.Sum() + b1; 
+	}
+}
+
+//在Main()函数中运行代码， s的值将为16，即执行派生类 B 中的 Sum() 方法
+A a = new B(1, 2, 3, 10);
+int s = a.Sum();
+\end{lstlisting}
+
+以上代码第14行需用关键字 virtual 定义， 第29行需用关键字 override 进行覆盖。
+
+
+为了更好地理解多态，下面我们以绘图程序中的几何图形为例进行演示虚函数实现多态的方法。设想有一绘图程序能够绘制点 Point 、 圆 Circle 、 多段线 Polyline 、 多边形 Polygon 等图形并能够计算图形的面积 Area 与 长度 Length。面向对象的类图如 \ref{fig:graph} 所示：
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[scale=0.8]{chapter/csobject/graph.png}
-	\caption{几何图形关系图}
+	\includegraphics[scale=0.6]{chapter/csobject/graph.png}
+	\caption{几何图形关系类图}
 	\label{fig:graph}
 \end{figure}
+
+请注意，类图\ref{fig:graph} 中所有的类均用实线矩形表示。
+
+我们首先将所有图形对象的公有属性面积 Area、长度Length 和 计算 Calculate、绘图 Draw 方法抽象到基类 Shape中，代码如下：
+
+\begin{lstlisting}
+public class Shape
+{
+	protected double length = 0.0;
+	public double Length { get => length; }
+	
+	protected double area = 0.0;
+	public double Area { get =>area; }
+	
+	public virtual void Calculate() { }
+	public virtual void Draw()
+	{
+		Console.WriteLine("Shape Draw ......");
+	}
+}
+\end{lstlisting}
+
+由于各种图形计算长度与面积的方法各不相同，所以将 Calculate() 方法与 Draw() 方法定义为虚函数virtual()， Calculate() 方法采用默认的空函数体方式实现；
+length与area用于存储各种图形的计算值，要求外部对象不能访问与修改，定义为受保护权限(protected)，通过只读属性向外部展现数据。
+
+点类 Point 的实现如下：
+
+\begin{lstlisting}
+public class Point : Shape
+{      
+	public double X { get; set; }
+	public double Y { get; set; }        
+	
+	public Point(double x, double y)
+	{          
+		this.X = x;
+		this.Y = y;          
+	}
+	
+	public override void Draw()
+	{
+		Console.WriteLine("Point Draw ......");
+	}
+}
+\end{lstlisting}
+
+点Point的面积与长度我们均默认为 0， Shape类中的计算功能就够了，此处就不在覆盖(override)；绘图需要修改为 ``Point Draw ... '' 形式，故需覆盖(override)。
+
+圆类 Circle 的实现如下：
+
+\begin{lstlisting}
+public class Circle : Shape
+{
+	public Point Center { get; set; }
+	
+	private double r;
+	public double R
+	{
+		get { return r; }
+		set
+		{
+			if(value != r && value >= 0)
+			{
+				r = value;
+				Calculate(); //r的值发生改变，重新计算圆的面积
+			}
+		}
+	}
+	
+	
+	public Circle(double x, double y, double r)
+	{
+		Center = new Point(x, y);
+		this.R = r;  //赋值给R而不是this.r，确保计算圆的面积
+	}
+	
+	public override void Calculate()
+	{
+		this.length = Math.PI * r * 2;
+		this.area = Math.PI * r * r;
+		
+	}
+	
+	public override void Draw()
+	{
+		Console.WriteLine("Circle Draw ......");
+	}
+}
+\end{lstlisting}
+
+由于圆类的面积与周长计算方法与基类Shape不同，需将 Calculate() 与 Draw() 方法覆盖(override)。
+
+
+
+
+多段线类 Polyline 的实现如下：
+
+\begin{lstlisting}
+public class Polyline : Shape
+{
+	private List<Point> points = new List<Point>();
+	
+	private double CalLength()
+	{
+		if (points.Count < 2) return 0;
+		double sum = 0;
+		for (int i = 0; i < points.Count - 1; i++)
+		{
+			double dx = points[i + 1].X - points[i].X;
+			double dy = points[i + 1].Y - points[i].Y;
+			sum += Math.Sqrt(dx * dx + dy * dy);
+		}
+		return sum;
+	}       
+	
+	public void Add(double x, double y)
+	{
+		points.Add(new Point(x, y));
+	}
+	
+	public Polyline()
+	{
+	}       
+	
+	public override void Calculate()
+	{
+		this.length = CalLength();
+		this.area = 0.0;
+		
+	}
+	
+	public override void Draw()
+	{
+		Console.WriteLine("Polyline Draw ......");
+	}
+}
+\end{lstlisting}
+
+由于多段线类的面积与周长计算方法与基类Shape不同，需将 Calculate() 与 Draw() 方法覆盖(override)。
+
+
+多边形类 Polygone 的实现如下：
+
+\begin{lstlisting}
+public class Polygon : Shape
+{
+	private List<Point> points = new List<Point>();
+	
+	public double CalLength()
+	{
+		if (points.Count < 2) return 0;
+		double sum = 0;
+		for (int i = 0; i < points.Count; i++)
+		{
+			int j = (i + 1) % points.Count;
+			double dx = points[j].X - points[i].X;
+			double dy = points[j].Y - points[i].Y;
+			sum += Math.Sqrt(dx * dx + dy * dy);
+		}
+		return sum;
+	}
+	
+	public double CalArea()
+	{
+		if (points.Count < 3) return 0;
+		double s = 0;
+		for (int i = 0; i < points.Count; i++)
+		{
+			int j = i + 1;
+			if (j == points.Count) j = 0;
+			s += points[i].X * points[j].Y - points[j].X * points[i].Y;
+		}
+		return 0.5 * Math.Abs(s);
+	}
+	
+	public void Add(double x, double y)
+	{
+		points.Add(new Point(x, y));
+	}
+	
+	public override void Calculate()
+	{
+		this.length = CalLength();
+		this.area = CalArea();
+		
+	}
+	
+	public override void Draw()
+	{
+		Console.WriteLine("Polygon Draw ......");
+	}
+}
+\end{lstlisting}
+
+由于多边形类的面积与周长计算方法与基类Shape不同，需将 Calculate() 与 Draw() 方法覆盖(override)。
+
+客户端调用的代码如下：
+\begin{lstlisting}
+class Program
+{
+	static void Main(string[] args)
+	{
+		Shape s = new Shape();
+		s.Calculate();
+		Console.WriteLine("Shape's Area={0}, Length={1}", s.Area, s.Length);
+		s.Draw();
+		
+		Point p = new Point(100, 100);
+		p.Calculate();
+		Console.WriteLine("Point's Area={0}, Length={1}", p.Area, p.Length);
+		p.Draw();
+		
+		Circle c = new Circle(100, 100, 80);
+		c.Calculate();
+		Console.WriteLine("Circle1's Area={0}, Length={1}", c.Area, c.Length);
+		c.Draw();
+		
+		Polyline pl = new Polyline();
+		pl.Add(-1, 0);
+		pl.Add(2, 3);
+		pl.Add(4, 2);
+		pl.Add(4, 4);
+		pl.Add(6, 8);
+		pl.Add(-2, 5);
+		pl.Calculate();
+		Console.WriteLine("Polyline's Area={0}, Length={1}", pl.Area, pl.Length);
+		pl.Draw();
+		
+		Polygon pg = new Polygon();
+		pg.Add(-1, 0);
+		pg.Add(2, 3);
+		pg.Add(4, 2);
+		pg.Add(4, 4);
+		pg.Add(6, 8);
+		pg.Add(-2, 5);
+		pg.Calculate();
+		Console.WriteLine("Polygon's Area={0}, Length={1}", pg.Area, pg.Length);
+		pg.Draw();
+		
+		Console.ReadKey();
+	}
+}
+\end{lstlisting}
+
+代码运行输出为：
+
+\begin{verbatim}
+Shape's Area=0, Length=0
+Shape Draw ......
+Point's Area=0, Length=0
+Point Draw ......
+Circle1's Area=20106.1929829747, Length=502.654824574367
+Circle Draw ......
+Polyline's Area=0, Length=21.4948483649362
+Polyline Draw ......
+Polygon's Area=28, Length=26.593867878529
+Polygon Draw ......	
+\end{verbatim}
+
+很明显，客户端的调用代码有问题，如果增加一个图形实例的，调用代码就需要增加，代码会无限膨胀，对于绘图程序，也无法统一在屏幕上进行绘制与计算。更加合理的客户端调用的代码如下所示：
+
+\begin{lstlisting}
+class Program
+{
+	static void Main(string[] args)
+	{
+		List<Shape> shapeList = new List<Shape>();
+		shapeList.Add(new Shape());
+		shapeList.Add(new Point(100, 100));
+		shapeList.Add(new Circle(100, 100, 80));
+		
+		Polyline pl = new Polyline();
+		pl.Add(-1, 0);
+		pl.Add(2, 3);
+		pl.Add(4, 2);
+		pl.Add(4, 4);
+		pl.Add(6, 8);
+		pl.Add(-2, 5);
+		shapeList.Add(pl);
+		
+		Polygon pg = new Polygon();
+		pg.Add(-1, 0);
+		pg.Add(2, 3);
+		pg.Add(4, 2);
+		pg.Add(4, 4);
+		pg.Add(6, 8);
+		pg.Add(-2, 5);
+		shapeList.Add(pg);
+		
+		CalculateAll(shapeList);
+		DrawAll(shapeList);
+		
+		
+		Console.ReadKey();
+	}
+		
+	static void CalculateAll(List<Shape> shapeList)
+	{
+		foreach (var item in shapeList)
+		{
+			item.Calculate();
+			Console.WriteLine("Area={0}, Length={1}", item.Area, item.Length);               
+		}
+	}
+		
+	static void DrawAll(List<Shape> shapeList)
+	{
+		foreach (var item in shapeList)
+		{
+			item.Draw();
+		}
+	}
+}
+\end{lstlisting}
+
+代码运行输出为：
+
+\begin{verbatim}
+Area=0, Length=0
+Area=0, Length=0
+Area=20106.1929829747, Length=502.654824574367
+Area=0, Length=21.4948483649362
+Area=28, Length=26.593867878529
+Shape Draw ......
+Point Draw ......
+Circle Draw ......
+Polyline Draw ......
+Polygon Draw ......
+\end{verbatim}
+
+这样写的好处是28-50行的代码基本稳定，图形实例的增加不会再去修改这部分代码。
+
+可能有人认为这次的面积与长度输出看不到图形信息，其实对各个类的 ToString 函数覆盖(override)就可以达到与前面一样的效果，代码如下：
+\begin{lstlisting}
+public class Shape
+{
+ 	........................
+	
+	public override string ToString()
+	{
+		return $"Shape's Area ={Area}, Length ={Length}";
+	}
+}
+
+public class Point : Shape
+{      
+ 	........................
+	
+	public override string ToString()
+	{
+		return $"Point's Area ={Area}, Length ={Length}";
+	}
+}
+
+public class Circle : Shape
+{
+	........................
+	
+	public override string ToString()
+	{
+		return $"Circle's Area ={Area}, Length ={Length}";
+	}
+}
+
+public class Polyline : Shape
+{
+	........................
+		
+	public override string ToString()
+	{
+		return $"Polyline's Area ={Area}, Length ={Length}";
+	}
+}
+
+public class Polygon : Shape
+{
+	........................
+	 
+	public override string ToString()
+	{
+		return $"Polygon's Area ={Area}, Length ={Length}";
+	}
+}
+
+\end{lstlisting}
+
+ToString() 函数来自 System.Object 类， System.Object 类是所有的类的根， ToString() 函数被定义为 virtual。
+
+CalculateAll函数稍作修改：
+\begin{lstlisting}
+static void CalculateAll(List<Shape> shapeList)
+{
+	foreach (var item in shapeList)
+	{
+		item.Calculate();
+		Console.WriteLine(item);               
+	}
+}	
+\end{lstlisting}
+
+则运行输出结果为：
+\begin{verbatim}
+Shape's Area =0, Length =0
+Point's Area =0, Length =0
+Circle's Area =20106.1929829747, Length =502.654824574367
+Polyline's Area =0, Length =21.4948483649362
+Polygon's Area =28, Length =26.593867878529
+Shape Draw ......
+Point Draw ......
+Circle Draw ......
+Polyline Draw ......
+Polygon Draw ......
+\end{verbatim}
+
+
+\section{抽象方法与抽象类}
+
+在上节的内容中，Shape类的虚函数Calculate函数体为空，什么内容都不做；在实际的绘图成图中，Draw函数也一样。
+因此可以用关键字 abstract 将其定义为抽象方法，就可以不定义函数体了。
+
+含有一个抽象方法的类就是抽象类，必须在关键字 class 前用 abstract 加以定义，抽象类 Shape 代码如下所示：
+
+\begin{lstlisting}
+public abstract class Shape
+{
+	protected double length = 0.0;
+	public double Length { get => length; }
+	
+	protected double area = 0.0;
+	public double Area { get =>area; }
+	
+	public abstract void Calculate();
+	public abstract void Draw();
+}
+\end{lstlisting}
+
+抽象类不同于普通实例类的特点是不能实例化，不能写成： \verb|Shape s = new Shape()|，但可以写成
+\verb|Shape s = new Point()| 形式。
+
+抽象方法不同于虚函数的地方在于派生类中必须覆盖(override)抽象方法，而虚函数则没有这样强制性的要求。
+因此前面的Point类由于没有覆盖(override) 基类Shape中的抽象方法 Calculate，需做如下修改：
+
+\begin{lstlisting}
+public sealed class Point : Shape
+{      
+	........................
+	
+	public override void Draw()
+	{
+		Console.WriteLine("Point Draw ......");
+	}
+	
+	........................
+}
+\end{lstlisting}
+
+
+在类图中，抽象类是用虚线矩形表示的，如图 \ref{fig:agraph} 所示：
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[scale=0.6]{chapter/csobject/agraph.png}
+	\caption{几何图形关系类图的抽象类}
+	\label{fig:agraph}
+\end{figure}
+
+由于抽象类Shape不能实例化，前面的调用代码中生成Shape实例的代码需删除，如下代码所示：
+\begin{lstlisting}
+class Program
+{
+	static void Main(string[] args)
+	{		
+		List<Shape> shapeList = new List<Shape>();
+		//shapeList.Add(new Shape()); //需删除
+		shapeList.Add(new Point(100, 100));
+		shapeList.Add(new Circle(100, 100, 80));
+		
+		........................
+	}
+	
+	........................
+}
+\end{lstlisting}
 
 
 
 
 \section{接口(interface)}
-接口(interface)是指公开约定的属性或方法，接口是面向对象编程方法的重要概念。
+接口是指公开约定的属性或方法，接口是面向对象编程方法的重要概念。
 
+接口的关键字是 interface， 与抽象类不同的是接口中只能含有方法与属性，所有的方法与属性均不能有具体的实现。
 
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[scale=0.6]{chapter/csobject/igraph.png}
+	\caption{带有接口的几何图形关系类图}
+	\label{fig:igraph}
+\end{figure}
+
+如图 \ref{fig:igraph}所示，我们设计图形接口IShape与绘制接口ICalculate ：
+
+\begin{lstlisting}
+public interface ICalculate
+{
+	void Calculate();
+}
+
+public interface IDraw
+{
+	void Draw();
+}
+\end{lstlisting}
+
+让抽象类 Shape 来实现这两个接口：
+
+\begin{lstlisting}
+public abstract class Shape : ICalculate, IDraw
+{
+	protected double length = 0.0;
+	public double Length { get => length; }
+	
+	protected double area = 0.0;
+	public double Area { get =>area; }
+	
+	public abstract void Calculate();
+	public abstract void Draw();
+}
+\end{lstlisting}
+
+实现接口也可以用一般的实例类，也可以用一般的方法，也可以用虚函数，也可以抽象方法，只要方法的签名与接口相符就行。
+
+在我们的这个例子中，我们使用抽象类的抽象函数进行接口实现。
 
 \subsection{面向接口编程}
 
+接口是框架系统设计的关键技术，众多的商业软件为了易于扩展与修改，也为了多人协调开发，均是以架构形式出现，系统架构师的主要设计手段就是面向接口进行设计与编码。有兴趣的同学可以研读设计模式等相关资料。
+
+在我们的例子中，如下代码中的CalculateAll与DrawAll函数分别是面向接口ICalculate与IDraw接口编写的：
+
+\begin{lstlisting}
+class Program
+{
+	static void Main(string[] args)
+	{		
+		List<Shape> shapeList = new List<Shape>();
+		shapeList.Add(new Point(100, 100));
+		shapeList.Add(new Circle(100, 100, 80));
+		
+		Polyline pl = new Polyline();
+		pl.Add(-1, 0);
+		pl.Add(2, 3);
+		pl.Add(4, 2);
+		pl.Add(4, 4);
+		pl.Add(6, 8);
+		pl.Add(-2, 5);
+		shapeList.Add(pl);
+		
+		Polygon pg = new Polygon();
+		pg.Add(-1, 0);
+		pg.Add(2, 3);
+		pg.Add(4, 2);
+		pg.Add(4, 4);
+		pg.Add(6, 8);
+		pg.Add(-2, 5);
+		shapeList.Add(pg);
+		
+		List<IDraw> drawList = new List<IDraw>();
+		foreach (var item in shapeList)
+		{
+			IDraw idraw = item;
+			drawList.Add(idraw);
+		}
+		DrawAll(drawList);
+		
+		List<ICalculate> calculateList = new List<ICalculate>();
+		foreach (var item in calculateList)
+		{
+			ICalculate icalculate = item as ICalculate;
+			calculateList.Add(icalculate);
+		}
+		CalculateAll(calculateList);
+		
+		foreach (var item in shapeList)
+		{                
+			Console.WriteLine(item);
+		}
+		
+		Console.ReadKey();
+	}
+		
+	static void CalculateAll(List<ICalculate> calculateList)
+	{
+		foreach (var item in calculateList)
+		{
+			item.Calculate();           
+		}
+	}
+		
+	static void DrawAll(List<IDraw> shapeList)
+	{
+		foreach (var item in shapeList)
+		{
+			item.Draw();
+		}
+	}
+}
+\end{lstlisting}
+
+代码中第27-32行是用接口IDraw指向各个Shape实例，以满足DrawAll的接口调用要求。
+
+
 \subsection{接口跳转}
+
+在某些软件设计中，有将某个类设计的功能特别多的情况，就可以用接口将这些功能分组，在使用的时候，某个接口功能使用完毕，就可以进行接口跳转，再去使用其他功能。
+
+在上面的代码第38行：
+\verb|ICalculate icalculate = item as ICalculate;| 就是从接口 IDraw 跳转到 ICalculate。
+
+这种跳转之所以能成功，是因为这些接口所指向的实例对象均实现了这些接口，否则，这种跳转将失败。
 
 
 \section{封闭类(sealed class)}
 
+如果一个类不需要再通过继承扩展，就可以用关键字 sealed 将其定义为封闭类，比如点Point类：
+\begin{lstlisting}
+public sealed class Point : Shape
+{      
+	public double X { get; set; }
+	public double Y { get; set; }        
+	
+	public Point(double x, double y)
+	{          
+		this.X = x;
+		this.Y = y;          
+	}
+	
+	public override void Calculate()
+	{
+		this.area = 0.0;
+		this.length = 0.0;
+	}
+	
+	public override void Draw()
+	{
+		Console.WriteLine("Point Draw ......");
+	}
+	
+	public override string ToString()
+	{
+		return $"Point's Area ={Area}, Length ={Length}";
+	}
+}
+\end{lstlisting}
+
 \section{小结}
+
+多态的实现条件是这些类要满足继承关系，也就是多态只能发生在基类与派生类之间；
+
+要实现多态，需将基类的方法定义为虚函数(virtual)，派生类根据需要覆盖(override)相应的基类虚函数；
+
+抽象方法不需要函数体，含有一个抽象方法的类必须定义为抽象类，抽象类不能实例化；
+
+接口中不能含有字段，只能有方法与属性，接口可以继承接口，接口支持多继承，继承自接口的类必须实现接口。

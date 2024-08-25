@@ -3,7 +3,7 @@
   <Class Name="Ch03Ex01.Shape" Collapsed="true">
     <Position X="7.25" Y="2.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAgAAAAAAAABAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAgAAAEAAAABAACAAAAAAAAAAAQAAAAE=</HashCode>
       <FileName>Shape.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.679" />
@@ -11,21 +11,21 @@
   <Class Name="Ch03Ex01.Point" Collapsed="true">
     <Position X="4.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAEAABAAABgAQAAYAE=</HashCode>
+      <HashCode>AAAAAAAAAAAAAgAEAAAAAAAAACAAAAAAAAAAAAAAYAA=</HashCode>
       <FileName>Point.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Ch03Ex01.Circle" Collapsed="true">
     <Position X="6.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAABAAEAAAAAAAAAAAAAAAAABAQAIEQE=</HashCode>
+      <HashCode>AAAAAAAAAAAAAgAEAAAAAAAAACAAAAAAAAABAAAIAQA=</HashCode>
       <FileName>Circle.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Ch03Ex01.Polygon" Collapsed="true">
     <Position X="10" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAIAAECAAAAAAAAAAAAAAABAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <HashCode>AAIAAACAAAAAAgAEAAAAAAAAACAAAAAAAAQAAAAAEAA=</HashCode>
       <FileName>Polygon.cs</FileName>
       <NewMemberFileName>Polyline.cs</NewMemberFileName>
     </TypeIdentifier>
@@ -33,15 +33,15 @@
   <Class Name="Ch03Ex01.Polyline" Collapsed="true">
     <Position X="8.25" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAIAAECAAAAAAAAAAAAAAABAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <HashCode>AAIAAACAAAAAAgAEAAAAAAAAACAAAAAAAAQAAAAAAAA=</HashCode>
       <FileName>Polyline.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Interface Name="Ch03Ex01.IShape" Collapsed="true">
+  <Interface Name="Ch03Ex01.ICalculate" Collapsed="true">
     <Position X="6.5" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAQAAAAA=</HashCode>
-      <FileName>IShape.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ICalculate.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Ch03Ex01.IDraw" Collapsed="true">

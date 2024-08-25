@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Ch03Ex01
 {
-    public interface IShape
+    public interface ICalculate
     {
-        double Length { get; }
-        double Area { get; }
+        void Calculate();
     }
 }

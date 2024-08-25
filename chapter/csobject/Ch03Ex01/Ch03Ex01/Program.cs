@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Ch03Ex01
 {
@@ -6,44 +7,103 @@ namespace Ch03Ex01
     {
         static void Main(string[] args)
         {
-            Circle c1 = new Circle(100, 100, 80);
-            Circle c2 = new Circle(200, 200, 110);
+            //Shape s = new Shape();
+            //s.Calculate();
+            //Console.WriteLine("Shape's Area={0}, Length={1}", s.Area, s.Length);
+            //s.Draw();
 
-            Console.WriteLine("Circle1的面积={0}", c1.Area );
-            Console.WriteLine("Circle2的面积={0}", c2.Area);
+            //Point p = new Point(100, 100);
+            //p.Calculate();
+            //Console.WriteLine("Point's Area={0}, Length={1}", p.Area, p.Length);
+            //p.Draw();
 
-            bool yes = c1.IsIntersectWithCircle(c2);
-            Console.WriteLine("Circle1与Circle2是否相交:{0}", 
-				yes ? "是" : "否" );
+            //Circle c = new Circle(100, 100, 80);
+            //c.Calculate();
+            //Console.WriteLine("Circle1's Area={0}, Length={1}", c.Area, c.Length);
+            //c.Draw();
 
             //Polyline pl = new Polyline();
-            //pl.Add(-1,  0);
+            //pl.Add(-1, 0);
             //pl.Add(2, 3);
             //pl.Add(4, 2);
             //pl.Add(4, 4);
             //pl.Add(6, 8);
             //pl.Add(-2, 5);
-            //Console.WriteLine("Polyline's Area={0}, Length={1}", pl.Area, pl.Length );
-
-            //double[,] pts = new double[,] {
-            //    { -1,0},
-            //    { 2, 3 }, 
-            //    { 4, 2 }, 
-            //    { 4, 4 }, 
-            //    { 6, 8 }, 
-            //    { -2, 5 }};
-            //Polyline pl = new Polyline(pts);
+            //pl.Calculate();
             //Console.WriteLine("Polyline's Area={0}, Length={1}", pl.Area, pl.Length);
+            //pl.Draw();
 
-          Point[] pts = new Point[]{
-                new Point(-1,0),
-                new Point(2, 3 ),
-                new Point(4, 2 ),
-                new Point(4, 4 ),
-                new Point(6, 8 ),
-                new Point(-2, 5 )};
-            Polyline pl = new Polyline(pts);
-            Console.WriteLine("Polyline's Area={0}, Length={1}", pl.Area, pl.Length);
+            //Polygon pg = new Polygon();
+            //pg.Add(-1, 0);
+            //pg.Add(2, 3);
+            //pg.Add(4, 2);
+            //pg.Add(4, 4);
+            //pg.Add(6, 8);
+            //pg.Add(-2, 5);
+            //pg.Calculate();
+            //Console.WriteLine("Polygon's Area={0}, Length={1}", pg.Area, pg.Length);
+            //pg.Draw();
+
+            List<Shape> shapeList = new List<Shape>();
+            shapeList.Add(new Point(100, 100));
+            shapeList.Add(new Circle(100, 100, 80));
+
+            Polyline pl = new Polyline();
+            pl.Add(-1, 0);
+            pl.Add(2, 3);
+            pl.Add(4, 2);
+            pl.Add(4, 4);
+            pl.Add(6, 8);
+            pl.Add(-2, 5);
+            shapeList.Add(pl);
+
+            Polygon pg = new Polygon();
+            pg.Add(-1, 0);
+            pg.Add(2, 3);
+            pg.Add(4, 2);
+            pg.Add(4, 4);
+            pg.Add(6, 8);
+            pg.Add(-2, 5);
+            shapeList.Add(pg);
+
+            List<IDraw> drawList = new List<IDraw>();
+            foreach (var item in shapeList)
+            {
+                IDraw idraw = item;
+                drawList.Add(idraw);
+            }
+            DrawAll(drawList);
+
+            List<ICalculate> calculateList = new List<ICalculate>();
+            foreach (var item in calculateList)
+            {
+                ICalculate icalculate = item as ICalculate;
+                calculateList.Add(icalculate);
+            }
+            CalculateAll(calculateList);
+
+            foreach (var item in shapeList)
+            {                
+                Console.WriteLine(item);
+            }
+
+            Console.ReadKey();
+        }
+
+        static void CalculateAll(List<ICalculate> calculateList)
+        {
+            foreach (var item in calculateList)
+            {
+                item.Calculate();           
+            }
+        }
+
+        static void DrawAll(List<IDraw> shapeList)
+        {
+            foreach (var item in shapeList)
+            {
+                item.Draw();
+            }
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ch03Ex01
 {
-    public class Polyline : Shape
+    public class Polygon : Shape
     {
         private List<Point> points = new List<Point>();
 

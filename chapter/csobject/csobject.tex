@@ -7,11 +7,11 @@
 封装把客观事物封装成抽象的类，在类中把自己的数据和方法只让可信的类或者对象操作，对不可信的类或对象进行信息隐藏。
 
 也就是应尽可能的把类成员变量的访问权限定为 private 或 protected ，通过属性(Property)或方法向外开放；
-类的方法/函数 应尽可能的定义为public；
-需向下继承的类成员，尽可能可以定义为 protected；
-项目内能访问的成员，尽可能定义为internal。
+类的方法/函数 应尽可能的定义为 public ；
+需向下继承的类成员，尽可能可以定义为 protected ；
+项目内能访问的成员，尽可能定义为 internal 。
 
-继承（Inheritance）是指这样一种能力：它可以使用现有类的所有功能，并在无需重新编写原来的类的情况下对这些功能进行扩展。
+继承 (Inheritance) 是指这样一种能力：它可以使用现有类的所有功能，并在无需重新编写原来的类的情况下对这些功能进行扩展。
 
 继承符合开闭原则。
 
@@ -31,12 +31,12 @@
 在 \cs 中类支持单继承 (inheritance)，通过类继承产生派生类 (derived class)， 
 从而扩展和专用化基类 (base class) 。
 
- \cs 中所有的类均从 System.Object 继承，如果一个类只从System.Object 类继承，
+ \cs 中所有的类均从 System.Object 继承，如果一个类只从 System.Object 类继承，
  则可以将其省略。
 
  \subsection{类的定义}
 
-类的关键字为class，定义一个新类的方式如下：
+类的关键字为 class ，定义一个新类的方式如下：
 
 \begin{lstlisting}
 [public/internal] class ClassName [: BaseClass, Interface1,...,InterfaceN]
@@ -45,11 +45,11 @@
 }
 \end{lstlisting}
 
-先指定类的修饰符，class关键字后是类名称（类名称首字母一般大写），接着是要继承的基类
+先指定类的修饰符， class 关键字后是类名称（类名称首字母一般大写），接着是要继承的基类
 与需实现的接口。
 之后是类的主体，它由一组位于一对大括号 ``\{'' 和 ``\}'' 之间的成员声明组成。
 
-由于测绘行业的基本任务是提供位置服务的，点位是我们经常使用的概念，我们就对它来定义一个类 Point：
+由于测绘行业的基本任务是提供位置服务的，点位是我们经常使用的概念，我们就对它来定义一个类 Point ：
 
 \begin{lstlisting}
 public class Point : System.Object
@@ -59,10 +59,10 @@ public class Point : System.Object
 \end{lstlisting}
 
 上面是测量点的简单定义，关键字 class 前的 public 为访问限定符，表示访问不受限制。 
-也可以为internal，表示该类仅限于当前程序集访问，外部程序集不能访问。
-如果在class前不加访问修饰符，默认的访问权限为internal。
+也可以为 internal ，表示该类仅限于当前程序集访问，外部程序集不能访问。
+如果在 class 前不加访问修饰符，默认的访问权限为 internal 。
 
-点名后的 ``: System.Object'' 表示 Point类从 System.Object 类（System为命名空间）继承。
+点名后的 ``: System.Object'' 表示 Point 类从 System.Object 类（ System 为命名空间）继承。
 \cs 中 System.Object 类为所有类的 根基类，如果不写类的基类，则默认从System.Object继承，
 上例中 ``: System.Object'' 可以省略。
 
@@ -80,7 +80,7 @@ public class Point
 在 \cs 中用 new 操作符生成类的实例对象。该运算符为新的实例分配内存、
 调用构造函数初始化实例，并返回对该实例的引用。
 
-下面的语句生成两个 Point 实例对象，并将对这两个对象的引用存储在两个变量p1、p2中：
+下面的语句生成两个 Point 实例对象，并将对这两个对象的引用存储在两个变量 p1 、p2 中：
 
 \begin{lstlisting}
 {
@@ -98,7 +98,7 @@ p1与p2所指向的内存，将由 .Net 系统自动收回。
 一个类通常由两部分组成：数据与对数据的操作。字段是与类或类的实例相关的变量，
 用于存储类的数据。
 
-如上面的点Point类，我们可以为其定义数据成员如下：
+如上面的点 Point 类，我们可以为其定义数据成员如下：
 
 \begin{lstlisting}
 public class Point
@@ -117,7 +117,7 @@ public class Point
 
 \subsection{类字段的可访问性}
 
-从以上点Point类的定义看出，每个字段的定义前都有public，代表着对字段的访问权限。
+从以上点 Point 类的定义看出，每个字段的定义前都有 public ，代表着对字段的访问权限。
 
 类的每个成员都可以关联可访问性，以控制访问该类成员的权限，默认的可访问性为private。
 
@@ -948,7 +948,7 @@ namespace ZXY
 
 \section{继承(Inheritance)}
 
- 继承是指这样一种能力：它可以使用现有类的所有功能，并在无需重新编写原来的类的情况下对这些功能进行扩展。继承符合面向对象设计的开闭原则：对修改封闭、对扩展开发。
+继承是指这样一种能力：它可以使用现有类的所有功能，并在无需重新编写原来的类的情况下对这些功能进行扩展。
 
 通过继承创建的新类称为“子类”或“派生类”。
 
@@ -956,66 +956,257 @@ namespace ZXY
 
 继承的过程，就是从一般到特殊的过程，也称为泛化。
 
+在考虑使用继承时，有一点需要注意，那就是两个类之间的关系应该是“属于”关系（is a）。
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{使用继承的目的}
+
+复用代码，减少类的冗余代码，减少开发工作量（符合开闭原则：对扩展开放，对修改关闭，简称为开闭原则）。
+
+使得类与类之间产生关系，为多态的实现打下基础。
+
+继承概念的实现方式有二种：类继承与接口继承（或称为接口实现）
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{ \cs 类继承}
+
+指使用基类的属性和方法而无需额外编码的能力，如：
+子窗体（类）使用基窗体（类）的外观和实现代码的能力。
+如在 WinForm 项目中，使用 System.Windows.Forms 生成我们自己的 Form1 :
+
+\begin{lstlisting}
+public partial class Form1 : System.Windows.Forms.Form
+{
+	.........................   
+}
+\end{lstlisting}
+
+如在 WPF 项目中，使用 System.Windows.Forms 生成我们自己的 WPF 窗体 MainWindow :
+
+\begin{lstlisting}
+public partial class MainWindow : System.Windows.Window
+{
+	.........................................
+}
+\end{lstlisting}
+
+如此，微软构造了各种类库，我们只需简单的继承，就可以使用微软已经定义好的类库。
+
+\cs 中类的继承为单继承，不支持类的多继承。
+
+\cs 中类的继承形式为： 子类 : 基类
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{继承的写法}
 
 在类名后面添加一个冒号和基类的名称来指定一个基类，省略基类的类默认为从类 System.Object 派生。
-在下面的示例中，Point3D 的基类是 Point2D，而 Point2D 的基类是 System.Object。
+下面的代码：
 
 \begin{lstlisting}
-public class Point2D
+class A : System.Object
 {
-	private string name;
-	public string Name
-	{
-		get => name;
-		set => name = value;
-	}
+}
+\end{lstlisting}
 
-	protected double x;
-	public double y;
-	
-	public Point(string name, double x, double y)
+可以写成：
+
+\begin{lstlisting}
+class A
+{
+}
+\end{lstlisting}
+
+若A为基类， B为子类，则写成：
+
+\begin{lstlisting}
+class A {}
+
+class B : A
+{
+}
+\end{lstlisting}
+
+\cs 中类的继承只支持单继承。
+
+\subsection{子类继承基类的成员}
+
+子类继承了基类的所有成员，继承意味着子类隐式地将它的基类的所有成员当作自已的成员，无论基类中的成员权限是 private，还是 protected 或 public。基类中的 private 不能直接访问，但可以通过 protected 或 public 方法间接访问。
+
+\begin{lstlisting}
+class A
+{
+	private int a1=1;
+	protected int a2=2;
+	public int a3=3;
+		
+	public int Sum()
 	{
-		this.name = name;
-		this.x = x;
-		this.y = y;
+		return a1+a2+a3;
 	}
 }
-
-public class Point3D: Point
+	
+class B : A
 {
-	private double z;
-	public Point3D(string name, double x, double y, double z): base(name, x, y)
+	private int b1=10;
+	
+	public int Sum1()
 	{
-		this.z = z;
+		return a1 + a2 + a3 + b1; 
+	}
+	
+	public int Sum2()
+	{
+		return Sum() + b1; 
 	}
 }
 \end{lstlisting}
 
+子类 B 中的方法 Sum1 会报错，因为 a1 为基类 A 中的 private 字段，不能直接使用。
 
-\subsection{子类继承基类的成员}
+子类 B 中的方法 Sum2 通过基类 A 中 public 方法 Sum 调用了基类 A 的 private 字段 a1，正确。
 
-子类继承了基类的所有成员，继承意味着子类隐式地将它的基类的所有成员当作自已的成员，无论基类中的成员权限是 private，还是 protected 或 public。
+
+\subsection{子类对基类方法的隐藏：使用关键字new}
+
+如果将上面代码中的子类 B 中的求和方法也定义为 Sum，则 子类 B 中的方法 Sum 隐藏了基类 A 中的方法Sum，编译器会给出警告提示，如下面代码所示:
+
+\begin{lstlisting}
+class A
+{
+	private int a1=1;
+	protected int a2=2;
+	public int a3=3;
+	
+	public int Sum()
+	{
+		return a1+a2+a3;
+	}
+}
+
+class B : A
+{
+	private int b1=10;	
+	
+	public new int Sum()
+	{
+		return base.Sum() + b1; 
+	}
+}
+\end{lstlisting}
+
+为消除警告，需在17行添加 new 关键字，告诉编译器这是子类 B 中的新方法，在19行为了引用基类中的Sum方法，需使用 base 关键字指明，否则会形成循环调用。
 
 
 \subsection{继承中的构造函数}
 
-但基类的实例构造函数、静态构造函数和析构函数除外。派生类能够在继承基类的基础上添加新的成员，但是它不能移除继承成员的定义。在前面的示例中，Point3D 从 Point 继承了 x 和 y 字段，并且每个 Point3D 实例均包含三个字段：x、y 和 z。
+\begin{itemize}
+\item {基类与子类的构造函数执行顺序}
 
-从某个类类型到它的任何基类类型存在隐式的转换。因此，类类型的变量可以引用该类的实例或任何派生类的实例。例如，对于前面给定的类声明，Point 类型的变量既可以引用 Point 也可以引用 Point3D：
+子类中的一部分是来自基类中的，在构造子类时，必须先构造基类，因此基类的构造函数肯定是先于子类的构造函数执行的，
+可以通过如下代码验证：
+
 \begin{lstlisting}
-Point a = new Point(10, 20);
-Point b = new Point3D(10, 20, 30);
+class A 
+{	
+	public A()
+	{
+		Console.WriteLine("A: A()");
+	}
+}
+
+class B : A
+{
+	public B()
+	{
+		Console.WriteLine("B: B()");
+	}
+}
 \end{lstlisting}
 
+如果在 Main 函数中运行如下代码：
+
+\verb| B objB = new B(); |
+
+则输出为：
+
+\begin{verbatim}
+A: A() 
+B: B()
+\end{verbatim}
+
+说明基类的构造函数会先于子类的构造函数执行的。
+
+
+
+\item{子类调用基类的非默认构造函数的形式}
+
+以上在 new B() 时，系统会先调用默认的 A 类的构造函数 A(), 如果 A类中不存在 默认构造函数A() 时，系统会报错。
+
+此时需在子类 B 中的构造函数中用关键字base调用基类 A 类的构造函数， 如下代码所示：
+
+\begin{lstlisting}
+class A 
+{
+	private int a1=1;
+	protected int a2=2;
+	public int a3=3;	
+
+	public A(int a1, int a2, int a3)
+	{
+		this.a1 = a1;
+		this.a2 = a2;
+		this.a3 = a3;
+	}
+}
+
+class B : A
+{
+	private int b1;
+	
+	public B(int a1, int a2, int a3, int b1) : base(a1, a2, a3)
+	{
+		this.b1 = b1;
+	}
+}
+\end{lstlisting}
+
+\end{itemize}
+
+
+
+ 
+\subsection{小结}
+
+ 基类是不能直接调用子类的方法或函数，子类可以调用继承自基类的 protected 和 public 字段、属性与方法;
+ 
+ 子类中的构造函数对基类构造函数的引用形式为 \verb| base(…, ….)| ；
+ 
+ 如果在子类中要调用基类中的属性或方法时，用关键字 base;
+ 
+ 对子类自己的调用 用关键字 this 。
+ 
+
+
+
 \section{多态与虚函数}
-在编程语言和类型论中，多态（polymorphism）是指为不同数据类型的实体提供统一的接口，虚函数是实现多态的工具。
+在编程语言和类型论中，多态（polymorphism）是指为不同数据类型的实体提供统一的接口。
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[scale=0.8]{chapter/csobject/graph.png}
+	\caption{几何图形关系图}
+	\label{fig:graph}
+\end{figure}
+
+
 
 
 \section{接口(interface)}
+接口(interface)是指公开约定的属性或方法，接口是面向对象编程方法的重要概念。
+
+
 
 \subsection{面向接口编程}
 

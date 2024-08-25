@@ -1,0 +1,191 @@
+\documentclass[UTF8]{ctexart}
+%% \documentclass{article}
+
+\usepackage{graphicx} % 插图片
+
+\usepackage{amsmath}  % 数学公式拓展
+\usepackage{amssymb}
+
+\usepackage{float}    % 浮动体控制
+
+%% \usepackage{listings} % 插入代码，不过据说 minted 的效果更好一些
+%% \usepackage{minted}
+
+\usepackage{fontspec}
+
+\setmainfont{Consolas}
+%% \setCJKmainfont{微软雅黑}
+\setCJKmainfont[BoldFont=黑体, ItalicFont=楷体]{宋体}
+\setCJKfamilyfont{hei}{黑体}
+\setCJKmonofont {仿宋}
+\newcommand{\hei}{\CJKfamily{hei}}
+
+\setCJKfamilyfont{hwxk}{STXingkai}             %使用STXingkai华文行楷字体
+\newcommand{\huawenxingkai}{\CJKfamily{hwxk}}
+
+\setCJKfamilyfont{hwcy}{STCaiyun}             %使用STCaiyun华文彩云字体
+\newcommand{\huawencaiyun}{\CJKfamily{hwcy}}
+
+\setCJKfamilyfont{hwhp}{STHupo}             %使用STHupo华文琥珀字体
+\newcommand{\huawenhupo}{\CJKfamily{hwhp}}
+
+\setCJKmainfont{宋体}
+
+
+\usepackage{xcolor}
+\usepackage{etoolbox}
+\usepackage[colorlinks]{hyperref}
+\usepackage{lipsum}
+\usepackage[paperwidth=21cm,paperheight=29cm,top=2cm,bottom=2cm,left=3cm,right=3cm]{geometry}
+\usepackage{xltxtra,mflogo,texnames}
+
+
+\usepackage{minted}
+\usepackage[user]{zref}
+\usepackage{tcolorbox}
+
+\newtcbox{\codelinenobox}[1][red]{on line,colback=#1!10!white,colframe=#1!50!black,
+arc=4.5pt, %圆弧的半径
+before upper={\rule[0pt]{0pt}{6pt}},
+%调整字符在宽中的位置，[]中负的越多，字符越向上偏离底线
+boxrule=0.5pt, %边框线宽
+boxsep=0pt,%字符与边框的间距
+left=2.5pt,right=2.5pt,top=1.5pt,bottom=1.5pt
+}
+
+\newcounter{codelineno}
+\setcounter{codelineno}{0}
+\renewcommand*{\thecodelineno}{\codelinenobox[blue]{\arabic{codelineno}}}
+
+\makeatletter
+
+\zref@newprop{lineno}{\thecodelineno}
+
+\zref@addprops{main}{lineno}
+
+\newcommand*{\codelineno}[2][]{%
+\edef\ref@temp{#1}%
+\ifx\ref@temp\@empty\relax%
+\stepcounter{codelineno}%
+\else%
+\setcounter{codelineno}{#1}%
+\fi%
+\makebox[0pt][c]{\hss\thecodelineno\hspace{10pt}}%
+\zlabel{#2}%
+}
+
+
+\makeatother
+
+\begin{document}
+
+\renewcommand{\theFancyVerbLine}{\sffamily
+\textcolor{blue!50!black}{\small\oldstylenums{\arabic{FancyVerbLine}}}}
+
+这是黑体加粗\textbf{加粗黑体}
+
+\hei 这段文字是黑体
+
+\textbf  加粗
+\textit  意大利斜体
+\textsl  slanted斜体
+\textsf  无衬线
+\texttt  等宽
+
+\noindent 我是全局字体，我使用的是宋体\\
+{\kaishu 我是ctex已定义好的字体，我使用的楷体}\\
+{\heiti 我是ctex已定义好的字体，我使用的黑体}\\
+{\fangsong 我是ctex已定义好的字体，我使用的仿宋}\\
+{\lishu 我是ctex已定义好的字体，我使用的隶书}\\
+{\youyuan 我是ctex已定义好的字体，我使用的幼圆}\\
+{\huawenxingkai 我是自定义的字体，我使用的华文行楷}\\
+{\huawencaiyun 我是自定义的字体，我使用的华文彩云}\\
+{\huawenhupo 我是自定义的字体，我使用的华文琥珀}\\
+
+Hello, \LaTeX
+
+\begin{math}
+ a^2 + b^2 = c^2
+\end{math}
+
+你好，\LaTeX
+
+测试Vim + VimTex + MuPDF
+
+\begin{minted}%
+[encoding=utf8,
+linenos,
+frame=single,
+rulecolor=purple!50!black,
+texcl=true,
+highlightcolor=green!40,
+highlightlines={7,9},
+]{python3}
+#
+#authoryear style
+#
+def formatlabelauthor(bibentry):
+
+    if 'author' in bibentry:
+        namelist=bibentry['author'] #\label{line:namelist:author}
+    elif 'editor' in bibentry:
+        namelist=bibentry['editor'] #\label{line:namelist:editor}
+    elif 'translator' in bibentry:
+        namelist=bibentry['translator']
+    else:
+        namelist='Anon'
+
+    return [namelist,namelist]
+\end{minted}
+
+作者姓名赋值见第\ref{line:namelist:author}行，编者姓名赋值见\ref{line:namelist:editor}行。
+
+
+\begin{minted}[escapeinside=||,
+frame=single,
+rulecolor=purple!50!black,
+highlightcolor=yellow!50,
+highlightlines={7,9},
+]{python3}
+#
+#authoryear style
+#
+def formatlabelauthor(bibentry):
+
+    if 'author' in bibentry:
+|\codelineno{line:tex:d}|        namelist=bibentry['author'] 
+    elif 'editor' in bibentry:
+|\codelineno{line:tex:e}|         namelist=bibentry['editor'] 
+    elif 'translator' in bibentry:
+        namelist=bibentry['translator']
+    else:
+        namelist='Anon'
+
+    return [namelist,namelist]
+\end{minted}
+
+作者姓名赋值见第\zref[lineno]{line:tex:d}行，编者姓名赋值见\zref[lineno]{line:tex:e}行。
+
+在代码第7和9行，利用逃逸代码增加了新的行号标签，然后再正文中引用。标签和引用利用zref宏包实现。
+行号标签的用tcolorbox画了一个圈。
+
+定义的 \verb|\codelineno|命令，根据输入信息完成了行号的更新，行号标签的输出，以及标签生成。
+注意python代码中的 \verb|\codelineno{line:tex:d}|。
+
+$$
+\mathbb{ABCDEFGHIJKLMNOPQRSTUVWXYZ}
+\mathbf{012...abc...ABC}
+$$
+
+\[
+	A=\bigcap_{i \in I } 	
+.\]
+
+朱学军
+西安科技大学测绘科学与技术学院
+tel：13892885268
+email：xazhuxj@qq.com
+
+2020-09-18
+
+\end{document}

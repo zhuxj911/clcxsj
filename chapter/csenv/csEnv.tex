@@ -2,18 +2,18 @@
 
 \chapter{ \cs 开发环境与程序基础}
 
-我们学习过C语言，有一定的计算机编程基础。C语言是功能强大的高效
+我们学习过 C 语言，有一定的计算机编程基础。 C 语言是功能强大的高效
 程序设计语言，但在现代的软件开发中特别是 Window 界面程序开发中的效率太低了。
-Microsoft推出的.Net Framwork在新版Windows中越来越多的进行了预安装，
+Microsoft 推出的 .Net Framwork 在新版 Windows 中越来越多的进行了预安装，
  \cs 语言面向对象、语法优美、功能强大、开发效率高，应用也越来越广泛。
-因此我们将从C语言程序设计转向 \cs 程序设计语言，
+因此我们将从 C 语言程序设计转向 \cs 程序设计语言，
 学习更多的现代程序设计方法，满足现代测绘大数据的处理与算法编写需求。
 
 \section{ \cs  开发环境与工具}
 
 \subsection{ \cs  开发环境}
 Microsoft Visual Studio 是微软出品的经典的集成开发环境(Integrated Development Environment,
-简称IDE)，也是 \cs 语言开发的经典工具，目前常用的版本为2017、2019、2022版，最新版本为2022版。
+简称 IDE )，也是 \cs 语言开发的经典工具，目前常用的版本为2017、2019、2022版，最新版本为2022版。
 本课程将使用 Microsoft Visual Studio Community 2022。
 
 安装好 Microsoft Visual Studio Community 222后，基本上 \cs  的开发环境就准备好了。
@@ -92,7 +92,8 @@ using、namespace以及默认的类Program与默认的Main函数，这些由编�
 在顶级语句的文件中，整个文件 Program.cs 的内容都相当于 Main 函数的内容，不能在其中编写除语句之外的内容。
 
 \subsection{Visual Studio文件组织形式分析}
-在文件资源管理器中打开HelloWorld项目，文件组织形式如图\ref{fig:HelloWorldProj}所示：
+
+在文件资源管理器中打开 HelloWorld 项目，文件组织形式如图 \ref{fig:HelloWorldProj} 所示：
 
 \begin{figure}[htbp]
 \centering
@@ -112,10 +113,10 @@ using、namespace以及默认的类Program与默认的Main函数，这些由编�
 \end{figure}
 
 图\ref{fig:HelloWorldProj-a} 为解决方案的文件夹，系统在生成解决方案时，
-会根据工程名（或解决方案名）自动创建一个文件夹，如本例中的HelloWorld，
-并在文件夹中创建一个解决方案的文件HelloWorld.sln与工程文件夹HelloWorld。
+会根据工程名（或解决方案名）自动创建一个文件夹，如本例中的 HelloWorld ，
+并在文件夹中创建一个解决方案的文件 HelloWorld.sln 与工程文件夹 HelloWorld 。
 
-文件HelloWorld.sln为文本文件，可以用 Visual Code 或 Notepad++打开，
+文件 HelloWorld.sln 为文本文件，可以用 Visual Code 或 Notepad++打开，
 其内容如下：
 
 \begin{lstlisting}

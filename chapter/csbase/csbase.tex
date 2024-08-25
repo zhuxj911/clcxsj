@@ -2,7 +2,7 @@
 
 \chapter{ \cs 语言基础}
 
-\cs 程序设计语言是类C语言，基本语法与C基本相同， 本章主要讲解 \cs 中不同于 C 的基础语法。
+\cs 程序设计语言是类 C 语言，基本语法与 C 基本相同， 本章主要讲解 \cs 中不同于 C 的基础语法。
 
 \section{ \cs 中的数据类型}
  为保持 \cs 语言的高效性，\cs 中的数据类型分为两类：值类型 (value type) 和引用类型 (reference type)。
@@ -10,7 +10,7 @@
 而引用类型的变量存储对数据的引用，即在堆中生成变量的值，在栈中保存堆中值的地址，在堆中生成的变量不自动释放，靠 .Net 架构回收。
 
 \subsection{值类型}
- \cs  的值类型进一步划分为简单类型 (simple type)、枚举 (enum)、结构(struct)
+ \cs  的值类型进一步划分为简单类型 ( simple type )、枚举 ( enum )、结构( struct )
 和可以为 null 的值类型 (nullable type)。
 
 对于值类型，每个变量都有它们自己的数据副本（除 ref 和 out 参数变量外），
@@ -20,7 +20,7 @@
 \hline
 类别   & 说明 \\
 \hline
-简单类型   & 有符号整型：sbyte、short、int、long \\
+简单类型   & 有符号整型：sbyte 、short 、int 、long \\
           & 无符号整型：byte、ushort、uint、ulong \\
           & Unicode 字符：char \\
           & IEEE 浮点：float、double \\
@@ -108,7 +108,7 @@ class Test
 }
 \end{lstlisting}
 
-当将值类型的值转换为类object 时，将分配一个对象实例（也称为“箱子”）以包含该值，
+当将值类型的值转换为类 object 时，将分配一个对象实例（也称为“箱子”）以包含该值，
 并将值复制到该箱子中。反过来，当将一个 object 引用强制转换为值类型时，
 将检查所引用的对象是否含有正确的值类型，如果有，则将箱子中的值复制出来。
 

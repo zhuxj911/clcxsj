@@ -995,7 +995,7 @@ public partial class MainWindow : System.Windows.Window
 
 \cs 中类的继承为单继承，不支持类的多继承。
 
-\cs 中类的继承形式为： 子类 : 基类
+\cs 中类的继承形式为： 派生类 : 基类
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1018,7 +1018,7 @@ class A
 }
 \end{lstlisting}
 
-若A为基类， B为子类，则写成：
+若 A 为基类， B 为派生类/子类，则写成：
 
 \begin{lstlisting}
 class A {}
@@ -1032,7 +1032,7 @@ class B : A
 
 \subsection{子类继承基类的成员}
 
-子类继承了基类的所有成员，继承意味着子类隐式地将它的基类的所有成员当作自已的成员，无论基类中的成员权限是 private，还是 protected 或 public。基类中的 private 不能直接访问，但可以通过 protected 或 public 方法间接访问。
+派生类继承了基类的所有成员，继承意味着派生类隐式地将它的基类的所有成员当作自已的成员，无论基类中的成员权限是 private，还是 protected 或 public。基类中的 private 不能直接访问，但可以通过 protected 或 public 方法间接访问。
 
 \begin{lstlisting}
 class A
@@ -1063,14 +1063,14 @@ class B : A
 }
 \end{lstlisting}
 
-子类 B 中的方法 Sum1 会报错，因为 a1 为基类 A 中的 private 字段，不能直接使用。
+派生类 B 中的方法 Sum1 中的第9行会报错，因为 a1 为基类 A 中的 private 字段，不能直接使用。
 
-子类 B 中的方法 Sum2 通过基类 A 中 public 方法 Sum 调用了基类 A 的 private 字段 a1，正确。
+派生类 B 中的方法 Sum2 通过基类 A 中 public 方法 Sum 调用了基类 A 的 private 字段 a1，不会报错。
 
 
-\subsection{子类对基类方法的隐藏：使用关键字new}
+\subsection{派生类对基类方法的隐藏：使用关键字new}
 
-如果将上面代码中的子类 B 中的求和方法也定义为 Sum，则 子类 B 中的方法 Sum 隐藏了基类 A 中的方法Sum，编译器会给出警告提示，如下面代码所示:
+如果将上面代码中的派生类 B 中的求和方法也定义为 Sum，则 派生类 B 中的方法 Sum 隐藏了基类 A 中的方法 Sum ，编译器会给出警告提示，如下面代码所示:
 
 \begin{lstlisting}
 class A
@@ -1096,16 +1096,15 @@ class B : A
 }
 \end{lstlisting}
 
-为消除警告，需在17行添加 new 关键字，告诉编译器这是子类 B 中的新方法，在19行为了引用基类中的Sum方法，需使用 base 关键字指明，否则会形成循环调用。
+为消除警告，需在17行添加 new 关键字，告诉编译器这是派生类 B 中的新方法，在19行为了引用基类中的 Sum 方法，需使用 base 关键字指明，否则会形成循环调用。
 
 
 \subsection{继承中的构造函数}
 
 \begin{itemize}
-\item {基类与子类的构造函数执行顺序}
+\item {基类与派生类的构造函数执行顺序}
 
-子类中的一部分是来自基类中的，在构造子类时，必须先构造基类，因此基类的构造函数肯定是先于子类的构造函数执行的，
-可以通过如下代码验证：
+派生类中的一部分是来自基类中的，在构造派生类时，必须先构造基类，因此基类的构造函数肯定是先于派生类的构造函数执行的，可以通过如下代码验证：
 
 \begin{lstlisting}
 class A 
@@ -1136,28 +1135,33 @@ A: A()
 B: B()
 \end{verbatim}
 
-说明基类的构造函数会先于子类的构造函数执行的。
+验证了基类的构造函数会先于子类的构造函数执行的。
 
 
 
-\item{子类调用基类的非默认构造函数的形式}
+\item{派生类调用基类的非默认构造函数的形式}
 
-以上在 new B() 时，系统会先调用默认的 A 类的构造函数 A(), 如果 A类中不存在 默认构造函数A() 时，系统会报错。
+以上在 new B() 时，系统会先调用默认的 A 类的构造函数 A() 。 如下代码所示，如果 A 类中不存在默认构造函数 A() 时，系统就会报错。
 
-此时需在子类 B 中的构造函数中用关键字base调用基类 A 类的构造函数， 如下代码所示：
+此时需在派生类 B 中的构造函数中用关键字 base 调用基类 A 的构造函数， 如下代码第24行所示：
 
 \begin{lstlisting}
 class A 
 {
-	private int a1=1;
-	protected int a2=2;
-	public int a3=3;	
+	private int a1;
+	protected int a2;
+	public int a3;	
 
 	public A(int a1, int a2, int a3)
 	{
 		this.a1 = a1;
 		this.a2 = a2;
 		this.a3 = a3;
+	}
+	
+	public int Sum()
+	{
+		return a1+a2+a3;
 	}
 }
 
@@ -1168,6 +1172,11 @@ class B : A
 	public B(int a1, int a2, int a3, int b1) : base(a1, a2, a3)
 	{
 		this.b1 = b1;
+	}
+	
+	public new int Sum()
+	{
+		return base.Sum() + b1; 
 	}
 }
 \end{lstlisting}
@@ -1191,6 +1200,24 @@ class B : A
 
 
 \section{多态与虚函数}
+
+在上节末尾的继承示例中，基类的变量可以指向派生类的实例，这是继承的一个重要概念，如下代码所示：
+
+\verb| A a = new B(1, 2, 3, 10); |
+
+这与以前的知识： 
+
+\verb| A a = new A(1, 2, 3); | 或 \verb| B b = new B(1, 2, 3, 10); |
+
+不同。 在此情况下，如果我们执行 \verb| a.Sum(); | 语句，大家猜想其值为 6 还是 16 ？
+
+这里的语境含义应该是： 基类 A 的变量 a 指向基类 A 的实例时，希望执行的是基类 A 中的 Sum()，其值应为 6 ；基类 A 的变量 a 指向派生类 B 的实例时，希望执行的是派生类 B 中的 Sum()，其值应为 16， 但上述语句执行的结果却是 6 ，也就是执行的是基类 A 中的 Sum() 函数， 显然不符合期望。
+
+
+如何实现
+
+
+
 在编程语言和类型论中，多态（polymorphism）是指为不同数据类型的实体提供统一的接口。
 
 \begin{figure}[htbp]

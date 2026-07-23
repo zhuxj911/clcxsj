@@ -2,36 +2,50 @@
 
 \chapter{ \cs 开发环境与程序基础}
 
-我们学习过 C 语言，有一定的计算机编程基础。 C 语言是功能强大的高效
-程序设计语言，但在现代的软件开发中特别是 Windows 桌面界面程序开发中的效率太低了。
-Microsoft 推出的 .Net Framwork 在新版 Windows 中越来越多的进行了预安装，
- \cs 语言面向对象、语法优美、功能强大、开发效率高，应用也越来越广泛。
+经过大学一年或两年的学习，我们有了 C 语言程序设计基础，有一定的计算机编程的基本知识。
+ C 语言是功能强大的高效程序设计语言，但在现代的软件开发中特别是 Windows 桌面界面程序开发中的效率太低了。
+为了提高软件快发效率， 微软公司在2000年之后推出了.Net Framwork， 在新版 Windows 中也越来越多的进行了预安装， 
+.Net Framwork 也逐渐进化到 .NET 10+, 具备了跨平台等多项功能， 应用场景非常广泛。
+
+
+\cs 语言是 .Net 平台开发的主流语言， \cs 语言面向对象、语法优美、功能强大、开发效率高，
+是现代软件工程的结晶，其应用也越来越广泛。
 因此我们将从 C 语言程序设计转向 \cs 程序设计语言，
 学习更多的现代程序设计方法，满足现代测绘大数据的处理与算法编写需求。
+
 
 \section{ \cs  开发环境与工具}
 
 \subsection{ \cs  开发环境}
-Microsoft Visual Studio 是微软出品的经典的集成开发环境(Integrated Development Environment,
-简称 IDE )，也是 \cs 语言开发的经典工具，目前常用的版本为2017、2019、2022版，最新版本为2022版。
-本课程将使用 Microsoft Visual Studio Community 2022。
 
-安装好 Microsoft Visual Studio Community 2022后，基本上 \cs  的开发环境就准备好了。
+Microsoft Visual Studio 是微软出品的经典集成开发环境(Integrated Development Environment,
+简称 IDE )，也是 \cs 语言开发的经典工具，目前常用的版本为2017、2019、2022、2026版，最新版本为2026版。
+本课程将使用 Microsoft Visual Studio Community 2022/2026进行代码的编写与调试。
+
+安装好 Microsoft Visual Studio Community 2022/2026后，基本上 \cs  的开发环境就准备好了。
+
+JetBrains Rider 是另一款非常优秀的 .NET IDE，号称为 The world's most loved .NET and game dev IDE，其开发环境与PyCharm(Python开发)、Android Studio等本质上是一样的，
+使用习惯也高度类似，还可以跨平台使用，非常值得尝试。
+
+
+Microsoft Visual Code 是微软开源的文本编辑软件，功能比 Windows操作系统自带的记事本功能强大的多，在程序编写中可以快速查看与修改源代码。
+也可以配合 dotnet 命令进行 .NET 程序开发。
 
 \subsection{版本控制与源代码管理}
+
 git 软件是目前最流行的开源分布式版本控制软件，也称为软件业的时光机。
 在我们的软件编写过程中，将使用它进行源代码管理。
 
 TortoiseGit 是 git 的图形化客户端软件，开源软件，支持中文等语言。
 
-Visual Code 与  Notepad++ 是开源的文本编辑软件，功能比微软自带的记事本强大的多，
-在程序编写中可以快速地查看与修改源代码。
+git 软件不但能用于编程时的源代码管理与协作，在其他领域也有诸多应用，建议多练习多使用。
+
 
 
 \section{第一个 \cs  程序}
 
 \subsection{单个 \cs  源代码文件的编写}
-我们用 \cs 语言编写经典的C语言入门程序 Hello World 。打开 Visual Code 或 Notepad++，
+我们用 \cs 语言编写经典的C语言入门程序 Hello World 。打开 Visual Code，
 首先将文件保存为 HelloWorld.cs 文件，在其中输入以下代码：
 
 %  [caption={HelloWorld源代码}, label=srcHelloWorld]
@@ -54,15 +68,15 @@ namespace HelloWorld
 
 
 \subsection{单个 \cs  源代码文件的编译与执行}
-点击开始菜单中的 Developer Command Prompt for VS 2022 或 Developer PowerShell for VS 2022，
+点击开始菜单中的 Developer Command Prompt for VS 或 Developer PowerShell for VS，
 切换到 HelloWorld.cs 文件所在的文件夹，输入： csc HelloWorld.cs 将编译生成 HelloWorld.exe 
 可执行程序。
 
 再输入：HelloWorld，程序执行输出：Hello World!
 
-以上命令中csc为 \cs 语言的编译器，作用为检查 \cs 源代码文件中的语法，将其翻译成 .Net Framwork 
+以上命令中csc为 \cs 语言的编译器，作用为检查 \cs 源代码文件中的语法，将其翻译成 .NET 
 能识别的中间语言(Microsoft Intermediate Language，简称为IL)，
-最后在.Net Framwork的公共语言运行库(Common Language Runtime，简称为CLR)支持下解释为可执行的计算机命令。
+最后在 .NET 的公共语言运行库(Common Language Runtime，简称为CLR)支持下解释为可执行的计算机命令。
 
 整个过程如图\ref{fig:BuildHelloWorld}所示。
 \begin{figure}[htbp]
@@ -79,7 +93,7 @@ namespace HelloWorld
 用Visual Studio 生成一个HelloWorld 控制台（Console）项目，
 在Program.cs文件中会自动生成以上代码，点击工具栏上的运行按钮，即可编译运行程序。
 
-使用 Visual Studio 2022 生成以上项目时，如果不勾选``不使用顶级语句''，
+使用 Visual Studio 2022/2026 生成以上项目时，如果不勾选``不使用顶级语句''，
 则只会在Program.cs文件中生成一个语句：
 
 % 顶级语句  [caption={HelloWorld源代码}, label=srcHelloWorld]
@@ -146,7 +160,7 @@ bin用于存放最后生成的可执行文件，obj缓存系统中间文件。
 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
-		<TargetFramework>net5.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 	</PropertyGroup>
 
 </Project>
@@ -193,7 +207,7 @@ bin用于存放最后生成的可执行文件，obj缓存系统中间文件。
 在软件开发中需要遵循软件工程的组织原则，寻求代码的可复用性、可测试性
 、可阅读性与可维护性。在学习编程时我们首先应该改掉以下三个不良编码习惯：
 
-改变C语言中将代码直接写入main函数中的习惯；
+改变如某些C语言入门教材中将代码直接写入main函数中的习惯；
 
 改变在 \cs 语言中将代码直接写入Main函数中的习惯；
 

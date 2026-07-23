@@ -63,17 +63,18 @@
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
-% \setmonofont{Consolas}
 
+%%\setmonofont{Fira Code}
+\setmonofont{Cascadia Code}
 \lstdefinestyle{cs}{
-    language=[Sharp]C,
+    language={[Sharp]C},                 % Set language to C#
     backgroundcolor=\color{backcolour},   
     commentstyle=\color{codegreen},
     keywordstyle=\color{magenta},
     % morekeywords={*,using, namespace}, 
     numberstyle=\small\color{codegray},
     stringstyle=\color{codepurple},
-    basicstyle=\footnotesize,
+    basicstyle=\ttfamily\small,          % Use monospace font
     breakatwhitespace=false,         
     breaklines=true,                 
     captionpos=b,                    
@@ -91,7 +92,5 @@
                    %% 否则应使用 \begin{lstlisting}[language=C] 指定语言
                    %% 或使用 [style=cs] 指定语言样式
 	                  
-
-
 
 \endinput

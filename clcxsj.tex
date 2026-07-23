@@ -15,20 +15,33 @@
 \tableofcontents
 
 \mainmatter
-\include{chapter/csenv/csenv}            %%C#开发环境 与 从C走向C\#
-\include{chapter/csbase/csbase}          %% C# 基础/
-\include{chapter/csobject/csobject}      %% C# 之面向对象
 
-\include{chapter/surveybase/surveybase}  %% 测量基础函数
+%%C#开发环境 与 从C走向C\#
+\include{chapter/csenv/csenv}                  
 
-\include{chapter/objectbase/objectbase}  %% 面向对象设计原则
-\include{chapter/uibase/uibase}          %% wpf UI 基础, 将wpf基础、wpf数据绑定、wpf数据验证合并到这一章中，并以坐标方位角计算程序作为例子
+ %% C# 语法 分为基础语法与高级语法
+\include{chapter/csbasic/csbasic}               
 
-\include{chapter/gaussproj/gaussproj}                   %%高斯投影程序设计
+ %% C# 面向对象基础
+\include{chapter/csobjectbasic/csobjectbasic} 
+%\include{chapter/surveybase/surveybase}  %% 测量基础函数
+
+ %% C# 面向对象程序设计
+\include{chapter/csobject/csobject}       
 
 
-\include{chapter/xytoxy/xytoxy}                         %%坐标转换程序设计
-\include{chapter/connectingtraverse/connectingtraverse} %%附合导线近似平差程序设计
-\include{chapter/route/route}                           %%线路要素计算程序设计
+ %% wpf UI 基础, 将wpf基础、wpf数据绑定、wpf数据验证合并到这一章中，并以坐标方位角计算程序作为例子
+\include{chapter/uibasic/uibasic}         
+
+
+ %%高斯投影程序设计
+\include{chapter/gaussproj/gaussproj}
+
+
+%\include{chapter/xytoxy/xytoxy}                          %%坐标转换程序设计
+%\include{chapter/connectingtraverse/connectingtraverse}  %%附合导线近似平差程序设计
+
+ %%线路要素计算程序设计
+\include{chapter/route/route}
 
 \end{document}

@@ -1,6 +1,4 @@
-%!TEX root = ../../clcxsj.tex
-
-\chapter{面向对象程序设计原则}
+\section{扩展阅读：面向对象程序设计原则}
 
 面向对象程序设计的核心是类与接口，设计良好的程序需要遵循类的七个如下设计原则：
 
@@ -28,9 +26,9 @@
 \end{itemize}
 
 
-\section{开闭原则(OCP)}
+\subsection{开闭原则(OCP)}
 
-\subsection{思想}
+\subsubsection{思想}
 \emph{ 软件实体（模块，类，方法等）应该对扩展开放，对修改关闭。}
 
 开闭原则英文为 The Open-Closed Principle，简称为OCP，是指在进行面向对象设计中，设计类或其他程序单位时，应该遵循：
@@ -51,7 +49,7 @@
 
 根据开闭原则，在设计一个软件系统模块（类，方法）的时候，应该可以在不修改原有的模块（修改关闭）的基础上，能扩展其功能（扩展开放）。
 
-\subsection{原因}
+\subsubsection{原因}
 
 \begin{itemize}
 \item{稳定性}
@@ -64,7 +62,7 @@
 遵循开闭原则的系统设计，可以让软件系统可复用，并且易于维护。
 \end{itemize}
 
-\subsection{实现方法}
+\subsubsection{实现方法}
 
 为了满足开闭原则的对修改关闭原则以及扩展开放原则，应该对软件系统中的不变的部分加以抽象，在面向对象的设计中，
 
@@ -84,10 +82,10 @@
 
 简单地说，软件系统是否有良好的接口（抽象）设计是判断软件系统是否满足开闭原则的一种重要的判断基准。现在多把开闭原则等同于面向接口的软件设计。
 
-\subsection{代码示例}
+\subsubsection{代码示例}
 
 
-\section{里氏替换原则(Liskov Substitution Principle ，LSP)}
+\subsection{里氏替换原则(Liskov Substitution Principle ，LSP)}
 所有引用基类的地方必须能透明地使用其派生类的对象。
 
 也就是说，只有满足以下2个条件的OO设计才可被认为是满足了LSP原则：
@@ -119,7 +117,7 @@
 当子类的方法重载父类的方法时，方法的前置条件（即方法的输入/入参）要比父类方法的输入参数更宽松。
 当子类的方法实现父类的方法时（重载/重写或实现抽象方法）的后置条件（即方法的输出/返回值）要比父类更严格或相等。
 
-\section{迪米特原则（最少知道原则）（Law of Demeter ，LoD）}
+\subsection{迪米特原则（最少知道原则）（Law of Demeter ，LoD）}
 
 迪米特原则（Law of Demeter）又叫最少知道原则（Least Knowledge Principle），可以简单说成：talk only to your immediate friends，只与你直接的朋友们通信，不要跟“陌生人”说话。
 
@@ -147,7 +145,7 @@
 
 例如，购房者要购买楼盘A、B、C中的楼，他不必直接到楼盘去买楼，而是可以通过一个售楼处去了解情况，这样就减少了购房者与楼盘之间的耦合，如图所示。
 
-\section{单一职责原则}
+\subsection{单一职责原则}
 永远不要让一个类存在多个改变的理由。
 
 换句话说，如果一个类需要改变，改变它的理由永远只有一个。如果存在多个改变它的理由，就需要重新设计该类。
@@ -167,7 +165,7 @@ Robert.C Martin给出了一个著名的定义：所谓一个类的一个职责�
 
 如果你能想到一个类存在多个使其改变的原因，那么这个类就存在多个职责。
 
-\section{接口分隔原则（Interface Segregation Principle ，ISP）}
+\subsection{接口分隔原则（Interface Segregation Principle ，ISP）}
 不能强迫用户去依赖那些他们不使用的接口。
 
 换句话说，使用多个专门的接口比使用单一的总接口总要好。
@@ -200,7 +198,7 @@ Robert.C Martin给出了一个著名的定义：所谓一个类的一个职责�
 
 接口分隔原则主要是约束接口，针对抽象、整体框架。
 
-\section{依赖倒置原则（Dependency Inversion Principle ，DIP）}
+\subsection{依赖倒置原则（Dependency Inversion Principle ，DIP）}
 A. 高层模块不应该依赖于低层模块，二者都应该依赖于抽象
 
 B. 抽象不应该依赖于细节，细节应该依赖于抽象
@@ -214,7 +212,7 @@ C.针对接口编程，不要针对实现编程。
 依赖倒置（Dependency Inversion）：
 面向对象程序设计相对于面向过程（结构化）程序设计而言，依赖关系被倒置了。因为传统的结构化程序设计中，高层模块总是依赖于低层模块。
 
-\section{组合/聚合复用原则（Composite/Aggregate Reuse Principle ，CARP）}
+\subsection{组合/聚合复用原则（Composite/Aggregate Reuse Principle ，CARP）}
 尽量使用组合/聚合，不要使用类继承。
 
 即在一个新的对象里面使用一些已有的对象，使之成为新对象的一部分，新对象通过向这些对象的委派达到复用已有功能的目的。就是说要尽量的使用合成和聚合，而不是继承关系达到复用的目的。

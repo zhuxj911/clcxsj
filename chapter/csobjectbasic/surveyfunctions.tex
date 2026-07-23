@@ -1,10 +1,10 @@
-%!TEX root = ../../clcxsj.tex
+\section{用静态类与静态函数建立测量基础函数库}
 
-\chapter{测量基础函数设计}
+%\chapter{测量基础函数设计}
 
-本章我们将编写一些测量程序设计中常用的函数，用于以后的测绘算法之中。
+本节我们将利用已学的静态类与静态函数知识编写一些测量程序设计中常用的函数，用于以后的测绘算法之中。
 
-\section{C\# 知识点}
+\subsection{C\# 知识点}
 
 C\# 是纯面向对象语言，也就是说所有的常量与方法都需要以类$class$为载体。
 
@@ -45,9 +45,9 @@ namespace ZXY
 你当然也可以根据自己的习惯或爱好命名适当的名称空间）。
 
 
-\section{测绘常用算法设计}
+\subsection{测绘常用算法设计}
 
-\subsection{测绘算法中的常量}
+\subsubsection{测绘算法中的常量}
 角度、距离与高差是测量工程师工作的基本对象，度分秒形式的角度与弧度之间的转换是我们进行测量数据处理的基础。
 为了方便的进行测量数据处理，我们首先需要定义一些常量，如上述示例代码所示，其中：
 
@@ -60,7 +60,7 @@ $TOSECOND$表示$180*3600/\pi$，用于将弧度转换为秒。
 静态的(static)，而且是不需要static修饰符的。另外需注意，const类型的数据在声明时必须进行初始化，且其值
 必须在编译时就能确定计算出。
 
-\subsection{六十进制度分秒化弧度函数}
+\subsubsection{六十进制度分秒化弧度函数}
 
  在测量工程中角度的常用习惯表示法是度分秒的形式，
  在计算程序中测量工程人员也常将度分秒形式的角度用格式为xxx.xxxxx的形式表示，
@@ -119,7 +119,7 @@ public static double DMStoRAD(double dmsAngle)
  考察精度（秒之后五位小数）是否足够：$39\degree 52'0.71672''$
 
 
-\subsection{弧度函数化六十进制度分秒}
+\subsubsection{弧度函数化六十进制度分秒}
 
 同样的道理，以下函数将不能正确的将一些弧度值转换为度分秒形式的角度值，
 在某些情况下转换出的角度将出现$59'60''$或$59'59.9999''$的形式。
@@ -159,7 +159,9 @@ public static double RADtoDMS(double radAngle)
 
 同样这个算法对负值也适用。
 
-\subsection{角度规划函数}
+
+
+\subsubsection{角度规划函数}
 
 在导线计算中，我们推算出的方位角值常常超出$0 -2\pi$的范围，这时我们就需要将角度规划到$0 -2\pi$范围内。
 函数代码如下所示，rad的单位为弧度。
@@ -180,7 +182,7 @@ public static double RADtoDMS(double radAngle)
  对于负的角度，以上算出的角度为负值，因此我们根据角度的符号性决定在角度为负值时再多加一个$2\pi$。
 
 
-\subsection{坐标方位角计算}
+\subsubsection{坐标方位角计算}
 
 在测量中，常常需要根据两点的坐标反算其坐标方位角，计算坐标方位角的关键是进行象限判断了。
 
@@ -232,7 +234,7 @@ public static double Azimuth(double xA, double yA, double xB, double yB, out dou
 平距，当不需要平距时，不接收函数返回值就可以了。
 
 
-\section{算法的扩展}
+\subsubsection{算法的扩展}
 
 六十进制的ddd.mmsss值十分利于角度数据的组织与输入，但不利于正式场景的角度展示。因此，在很多情况下我们需要
 将角度表示为$23\degree 05'47.6324''$或$-23\degree 05'47.6324''$这种形式。
@@ -315,7 +317,7 @@ public static string RADtoString(double radAngle)
 
 
 
-\subsection{对算法进行单元测试}
+\subsubsection{对算法进行单元测试}
 
 SMath项目中的各个函数是我们的基础测量算法函数，必须保证它们的正确性。
 为此对其编写单元测试函数进行严格的测试。如果以后需要对这些算法进行优化，
@@ -382,7 +384,7 @@ $235^{\degree} 07'49.2345''$、$-235^{\degree} 07'49.2345''$进行
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[scale=0.65]{chapter/surveybase/AzimuthApp8.png}
+    \includegraphics[scale=0.65]{chapter/csobjectbasic/AzimuthApp8.png}
     \caption{执行单元测试成功的示意图}
     \label{fig:AzimuthApp8}
 \end{figure}
@@ -395,7 +397,7 @@ $235^{\degree} 07'49.2345''$、$-235^{\degree} 07'49.2345''$进行
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[scale=0.65]{chapter/surveybase/AzimuthApp9.png}
+    \includegraphics[scale=0.65]{chapter/csobjectbasic/AzimuthApp9.png}
     \caption{执行单元测试失败的示意图}
     \label{fig:AzimuthApp9}
 \end{figure}

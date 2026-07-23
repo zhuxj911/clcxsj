@@ -1,6 +1,6 @@
 %!TEX root = ../../clcxsj.tex
 
-\chapter{高斯投影程序设计}
+\chapter{通用高斯投影程序设计}
 
 高斯投影是为解决球面与平面之间的坐标映射问题，即大地坐标(B,
 L)与高斯平面直角坐标$(x,y)$之间的相互换算，以及不同带之间的高斯坐标
@@ -707,7 +707,7 @@ spheroid.XYtoXY(oldX, oldY, oldL0, newL0, out newX, out newY);
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[scale=1]{chapter/gaussProj/UI01.png}
+    \includegraphics[scale=1]{chapter/gaussproj/UI01.png}
     \caption{简单的高斯投影正反算界面}
     \label{fig:GaussProjUI01}
 \end{figure}
@@ -1082,7 +1082,7 @@ private void XYtoBLButton_Click(object sender, RoutedEventArgs e)
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[scale=1]{chapter/gaussProj/UI02.png}
+    \includegraphics[scale=1]{chapter/gaussproj/UI02.png}
     \caption{实用高斯投影程序界面}
     \label{fig:GaussProjUI02}
 \end{figure}
@@ -1741,7 +1741,7 @@ public partial class GaussProjWin : Window
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[scale=0.8]{chapter/gaussProj/UI03.png}
+    \includegraphics[scale=0.8]{chapter/gaussproj/UI03.png}
     \caption{$6\degree$带第19带数据界面}
     \label{fig:GaussProjUI03}
 \end{figure}
@@ -1753,7 +1753,7 @@ public partial class GaussProjWin : Window
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[scale=0.8]{chapter/gaussProj/UI04.png}
+    \includegraphics[scale=0.8]{chapter/gaussproj/UI04.png}
     \caption{$6\degree$带第19带反算数据界面}
     \label{fig:GaussProjUI04}
 \end{figure}
@@ -1763,7 +1763,7 @@ public partial class GaussProjWin : Window
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[scale=0.8]{chapter/gaussProj/UI05.png}
+    \includegraphics[scale=0.8]{chapter/gaussproj/UI05.png}
     \caption{设置$3\degree$带第36带数据界面}
     \label{fig:GaussProjUI05}
 \end{figure}
@@ -1771,7 +1771,7 @@ public partial class GaussProjWin : Window
 点击计算按钮，计算出新坐标系下各点的坐标，如图\ref{fig:GaussProjUI06}所示：
 \begin{figure}[htbp]
     \centering
-    \includegraphics[scale=0.8]{chapter/gaussProj/UI06.png}
+    \includegraphics[scale=0.8]{chapter/gaussproj/UI06.png}
     \caption{$3\degree$带第36带正算数据界面}
     \label{fig:GaussProjUI06}
 \end{figure}

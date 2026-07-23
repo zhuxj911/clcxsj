@@ -6,6 +6,10 @@
 *.out
 *.toc
 *.gz
+*.bbl
+*.ilg
+*.ind
+*.xdv
 *.vs/
 bin/
 obj/

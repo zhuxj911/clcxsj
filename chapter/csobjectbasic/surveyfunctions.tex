@@ -11,33 +11,46 @@ C\# 是纯面向对象语言，也就是说所有的常量与方法都需要以�
 C\#中的类分为实例类与静态类。实例类需要用关键字 new 将类实例化，在一些与类的实例成员操作无关的
 环境中，对类进行实例化的操作显得冗余，而静态类与类的静态成员可以很好的解决这个问题。 
 
-如果我们分析C\#系统中的System.Math类，我们会发现常用的一些数学函数都被设计成了静态函数。因此，我们也如同System.Math类一样，
+如果我们分析 \cs 系统中的 System.Math 类，我们会发现常用的一些数学函数都被设计成了静态函数。因此，我们也如同System.Math类一样，
 也将我们常用的测绘算法也用类名$SMath(SurveyMath)$命名，保存在$SMath.cs$文件中，
 将常用的一些常量及方法定义也定义为静态成员。
 
 示例代码如下所示：
 \begin{lstlisting}
-namespace ZXY
+﻿using System;
+
+namespace ZXY;
+
+public static class SMath
 {
-    public static class SMath
+    public const double PI = Math.PI;
+    public const double TWOPI = 2 * Math.PI;
+    public const double HALFPI = 0.5 * Math.PI;
+    public const double TORADIANS = PI / 180.0;
+    public const double TODEGREE = 180.0 / PI;
+    public const double TOSECOND = 180.0 * 3600.0 / PI;
+    
+    /// <summary>
+    /// 将60进制的度分秒角度转换为弧度
+    /// </summary>
+    /// <param name="dmsAngle">形如ddd.mmss的60进制的角度</param>
+    /// <returns>弧度值</returns>
+    public static double DmsToRadians(double dmsAngle)
     {
-        public const double PI=Math.PI;
-        public const double TWOPI=2*Math.PI;
-        public const double TODEG=180.0/PI; 
-        public const double TORAD=PI/180.0;
-        public const double TOSECOND=180.0*3600.0/PI;
+    	......
+    }
     
-        public static double DMStoRAD(double dmsAngle)
-        {
-            ......
-        }
-    
-        public static double RADtoDMS(double radAngle)
-        {
-            ......
-        }
+    /// <summary>
+    /// 将弧度转换为60进制的度分秒角度
+    /// </summary>
+    /// <param name="radAngle">单位为弧度的角度</param>
+    /// <returns>60进制的角度</returns>
+    public static double RadiansToDms(double radAngle)
+    {
+    	......
     }
 }
+
 \end{lstlisting}
 
 以上示例代码为了与其他的函数或符号相区别，也为了与其他的代码一起配合使用，
@@ -51,12 +64,12 @@ namespace ZXY
 角度、距离与高差是测量工程师工作的基本对象，度分秒形式的角度与弧度之间的转换是我们进行测量数据处理的基础。
 为了方便的进行测量数据处理，我们首先需要定义一些常量，如上述示例代码所示，其中：
 
-$PI$表示$\pi$, $TWOPI$表示$2\pi$;
-$TODEG$表示$180/\pi$，用于将弧度化为度；
-$TORAD$表示$\pi/180$，用于将度化为弧度；
-$TOSECOND$表示$180*3600/\pi$，用于将弧度转换为秒。
+$PI$ 表示 $\pi$, $TWOPI$ 表示 $2\pi$;
+$TODEGREE$ 表示 $180/\pi$，用于将弧度化为度；
+$TORADIANS$ 表示 $\pi/180$ ，用于将度化为弧度；
+$TOSECOND$ 表示 $180*3600/\pi$，用于将弧度转换为秒。
 
-在静态类SMath中我们采用常量const的形式定义了$\pi, 2\pi$等常用的数值，在 C\# 中 const类型的数据总是
+在静态类SMath中我们采用常量const的形式定义了$\pi, 2\pi$等常用的数值，在 \cs 中 const类型的数据总是
 静态的(static)，而且是不需要static修饰符的。另外需注意，const类型的数据在声明时必须进行初始化，且其值
 必须在编译时就能确定计算出。
 

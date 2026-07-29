@@ -3,12 +3,13 @@
 \chapter{ \cs 开发环境与程序基础}
 
 经过大学一年或两年的学习，我们有了 C 语言程序设计基础，有一定的计算机编程的基本知识。
- C 语言是功能强大的高效程序设计语言，但在现代的软件开发中特别是 Windows 桌面界面程序开发中的效率太低了。
-为了提高软件快发效率， 微软公司在2000年之后推出了.Net Framwork， 在新版 Windows 中也越来越多的进行了预安装， 
-.Net Framwork 也逐渐进化到 .NET 10+, 具备了跨平台等多项功能， 应用场景非常广泛。
+C 语言是功能强大的高效程序设计语言，但在现代的软件开发中特别是 Windows 桌面界面程序开发中的效率太低了。
+为了提高软件快发效率， 微软公司在2000年之后推出了 .Net Framwork，
+在新版 Windows 中也越来越多的进行了.Net Framwork 预装，
+.Net Framwork 也进化到 .NET 10+, 具备了跨平台等多项功能， 应用场景日益广泛。
 
 
-\cs 语言是 .Net 平台开发的主流语言， \cs 语言面向对象、语法优美、功能强大、开发效率高，
+\cs 语言是 .NET 平台开发的主流语言， \cs 语言面向对象、语法优美、功能强大、开发效率高，
 是现代软件工程的结晶，其应用也越来越广泛。
 因此我们将从 C 语言程序设计转向 \cs 程序设计语言，
 学习更多的现代程序设计方法，满足现代测绘大数据的处理与算法编写需求。
@@ -19,17 +20,25 @@
 \subsection{ \cs  开发环境}
 
 Microsoft Visual Studio 是微软出品的经典集成开发环境(Integrated Development Environment,
-简称 IDE )，也是 \cs 语言开发的经典工具，目前常用的版本为2017、2019、2022、2026版，最新版本为2026版。
+简称 IDE)，也是 \cs 语言开发的经典工具，目前常用的版本为2017、2019、2022、2026版，最新版本为2026版。
+为了学习与练习 \cs 新的语法，建议使用较新版本的 IDE ，
 本课程将使用 Microsoft Visual Studio Community 2022/2026进行代码的编写与调试。
+建议你的 Microsoft Visual Studio 版本不要低于 2017 版。
+
 
 安装好 Microsoft Visual Studio Community 2022/2026后，基本上 \cs  的开发环境就准备好了。
 
-JetBrains Rider 是另一款非常优秀的 .NET IDE，号称为 The world's most loved .NET and game dev IDE，其开发环境与PyCharm(Python开发)、Android Studio等本质上是一样的，
+JetBrains Rider 是另一款非常优秀的 .NET IDE ，号称为 The world's most loved .NET and game dev IDE ，
+其开发环境与 PyCharm(Python 开发)、Android Studio 等本质上是一样的，
 使用习惯也高度类似，还可以跨平台使用，非常值得尝试。
 
-
-Microsoft Visual Code 是微软开源的文本编辑软件，功能比 Windows操作系统自带的记事本功能强大的多，在程序编写中可以快速查看与修改源代码。
+Microsoft Visual Code 是微软开源的文本编辑软件，功能比 Windows 操作系统自带的记事本功能强大的多，
+在程序编写中可以快速查看与修改源代码。
 也可以配合 dotnet 命令进行 .NET 程序开发。
+
+如果不考虑界面编写，可用使用 LINQPad 进行 \cs 练习， LINQPad 是一款非常优秀的 .NET 代码编辑器，支持 \cs、VB、\texttt{F\#} 等多种语言，
+可以直接编写、调试与运行 \cs 代码，支持 .NET 6/7/8/9/10 等多种版本、多种运行环境，
+支持 NuGet 包管理器，支持 LINQ 查询语法，支持多种数据库，支持图形化输出，支持 Markdown 文档等, 功能非常强大，值得尝试。
 
 \subsection{版本控制与源代码管理}
 
@@ -40,12 +49,16 @@ TortoiseGit 是 git 的图形化客户端软件，开源软件，支持中文等
 
 git 软件不但能用于编程时的源代码管理与协作，在其他领域也有诸多应用，建议多练习多使用。
 
+github.com 是全球最大的开源代码托管平台，支持 git 软件进行源代码管理与协作，
+是软件开发者的宝藏库，非常值得一探究竟。
 
+gitee.com 是国内的开源代码托管平台，本课程的示例代码托管在 gitee.com 上，
+可以使用命令 \verb|git clone git@gitee.com:zhuxj911/SurApp.git| 下载源码。
 
 \section{第一个 \cs  程序}
 
 \subsection{单个 \cs  源代码文件的编写}
-我们用 \cs 语言编写经典的C语言入门程序 Hello World 。打开 Visual Code，
+我们用 \cs 语言编写经典的 C 语言入门程序 Hello World 。打开 Microsoft Visual Code ，
 首先将文件保存为 HelloWorld.cs 文件，在其中输入以下代码：
 
 %  [caption={HelloWorld源代码}, label=srcHelloWorld]
@@ -68,13 +81,14 @@ namespace HelloWorld
 
 
 \subsection{单个 \cs  源代码文件的编译与执行}
-点击开始菜单中的 Developer Command Prompt for VS 或 Developer PowerShell for VS，
-切换到 HelloWorld.cs 文件所在的文件夹，输入： csc HelloWorld.cs 将编译生成 HelloWorld.exe 
+
+点击开始菜单中的 Visual Studio 文件夹下的 Developer Command Prompt for VS 或 Developer PowerShell for VS，
+切换到 HelloWorld.cs 文件所在的文件夹，输入： csc HelloWorld.cs 将编译生成 HelloWorld.exe
 可执行程序。
 
 再输入：HelloWorld，程序执行输出：Hello World!
 
-以上命令中csc为 \cs 语言的编译器，作用为检查 \cs 源代码文件中的语法，将其翻译成 .NET 
+以上命令中csc为 \cs 语言的编译器，作用为检查 \cs 源代码文件中的语法，将其翻译成 .NET
 能识别的中间语言(Microsoft Intermediate Language，简称为IL)，
 最后在 .NET 的公共语言运行库(Common Language Runtime，简称为CLR)支持下解释为可执行的计算机命令。
 
@@ -86,53 +100,41 @@ namespace HelloWorld
 	\label{fig:BuildHelloWorld}
 \end{figure}
 
+
 \subsection{使用IDE编辑、编译与运行 \cs 程序}
 一个程序除了源代码之外，还有图标、图片、配置信息等等文件，源代码文件也可能有多个，
-用以上方式编辑、构建可执行文件太复杂了，这时使用IDE的效率会更高。
+用以上方式编辑、构建可执行文件太复杂了，这时使用 IDE 的效率会更高。
 
-用Visual Studio 生成一个HelloWorld 控制台（Console）项目，
-在Program.cs文件中会自动生成以上代码，点击工具栏上的运行按钮，即可编译运行程序。
+用 Visual Studio 生成一个 HelloWorld 控制台（Console）项目，
+在 Program.cs 文件中会自动生成以上代码，点击工具栏上的运行按钮，即可编译运行程序。
 
-使用 Visual Studio 2022/2026 生成以上项目时，如果不勾选``不使用顶级语句''，
-则只会在Program.cs文件中生成一个语句：
-
-% 顶级语句  [caption={HelloWorld源代码}, label=srcHelloWorld]
-\begin{lstlisting}
-Console.WriteLine("Hello World!");
-\end{lstlisting}
-
-这是 .NET 6 项目生成顶级语句 (top-level statements) 的新模板。相当于去掉了
-using 、namespace 以及默认的类 Program 与默认的 Main 函数，这些由编译器在编译时自动生成。
-具体请参看\href{https://docs.microsoft.com/en-us/dotnet/core/tutorials/top-level-templates}{微软官方文档}。
-
-在顶级语句的文件中，整个文件 Program.cs 的内容都相当于 Main 函数的内容，不能在其中编写除语句之外的内容。
 
 \subsection{Visual Studio文件组织形式分析}
 
 在文件资源管理器中打开 HelloWorld 项目，文件组织形式如图 \ref{fig:HelloWorldProj} 所示：
 
 \begin{figure}[htbp]
-\centering
-\subfloat[解决方案]
-{
-	\label{fig:HelloWorldProj-a}
-	\includegraphics[scale=1]{chapter/csenv/HelloWorldProj1.png}
-}
-\hspace{20pt}%
-\subfloat[项目]
-{
-	\label{fig:HelloWorldProj-b}
-	\includegraphics[scale=1]{chapter/csenv/HelloWorldProj2.png}
-}
-\caption{HelloWorld程序文件结构}
-\label{fig:HelloWorldProj}
+	\centering
+	\subfloat[解决方案]
+	{
+		\label{fig:HelloWorldProj-a}
+		\includegraphics[scale=1]{chapter/csenv/HelloWorldProj1.png}
+	}
+	\hspace{20pt}%
+	\subfloat[项目]
+	{
+		\label{fig:HelloWorldProj-b}
+		\includegraphics[scale=1]{chapter/csenv/HelloWorldProj2.png}
+	}
+	\caption{HelloWorld程序文件结构}
+	\label{fig:HelloWorldProj}
 \end{figure}
 
 图\ref{fig:HelloWorldProj-a} 为解决方案的文件夹，系统在生成解决方案时，
 会根据工程名（或解决方案名）自动创建一个文件夹，如本例中的 HelloWorld ，
 并在文件夹中创建一个解决方案的文件 HelloWorld.sln 与工程文件夹 HelloWorld 。
 
-文件 HelloWorld.sln 为文本文件，可以用 Visual Code 或 Notepad++打开，
+文件 HelloWorld.sln 为文本文件，可以用 Visual Code 或 Notepad 打开，
 其内容如下：
 
 \begin{lstlisting}
@@ -150,11 +152,11 @@ EndGlobal
 第5行说明了HelloWorld项目的相关信息。
 
 图\ref{fig:HelloWorldProj-b}为项目HelloWorld的文件夹，
-该文件夹中有一个工程文件HelloWorld.csproj,
-一个  \cs  源代码文件Program.cs、两个文件夹bin与obj，
-bin用于存放最后生成的可执行文件，obj缓存系统中间文件。
+该文件夹中有一个工程文件 HelloWorld.csproj ,
+一个  \cs  源代码文件 Program.cs 、两个文件夹 bin 与 obj，
+bin 用于存放最后生成的可执行文件，obj 缓存系统中间文件。
 
-文件HelloWorld.csproj内容如下：
+文件 HelloWorld.csproj 内容如下：
 \begin{lstlisting}
 <Project Sdk="Microsoft.NET.Sdk">
 
@@ -170,11 +172,11 @@ bin用于存放最后生成的可执行文件，obj缓存系统中间文件。
 
 从以上看出，Visual Studio 是用文件夹与文件的形式来组织管理项目的。
 一个项目由多个源代码文件、资源文件等组成，经过编译链接最终生成为程序集。
-程序集通常具有文件扩展名 .exe 或 .dll，具体取决于它们是实现应用程序 (application) 还是实现库 (library)。
+程序集通常具有文件扩展名 .exe 或 .dll ，具体取决于它们是实现应用程序 (application) 还是实现库 (library)。
 
 一个或多个项目组成一个解决方案（Solution）。
 
-一个项目的构建过程如图\ref{fig:BuildProject}所示:
+一个项目的构建过程如图\ref{fig:BuildProject}所示。
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[scale=1.4]{chapter/csenv/BuildProject.png}
@@ -184,76 +186,145 @@ bin用于存放最后生成的可执行文件，obj缓存系统中间文件。
 
 
 
+
+
+\subsection{顶级语句}
+
+使用 Visual Studio 2022/2026 生成 .NET 6 或更高版本项目 (\cs 9.0 版本) 时，如果不勾选``不使用顶级语句''，
+则只会在 Program.cs 文件中生成一个语句：
+
+% 顶级语句  [caption={HelloWorld源代码}, label=srcHelloWorld]
+\begin{lstlisting}
+Console.WriteLine("Hello World!");
+\end{lstlisting}
+
+顶级语句 (top-level statements) 相当于去掉了
+using 、namespace 以及默认的类 Program 与默认的 Main 函数，这些由编译器在编译时自动生成。
+具体请参看 \href{https://docs.microsoft.com/en-us/dotnet/core/tutorials/top-level-templates}{微软顶级语句官方文档}。
+
+顶级语句允许直接在文件的顶层编写代码，无需定义类或方法,
+包含顶级语句的文件被视为程序的入口点，类似于 \cs 之前的 Main 方法,
+编译器会自动生成一个 Main 方法，并将顶级语句作为 Main 方法的主体。
+尽管不需要定义类，但顶级语句的文件中仍然可以定义局部函数。
+
+顶级语句只能在一个源文件中使用, 如果一个项目中有多个使用顶级语句的文件，会导致编译错误。
+
+顶级语句简化了基于控制台应用的程序，使创建简单程序更容易， 更加方便探索新的语法与算法。
+
+
+
+
+
 \section{ \cs  程序结构分析}
 
-分析以上 \cs 示例中的HelloWorld.cs源代码可以看出，
-  \cs  程序中的一些关键概念：
- \begin{itemize}
-	 \item using指令
-	 	
-	 \item 命名空间 (namespace)
-	 \item 类程序 (class)
-	 \item 类的静态成员函数(static)
-	 \item Console类(控制台类)
- \end{itemize}
+分析以上 \cs 示例中的 HelloWorld.cs 源代码可以看出，
+\cs  程序中的一些关键概念：
+\begin{itemize}
+	\item using 指令
 
-  \cs  程序由一个或多个源代码文件组成。每个源代码中声明类，类包含成员，并且可按命名空间进行组织。
- 类的成员有字段 (field)、方法、函数、属性和事件等。
- 
-\section{扩展：从C走向 \cs }
+	      引入所需的外部命名空间，使用其中的类型，避免在使用这些类时需要写完整的命名空间路径。
 
-\subsection{Client/Server程序设计模式}
+	\item 命名空间 (namespace)
+
+	      组织与管理源代码，避免名称冲突。
+
+	      命名空间有两种形式：一种是命名空间块，另一种是文件范围的命名空间。
+
+	      命名空间块的形式为：
+	      \begin{lstlisting}
+namespace MyNamespace
+{
+	// 代码内容
+}
+		\end{lstlisting}
+
+	      文件范围的命名空间的形式为：
+	      \begin{lstlisting}
+namespace MyNamespace;
+// 代码内容
+			\end{lstlisting}
+
+	      一般一个文件中只会有一个命名空间，命名空间的名称一般与文件夹的名称相同。
+
+	\item 类(class)
+
+	      \cs 代码的载体，包含数据和方法的容器， \cs 中所有的代码都必须写在类中。
+
+	\item 类的静态成员方法(static void Main)
+
+	      静态成员方法是指不依赖于类的实例而存在的方法， 意味着整个类只有唯一的一份，
+	      Main 方法是程序的入口点， 当程序启动时从这里开始执行。
+
+	\item Console.WriteLine 语句
+
+	      Console 代表控制台类，WriteLine 是控制台类的一个方法，作用是在控制台输出一行文本。
+
+\end{itemize}
+
+\cs  程序由一个或多个源代码文件与资源文件组成。每个源代码中声明类，类包含成员，并且可按命名空间进行组织。
+类的成员有字段 (field)、方法、函数、属性和事件等。
+
+
+
+\section{扩展：从 C 走向\cs}
+
+\subsection{Client/Server 程序设计模式}
 现代软件往往是多人协作开发的成果，单个人进行大型软件的开发是比较少的。
 在软件开发中需要遵循软件工程的组织原则，寻求代码的可复用性、可测试性
-、可阅读性与可维护性。在学习编程时我们首先应该改掉以下三个不良编码习惯：
+、可阅读性与可维护性。
 
-改变如某些C语言入门教材中将代码直接写入main函数中的习惯；
+在学习编程时我们首先应该改掉以下不良编码习惯：
 
-改变在 \cs 语言中将代码直接写入Main函数中的习惯；
+改变如某些 C 语言入门教材中将代码直接写入 main 函数中的习惯；
 
-改变在UI(WinForm或WPF或其它的界面)中直接写入逻辑算法代码的习惯。
+改变在 \cs 语言中将代码直接写入 Main 函数中的习惯；
 
-以上三种形式的代码书写处的Main函数或界面调用函数我们可以称为Client，我们编写的逻辑算法代码可以称为
-Server。试想如果我们去商场买东西，我们就是Client，提供需求；商场就是Server，提供服务。
+改变在 UI (WinForm 或 WPF 或其它的界面)中直接写入逻辑算法代码的习惯。
+
+以上三种形式的代码书写处的 Main 函数或界面调用函数我们可以称为 Client ，我们编写的逻辑算法代码可以称为
+Server。试想如果我们去商场买东西，我们就是 Client ，提供需求；商场就是 Server ，提供服务。
 如果我们要买一只圆珠笔，也许我们只需简单的告诉商场人员，然后付钱拿笔走人就行了。但如果
 商场要让我们自己去仓库里找笔、查价钱、再在商场登记簿上登记库存等等一些动作，
 你想想会是怎么样的一种结果？买只笔都要把我们累死了。
 
 这说明了什么呢？提供服务功能的商场应该对有功能需求的客户简化和屏蔽各种复杂的中间环节。
-在软件开发时同样如此，我们的main或Main函数或UI处的代码应该简洁，
+在软件开发时同样如此，我们的 main 或 Main 函数或 UI 处的代码应该简洁，
 基本上只是调用各个功能算法而已。
 
 如果我们像以上这三种方式组织代码，将会带来一系列的问题，
 尤其在团队开发与多人协作时代码不能复用，不能进行 unit test (单元测试)、
-不能用git工具（著名的源代码管理工具）进行源代码的自动合并。
+不能用 git 工具（著名的源代码管理工具）进行源代码的自动合并。
 软件系统稍微复杂一点，我们的开发就会面临不可控甚至失败的危险。
 
-万丈高楼从地起，因此，在学习编程时首先我们要有Client/Server模式意识，
+万丈高楼从地起，因此，在学习编程时首先我们要有 Client/Server 模式意识，
 要遵循界面与算法相分离的原则进行程序设计。
 
 \subsection{从面向过程走向面向对象的程序设计 }
 
 良好的面向过程设计程序设计程序是可以很好的转向面向对象的程序设计的，我们将从一个简单的
-C程序开始设计结构较为良好的C代码，再将其用面向对象的 \cs 进行实现。从中体会面向过程与
+C 程序开始设计结构较为良好的 C 代码，再将其用面向对象的 \cs 进行实现。从中体会面向过程与
 面向对象的程序设计方法的不同。
 
- \subsubsection{面向过程的C代码示例}
+\subsubsection{面向过程的 C 代码示例}
 
-在测绘专业中我们经常与测量点打交道，因此我们定义一个点Point（测点除了它的坐标x,y和高程z之外，还需至少有点名），
- 另外我们定义一个简单的为大家所熟知的圆Circle，来使用点Point定义它的圆心，并实现判断两圆是否相交，
- 计算圆的面积和周长等功能。代码如下所示：
+在测绘专业中我们经常与测量点打交道，因此我们定义一个点 Point（测点除了它的坐标 x, y 和高程 z 之外，
+还需至少有点名），
+另外我们定义一个简单的为大家所熟知的圆 Circle ，来使用点 Point 定义它的圆心，并实现判断两圆是否相交，
+计算圆的面积和周长等功能。代码如下所示：
 
 \lstinputlisting[language=C,
-        % caption={C代码示例}, label=Ch01Ex01,
-        firstline=1, lastline=40]
-        {./chapter/csenv/Ch01Ex01/Ch01Ex01/Ch01Ex01.cpp}
+	% caption={C代码示例}, label=Ch01Ex01,
+	firstline=1, lastline=40]
+{./chapter/csenv/Ch01Ex01/Ch01Ex01/Ch01Ex01.cpp}
 
-\subsubsection{对C代码的解释}
-代码中的11和16行定义结构体时使用了 typedef，这样在标准C中再定义Point类型或Circle类型时可以避免
-在其前面加关键词struct。
 
-第24-26行计算圆的面积，传入了圆的指针，这是C及C++中传递自定义数据类型的常用的高效方式。
-由于计算的圆面积会保存在结构体Circle中的area中，所以函数不需要返回值，返回值定义为void。
+
+\subsubsection{对 C 代码的解释}
+代码中的11和16行定义结构体时使用了 typedef ，这样在标准 C 中再定义 Point 类型或 Circle 类型时可以避免
+在其前面加关键词 struct。
+
+第24-26行计算圆的面积，传入了圆的指针，这是 C 及 C++ 中传递自定义数据类型的常用的高效方式。
+由于计算的圆面积会保存在结构体 Circle 中的 area 中，所以函数不需要返回值，返回值定义为 void。
 
 第29-33行为计算两点的距离，由于该函数不会修改p1、p2两个Point内的任何成员，故应该将这两个指针
 定义为 const 类型，防止函数内部无意或故意的修改。
@@ -268,9 +339,9 @@ c2->center不是指针，所以需要在其前用取地址符 \& 。
 
 相应的main函数测试代码如下：
 
-\lstinputlisting[language=C, 
-% caption={Client作用的C main函数}, label={code:Ch01Ex01main},
-firstline=41, lastline=65]
+\lstinputlisting[language=C,
+	% caption={Client作用的C main函数}, label={code:Ch01Ex01main},
+	firstline=41, lastline=65]
 {./chapter/csenv/Ch01Ex01/Ch01Ex01/Ch01Ex01.cpp}
 
 程序的运行结果如下：
@@ -280,9 +351,9 @@ Circle1 与 Circle2 是否相交 ：是
 \end{verbatim}
 
 
-\subsection{与C相对应的 \cs 代码}
+\subsection{与 C 相对应的 \cs 代码}
 
-将以上代码相对应的C代码直接翻译为 \cs 代码为：
+将以上代码相对应的 C 代码直接翻译为 \cs 代码为：
 
 \lstinputlisting{./chapter/csenv/Ch01Ex02/Ch01Ex02/Circle.cs}
 % \caption{由C转换为 \cs 的示例代码}\label{code:Ch01Ex02}
@@ -371,15 +442,15 @@ public double Z {get; set ;}
 
 \section{作业}
 \begin{enumerate}
-\item 请完成示例中的圆的周长计算功能；
-\item 请试着完成多段线Polyline的面积与长度计算功能（提示：多段线是点序的集合）；
-\item 请试着完成多边形Polygon的面积与长度计算功能。
+	\item 请完成示例中的圆的周长计算功能；
+	\item 请试着完成多段线Polyline的面积与长度计算功能（提示：多段线是点序的集合）；
+	\item 请试着完成多边形Polygon的面积与长度计算功能。
 
-提示：多边形面积计算公式为：
+	      提示：多边形面积计算公式为：
 
-$$S=\frac{1}{2}\sum_{k=1}^{6}{(x_k y_{k+1} - x_{k+1} y_k)}$$
+	      $$S=\frac{1}{2}\sum_{k=1}^{6}{(x_k y_{k+1} - x_{k+1} y_k)}$$
 
-多边形的顶点坐标依次为
-$p_1(-1,0), p_2(2,3), p_3(4,2), p_4(4,4),p_5(6,8),p_6(-2,5)$，
-则依上式计算该多边形面积为28.
+	      多边形的顶点坐标依次为
+	      $p_1(-1,0), p_2(2,3), p_3(4,2), p_4(4,4),p_5(6,8),p_6(-2,5)$，
+	      则依上式计算该多边形面积为28.
 \end{enumerate}

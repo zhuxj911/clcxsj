@@ -1,5 +1,7 @@
-\documentclass[UTF8]{ctexart}
-%% \documentclass{article}
+% latex 中文测试文档
+
+\documentclass{article}
+\usepackage{ctex}
 
 \usepackage{graphicx} % 插图片
 
@@ -13,23 +15,42 @@
 
 \usepackage{fontspec}
 
-\setmainfont{Consolas}
+\setmonofont {Fira Code}
+
+% 自定义中文字体命令
+\setCJKfamilyfont{song}{SimSun} % 宋体
+\setCJKfamilyfont{hei}{SimHei}  % 黑体
+\setCJKfamilyfont{kai}{SimKai}  % 楷体
+
+% 声明快捷命令
+% \newcommand{\songti}{\CJKfamily{song}}
+% \newcommand{\heiti}{\CJKfamily{hei}}
+% \newcommand{\kaiti}{\CJKfamily{kai}}
+
+% \setCJKmainfont{simsun} % 设置正文默认中文字体为宋体
+
+% \setmainfont{Consolas}
 %% \setCJKmainfont{微软雅黑}
-\setCJKmainfont[BoldFont=黑体, ItalicFont=楷体]{宋体}
-\setCJKfamilyfont{hei}{黑体}
-\setCJKmonofont {仿宋}
-\newcommand{\hei}{\CJKfamily{hei}}
+% \setCJKmainfont{宋体}
 
-\setCJKfamilyfont{hwxk}{STXingkai}             %使用STXingkai华文行楷字体
-\newcommand{\huawenxingkai}{\CJKfamily{hwxk}}
+% \setCJKfamilyfont{hei}{黑体}
 
-\setCJKfamilyfont{hwcy}{STCaiyun}             %使用STCaiyun华文彩云字体
-\newcommand{\huawencaiyun}{\CJKfamily{hwcy}}
 
-\setCJKfamilyfont{hwhp}{STHupo}             %使用STHupo华文琥珀字体
-\newcommand{\huawenhupo}{\CJKfamily{hwhp}}
 
-\setCJKmainfont{宋体}
+% \setCJKmonofont {仿宋}
+% \setmonofont {Consolas}
+
+
+
+% \newcommand{\huawenxingkai}{\CJKfamily{hwxk}}
+
+% \setCJKfamilyfont{hwcy}{STCaiyun}             %使用STCaiyun华文彩云字体
+% \newcommand{\huawencaiyun}{\CJKfamily{hwcy}}
+
+% \setCJKfamilyfont{hwhp}{STHupo}             %使用STHupo华文琥珀字体
+% \newcommand{\huawenhupo}{\CJKfamily{hwhp}}
+
+
 
 
 \usepackage{xcolor}
@@ -84,7 +105,7 @@ left=2.5pt,right=2.5pt,top=1.5pt,bottom=1.5pt
 
 这是黑体加粗\textbf{加粗黑体}
 
-\hei 这段文字是黑体
+\heiti 这段文字是黑体
 
 \textbf  加粗
 \textit  意大利斜体
@@ -96,11 +117,11 @@ left=2.5pt,right=2.5pt,top=1.5pt,bottom=1.5pt
 {\kaishu 我是ctex已定义好的字体，我使用的楷体}\\
 {\heiti 我是ctex已定义好的字体，我使用的黑体}\\
 {\fangsong 我是ctex已定义好的字体，我使用的仿宋}\\
-{\lishu 我是ctex已定义好的字体，我使用的隶书}\\
-{\youyuan 我是ctex已定义好的字体，我使用的幼圆}\\
-{\huawenxingkai 我是自定义的字体，我使用的华文行楷}\\
-{\huawencaiyun 我是自定义的字体，我使用的华文彩云}\\
-{\huawenhupo 我是自定义的字体，我使用的华文琥珀}\\
+% {\lishu 我是ctex已定义好的字体，我使用的隶书}\\
+% {\youyuan 我是ctex已定义好的字体，我使用的幼圆}\\
+% {\huawenxingkai 我是自定义的字体，我使用的华文行楷}\\
+% {\huawencaiyun 我是自定义的字体，我使用的华文彩云}\\
+% {\huawenhupo 我是自定义的字体，我使用的华文琥珀}\\
 
 Hello, \LaTeX
 

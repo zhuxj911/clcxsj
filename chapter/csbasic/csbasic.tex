@@ -1,62 +1,88 @@
 %!TEX root = ../../clcxsj.tex
 
-\chapter{ \cs 语法}
+\chapter{ \cs 基础语法}
 
-\cs 程序设计语言是类 C 语言，基本语法与 C 或 C++ 基本类似，比如块注释为 \verb|/* */|， 行注释为 \verb|//| ， 每行语句用分号 \verb|;| 分隔。  本章主要讲解 \cs 中不同于  C 或 C++ 的语法。
+\cs 程序设计语言是类 C 语言，基本语法与 C 或 \cpp 基本类似，
+比如块注释为 \verb|/* */|， 行注释为 \verb|//| ，
+每行语句用分号 \verb|;| 分隔，\cs 标识符区分大小写。
+\cs 使用相同的大括号 \verb|{ }| 、 中括号 \verb|[ ]| 与 圆括号 \verb|( )|,
+控件语句 \verb|if、else、switch|，
+循环语句 \verb|for、while、do while|等。
 
-\section{ \cs 中的数据类型}
- 为保持 \cs 语言的高效性，\cs 中的数据类型分为两类：值类型 (value type) 和引用类型 (reference type)。
-值类型的变量直接包含它们的数据，也就是直接在栈中保存变量的值， 变量的值自动生成、自动释放;
-而引用类型的变量存储对数据的引用，即在堆中生成变量的值，在栈中保存堆中值的地址，在堆中生成的变量不自动释放，靠 .Net 架构回收。
+本章主要讲解 \cs 中不同于  C 或 \cpp 的语法。
+
+
+\section{ \cs 中的变量与数据类型}
+
+为保持 \cs 语言的高效性，\cs 中的数据类型分为两类：值类型 (value type) 和引用类型 (reference type)。
+从概念上讲，值类型变量直接存储其值，引用类型变量存储对其值的引用。
+
+值类型变量的值通常直接在栈上保存，变量直接存储相应的值，因此变量的值自动生成、自动释放。
+当值类型的变量进行赋值或传参操作时，会创建该值的副本，对一个值类型变量的修改不会影响另一个。
+基本数据类型如 int、float、double、decimal、bool、char 与 结构体（struct）、枚举（enum）等都是值类型。
+
+引用类型变量在堆中生成变量的值，在栈中保存堆中值的地址，当变量被释放时，
+在堆中生成的值不会自动释放，靠 .NET 架构回收。
+引用类型包括类（class）、接口（interface）、委托(delegate)、数组（array）以及字符串（string）等。
+
+值类型和引用类型在内存中的存储方式差异导致了它们在 \cs 程序中的不同行为。
+例如，值类型在赋值时会复制整个数据，而引用类型在赋值时只复制引用。
+因此对引用类型的一个实例的修改会影响所有指向该实例的变量，而值类型的修改则限定于单个实例。
+
+值类型适用于表示简单的数据结构，如数值和布尔值。值类型通常具有更好的性能，因为它们可以直接存储在栈上，
+栈上的内存分配和回收速度非常快，在内存管理方面更高效，且不需要垃圾回收。
+引用类型适用于表示更复杂的数据结构和对象，如字符串和数组等。它们支持继承和多态，但需要垃圾回收来管理内存。
 
 \subsection{值类型}
- \cs  的值类型进一步划分为简单类型 ( simple type )、枚举 ( enum )、结构( struct )
+\cs  的值类型进一步划分为基本类型、枚举 (enum)、结构(struct)
 和可以为 null 的值类型 (nullable type)。
 
 对于值类型，每个变量都有它们自己的数据副本（除 ref 和 out 参数变量外），
 因此对一个变量的操作不可能影响另一个变量。
 
-\begin{tabular}{|l|l|}
-\hline
-类别   & 说明 \\
-\hline
-简单类型   & 有符号整型：sbyte 、short 、int 、long \\
-          & 无符号整型：byte、ushort、uint、ulong \\
-          & Unicode 字符：char \\
-          & IEEE 浮点：float、double \\
-          & 高精度小数型：decimal \\
-          & 布尔：bool \\
-\hline
-结构                & struct S {...} 形式的用户定义的类型 \\
-枚举                & enum E {...} 形式的用户定义的类型   \\
-可以为 null 的值类型 & 其他所有具有 null 值的值类型的扩展   \\
-\hline
+\begin{tabular}{l|l}
+    \hline
+    类别         & 说明                                   \\
+    \hline
+    基本类型       & 有符号整型：sbyte 、short 、int 、long        \\
+               & 无符号整型：byte、ushort、uint、ulong         \\
+               & Unicode 字符：char                      \\
+               & IEEE 浮点：float、double                 \\
+               & 高精度小数型：decimal                       \\
+               & 布尔：bool                              \\
+    结构(struct) & struct S {...} 形式的用户定义的类型            \\
+    枚举(enum)   & enum E {...} 形式的用户定义的类型              \\
+    可空(T?)     & 派生自 System.Nullable<T> 泛型结构体，T? 为其别名 \\
+    \hline
 \end{tabular}
 
 
 \subsection{引用类型}
- \cs  的引用类型进一步划分为类 (class)、接口(interface)、
+\cs  的引用类型进一步划分为类 (class)、接口(interface)、
 数组 (array) 和委托(delegate)。
 对于引用类型，两个变量可能引用同一个对象，因此对一个变量的操作可能影响另一个变量所引用的对象。
 
-\begin{tabular}{|l|l|}
-\hline
-类别          & 说明 \\
-\hline
-类class       &  所有其他类型的最终基类：object \\
-              &  Unicode 字符串：string \\
-              &  class C {...} 形式的用户定义的类型 \\
-\hline
-接口interface     & interface I {...} 形式的用户定义的类型  \\
-数组              & 一维和多维数组，例如 int[] 和 int[,]  \\
-委托 delegate     & delegate int D(...) 形式的用户定义的类型  \\
-\hline
+\begin{tabular}{l|l}
+    \hline
+    类别            & 说明                                                  \\
+    \hline
+    类(class)      & 派生于 System.Object, 其别名为 object ，是所有其他类型的基类          \\
+
+    接口(interface) & interface I {...} 形式的用户定义的类型                        \\
+    数组(Array)     & 派生于 System.Array, 一维和多维数组，例如 int[] 和 int[,]         \\
+    委托(delegate)  & 派生于 System.Delegate, delegate int D(...) 形式的用户定义的类型 \\
+    \hline
 \end{tabular}
 
- \cs 中的 string不是值类型数据，而是引用类型数据。
+\cs 中的 string 的类名为 System.String，string 是其别名，因此 string 是引用类型数据。
+
+\cs 中常用的 DateTime 的定义为 \verb|public readonly struct DateTime : ......|，因此DateTime是值类型数据。
+
+\cs 的所有类型都继承自 System.Object 类，System.Object 是所有类型的基类，
+
 
 \subsection{自定义类型}
- \cs  程序使用类型声明 (type declaration) 创建新类型。类型声明指定新类型的名称和成员。
+\cs  程序使用类型声明 (type declaration) 创建新类型。类型声明指定新类型的名称和成员。
 在  \cs  类型分类中，有五类是用户可定义的：类(class)、结构(struct)、
 接口(interface)、枚举(enum) 和委托(delegate)。
 
@@ -67,7 +93,7 @@
 
 结构与类相似，表示一个带有数据成员和函数成员的结构。
 但是，与类不同，结构是值类型，不需要堆分配。
-结构类型不支持用户指定的继承，所有结构类型都隐式地从类 System.Object 继承。
+结构类型不支持用户指定的继承，所有结构类型都从类 System.ValueType 继承。
 
 接口定义了一个协定，是一个公共函数成员的命名集。
 实现某个接口的类或结构必须提供该接口的函数成员的实现。
@@ -82,7 +108,7 @@
 枚举是具有命名常量的独特的类型。每种枚举类型都具有一个基础类型，
 该基础类型必须是八种整型之一。枚举类型的值集和它的基础类型的值集相同。
 
- \cs  支持由任何类型组成的一维和多维数组。与以上列出的类型不同，数组类型不必声明就可以使用。
+\cs  支持由任何类型组成的一维和多维数组。与以上列出的类型不同，数组类型不必声明就可以使用。
 实际上，数组类型是通过在某个类型名后加一对方括号来构造的。
 例如，int[] 是一维 int 数组，int[,] 是二维 int 数组，int[][] 是一维 int 数组的一维数组。
 
@@ -91,7 +117,7 @@
 例如，int? 类型可以容纳任何 32 位整数或 null 值。
 
 \subsection{装箱与拆箱}
- \cs  的类型系统是统一的，因此任何类型的值都可以按对象处理。 \cs  中的每个类型直接或间接地从 object 类类型派生，
+\cs  的类型系统是统一的，因此任何类型的值都可以按对象处理。 \cs  中的每个类型直接或间接地从 object 类类型派生，
 而 object 是所有类型的根基类。引用类型的值都被视为 object 类型，被简单地当作对象来处理。
 值类型的值则通过对其执行装箱和拆箱操作按对象处理。下面的示例将 int 值转换为 object，然后又转换回 int。
 
@@ -112,65 +138,138 @@ class Test
 并将值复制到该箱子中。反过来，当将一个 object 引用强制转换为值类型时，
 将检查所引用的对象是否含有正确的值类型，如果有，则将箱子中的值复制出来。
 
+在程序中频繁地装箱和拆箱操作会带来性能开销，应尽量避免不必要的装箱和拆箱操作。
 
 \subsection{延伸阅读值类型}
+所有值类型隐式继承自 System.ValueType ， 而 System.ValueType 又继承自 System.Object 类。
+这听起来是不是有点自我矛盾？其中有什么奥秘？
 
-实际上值类型和引用类型都是从System.Object继承的，System.Object类是 \cs 中所有类的基类。
-所有值类型都隐式继承自类 System.ValueType，而类System.ValueType又继承自类 System.Object（别名object），
-System.ValueType 用更合适的值类型实现重写了Object 中的虚方法。 
+实际上值类型和引用类型都是从 System.Object 继承的，System.Object 类是 \cs 中所有类的基类。
+所有值类型都隐式继承自类 System.ValueType，而类 System.ValueType 又继承自类 System.Object（别名object），
+奥秘的地方在于 System.ValueType 用更合适的值类型实现重写了 System.Object 中的虚方法。
 
-但任何类型都不能直接从值类型System.ValueType派生。
+但任何类型都不能直接从值类型 System.ValueType 派生。
 
-这样就有一个问题，值类型与引用类型都是从System.Object继承的，怎么object类型与int类型就不一样呢？
+这样就有一个问题，值类型与引用类型都是从 System.Object 继承的，怎么 object 类型与 int 类型就不一样呢？
 
-这里大致可以这样理解，.Net是动态加载运行 \cs 代码的，CLR在运行时把值类型装载到栈，把引用类型装载到堆，
+这里大致可以这样理解，.NET 是动态加载运行 \cs 代码的，CLR 在运行时把值类型装载到栈，把引用类型装载到堆，
 栈中只提供一个引用指向堆，即引用。
 
-\subsection{\cs 新版本中的类型}
+有关具体的值类型与引用类型的区别，请参考有关微软官方文档。
+
+\subsection{\cs 中较为特别的类型}
 
 \begin{itemize}
     \item 元组（tuple）
-    
-    用于将多个数据元素分组成一个轻型数据结构。
-    如：
-\begin{lstlisting}
-(double, int) t1 = (4.5, 3);
-Console.WriteLine($"Tuple with elements {t1.Item1} and {t1.Item2}.");
-// Output:
-// Tuple with elements 4.5 and 3.
-(double Sum, int Count) t2 = (4.5, 3);
-Console.WriteLine($"Sum of {t2.Count} elements is {t2.Sum}.");
-// Output:
-// Sum of 3 elements is 4.5.
+
+          元组是 \cs 中一种轻量级的数据结构，用于将多个值组合成一个复合值。
+          它在 \cs 4.0 中首次引入，随后在 \cs 7.0 中通过 ValueTuple 提供了更强大的功能。
+          元组可以存储不同类型的元素，并且无需显式定义字段类型和名称。
+
+          如测绘中常用的六十进制的角度值可以用显示的元组表示为：
+
+          \begin{lstlisting}
+(int d, int m, double s) a1 = (45, 30, 15.5);
+Console.WriteLine($"Angle value is {a1.d}°{a1.m}'{a1.s}\".");
+// Output: Angle value is 45°30'15.5".
 \end{lstlisting}
 
-    元组类型是值类型，元组元素是公共字段。元组字段的默认名称为 Item1、Item2、Item3 等。
+          也可以隐式的定义为：
+
+          \begin{lstlisting}
+var a1 = (45, 30, 15.5);
+Console.WriteLine($"Angle value is {a1.Item1}°{a1.Item2}'{a1.Item3}\".");
+// Output: Angle value is 45°30'15.5".
+\end{lstlisting}
+
+          元组类型是值类型，元组元素是公共字段, 若无显示类型指定， 元组字段的默认名称为 Item1、Item2、Item3 等。
+
+          还可以定义为：
+
+          \begin{lstlisting}
+var (d, m, s) = (45, 30, 15.5);
+Console.WriteLine($"Angle value is {d}°{m}'{s}\".");
+// Output: Angle value is 45°30'15.5".
+\end{lstlisting}
+
+          上面代码利用 var 关键字，由编译器根据右边的值来推断变量 d、m、s 的类型， 从而保持代码的简洁。
+
+
 
     \item 记录（record）
-    
-    record类型是一种用record关键字声明的新的引用类型，与类不同的是，
-    它是基于值相等而不是唯一的标识符——对象引用。
-    它有着引用类型的支持大对象、继承、多态等特性，也有着结构的基于值相等的特性。
-    可以说有着class和struct两者的优势，在一些情况下可以用以替代class和struct。
 
-    如以下代码就定义了一个类Point：
-\begin{lstlisting}
+          record 修饰符是用于封装数据的内置功能，提供了一种简洁的语法来定义不可变的数据对象。
+          record 与 record class 语法定义引用类型，record struct 定义值类型。
+
+          如下代码定义了一个 record Point：
+          \begin{lstlisting}
 public record Point(string Name, double X, double Y, double Z);
 \end{lstlisting}
+
+          在 record 上声明主构造函数时，编译器会为主构造函数参数生成公共属性。
+          上面代码相当于如下代码：
+          \begin{lstlisting}
+public record Point
+{
+    public required string Name { get; init; }
+    public required double X { get; init; }
+    public required double Y { get; init; }
+    public required double Z { get; init; }
+};
+\end{lstlisting}
+
+          其中 init 修饰符表示属性只能在对象初始化时设置值，之后不能修改。
+
+          record 类型的对象是不可变的，意味着一旦创建了一个 record 对象，其属性值就不能被修改。
+          这有助于确保数据的一致性和安全性，尤其是在多线程环境中。
+
+          我们在Top-Level Statement中测试使用record类型，如下代码所示：
+          \begin{lstlisting}
+Point point1 = new("GP10", 3804770.542, 608960.290, 471.823);
+// point1.Name = "GP11";
+Console.WriteLine(point1);
+// output: Point { Name = GP10, X = 3804770.542, Y = 608960.290, Z = 471.823 }
+
+Point point2 = new("GP10", 3804770.542, 608960.290, 471.823);
+Console.WriteLine(point2);
+// output: Point { Name = GP10, X = 3804770.542, Y = 608960.290, Z = 471.823 }
+
+Console.WriteLine( point1 == point2); // Output: True
+Console.WriteLine(point1.Equals(point2)); // Output: True
+
+public record Point(string Name, double X, double Y, double Z);
+\end{lstlisting}
+
+          point对象的属性值在初始化后不能被修改，尝试修改会导致编译错误，所以上面代码中第2行代码被注释掉了。
+
+          第9、10行代码中，point1和point2对象的属性值完全相同，因此它们被认为是相等的，输出结果为True。
+          这也是 record 类型不同于 class 的一个重要特性，即它们的相等性是基于属性值的，而不是基于对象引用。
+
+          record struct 基本等同于 struct 的相等性定义。
 
 \end{itemize}
 
 
-\subsection{变量的定义}
+\subsection{变量的定义与 var 关键字}
 
-\cs 中变量是前置定义的，需先指定类型，然后是变量名，最后是其值。
-如： int i = 0；
+\cs 中变量是前置定义的，需先指定类型，然后是变量名，最后是其值,
+如语句 \verb|int i = 0;| 定义 i 为 int 类型的变量，并赋初始值为 0。
 
-变量可以显示指定类型，也可以隐式定义，让编译器根据变量的值进行推定，如：
-var i = 0；
+变量也可隐式定义，让编译器根据变量的值进行推定，
+如语句\verb|var i = 0;| 中的 i 将由编译器推断出类型为 int 。
 
-值类型数据可以在声明时赋初始值，引用类型变量在定义时需用new生成实例对象或
-将其它实例对象的引用赋值给它，或直接赋值为null。
+在程序设计中，为了保持代码简洁，定义变量时可以使用 var 关键字让编译器推断变量的数据类型。
+
+值类型数据可以在声明时赋初始值，引用类型变量在定义时需用 new 生成实例对象或
+将其它实例对象的引用赋值给它，或直接赋值为 null。
+
+\subsection{变量的定义位置}
+\cs 中变量的定义位置有三种：字段、局部变量和参数。
+作为字段的变量在类或结构中定义，作为局部变量的变量在方法、构造函数、属性或索引器中定义，
+\cs 中的参数是方法、构造函数、属性或索引器的参数列表中的变量。
+
+\cs 中不存在全局变量，所有变量都必须在类或结构中定义。
+
 
 
 \section{表达式与语句}
@@ -179,30 +278,30 @@ var i = 0；
 表达式由操作数 (operand) 和运算符 (operator) 构成。表达式的运算符指示对操作数适用什么样的运算。
 运算符的示例包括+、-、*、/ 和 new。操作数的示例包括文本、字段、局部变量和表达式。
 
-\begin{tabular}{|l|l|}
-\hline
-类别            & 说明 \\
-\hline
-x.m            &          成员访问  \\
-x(...)         &           方法和委托调用  \\
-x[...]         &           数组和索引器访问  \\
-x++            &        后增量  \\
-x--            &           后减量  \\
-new T(...)     &       对象和委托创建  \\
-new T(...){...}&      使用初始值设定项创建对象  \\
-new {...}      &         匿名对象初始值设定项  \\
-new T[...]     &        数组创建  \\
-typeof(T)      &      获取 T 的 System.Type 对象  \\
-checked(x)     &    在 checked 上下文中计算表达式  \\
-unchecked(x)   & 在 unchecked 上下文中计算表达式  \\
-default(T)     &       获取类型 T 的默认值  \\
-delegate {...} &      匿名函数（匿名方法）  \\
-(T)x           &             将 x 显式转换为类型 T  \\
-await x        &         异步等待 x 完成  \\
-x is T         &            如果 x 为 T，则返回 true，否则返回 false  \\
-x as T         &           返回转换为类型 T 的 x，如果 x 不是 T 则返回 null  \\
-(T x) => y     &       匿名函数（lambda 表达式）  \\
-\hline
+\begin{tabular}{l|l}
+    \hline
+    类别              & 说明                               \\
+    \hline
+    x.m             & 成员访问                             \\
+    x(...)          & 方法和委托调用                          \\
+    x[...]          & 数组和索引器访问                         \\
+    x++             & 后增量                              \\
+    x--             & 后减量                              \\
+    new T(...)      & 对象和委托创建                          \\
+    new T(...){...} & 使用初始值设定项创建对象                     \\
+    new {...}       & 匿名对象初始值设定项                       \\
+    new T[...]      & 数组创建                             \\
+    typeof(T)       & 获取 T 的 System.Type 对象            \\
+    checked(x)      & 在 checked 上下文中计算表达式              \\
+    unchecked(x)    & 在 unchecked 上下文中计算表达式            \\
+    default(T)      & 获取类型 T 的默认值                      \\
+    delegate {...}  & 匿名函数（匿名方法）                       \\
+    (T)x            & 将 x 显式转换为类型 T                    \\
+    await x         & 异步等待 x 完成                        \\
+    x is T          & 如果 x 为 T，则返回 true，否则返回 false     \\
+    x as T          & 返回转换为类型 T 的 x，如果 x 不是 T 则返回 null \\
+    (T x) => y      & 匿名函数（lambda 表达式）                 \\
+    \hline
 \end{tabular}
 
 其它的与 C 或 \cpp 语言基本相同。
@@ -213,36 +312,36 @@ x as T         &           返回转换为类型 T 的 x，如果 x 不是 T 则
 
 \cs 中常见的语句有：
 \begin{itemize}
-\item 声明语句 (declaration statement) 
+    \item 声明语句 (declaration statement)
 
-    用于声明局部变量和常量。
+          用于声明局部变量和常量。
 
-\item 表达式语句 (expression statement) 
+    \item 表达式语句 (expression statement)
 
-    用于对表达式求值。
+          用于对表达式求值。
 
-    可用作语句的表达式包括方法调用、使用 new 运算符的对象分配、
-使用 = 和复合赋值运算符的赋值、使用 ++ 和 -- 运算符的增量和减量运算以及 await 表达式。
+          可用作语句的表达式包括方法调用、使用 new 运算符的对象分配、
+          使用 = 和复合赋值运算符的赋值、使用 ++ 和 -- 运算符的增量和减量运算以及 await 表达式。
 
-\item 选择语句 (selection statement) 
+    \item 选择语句 (selection statement)
 
-用于根据表达式的值从若干个给定的语句中选择一个来执行。
-这一组中有 if else、 switch case、 ? : 、 ??语句。
+          用于根据表达式的值从若干个给定的语句中选择一个来执行。
+          这一组中有 if else、 switch case、 ? : 、 ??语句。
 
-??表示如果左值为null，则用右值进行计算，如下代码所示：
-\begin{lstlisting}
+          ??表示如果左值为null，则用右值进行计算，如下代码所示：
+          \begin{lstlisting}
 int? a = null;
 int b = a ?? -1;
 Console.WriteLine(b);  // output: -1
 \end{lstlisting}
 
-\item 迭代语句 (iteration statement) 
+    \item 迭代语句 (iteration statement)
 
-用于重复执行嵌入语句，常用语句有 while、do、for 和 foreach 语句。
+          用于重复执行嵌入语句，常用语句有 while、do、for 和 foreach 语句。
 
-\cs 中常用foreach语句进行循环，示例代码如下:
+          \cs 中常用foreach语句进行循环，示例代码如下:
 
-\begin{lstlisting}
+          \begin{lstlisting}
 static void Main(string[] args)
 {
     foreach (string s in args)
@@ -253,15 +352,15 @@ static void Main(string[] args)
 \end{lstlisting}
 
 
-\item 跳转语句 (jump statement) 
+    \item 跳转语句 (jump statement)
 
-用于转移控制，常用语句有 break、continue、goto、throw、return 和 yield 语句。
+          用于转移控制，常用语句有 break、continue、goto、throw、return 和 yield 语句。
 
-\item 异常捕捉
+    \item 异常捕捉
 
-try...catch 语句用于捕获在块的执行期间发生的异常，try...finally 语句用于指定终止代码，不管是否发生异常，该代码都始终要执行。
-    
-\begin{lstlisting}
+          try...catch 语句用于捕获在块的执行期间发生的异常，try...finally 语句用于指定终止代码，不管是否发生异常，该代码都始终要执行。
+
+          \begin{lstlisting}
 static double Divide(double x, double y)
 {
     if (y == 0) throw new DivideByZeroException();
@@ -291,11 +390,11 @@ static void Main(string[] args)
 }
 \end{lstlisting}
 
-\item checked 语句和 unchecked 语句
+    \item checked 语句和 unchecked 语句
 
-用于控制整型算术运算和转换的溢出检查上下文。
+          用于控制整型算术运算和转换的溢出检查上下文。
 
-\begin{lstlisting}
+          \begin{lstlisting}
 static void Main()
 {
     int i = int.MaxValue;
@@ -310,11 +409,11 @@ static void Main()
 }
 \end{lstlisting}
 
-\item lock 语句
+    \item lock 语句
 
-用于获取某个给定对象的互斥锁，执行一个语句，然后释放该锁。
+          用于获取某个给定对象的互斥锁，执行一个语句，然后释放该锁。
 
-\begin{lstlisting}
+          \begin{lstlisting}
 class Account
 {
     decimal balance;
@@ -332,11 +431,11 @@ class Account
 }
 \end{lstlisting}
 
-\item using 语句
+    \item using 语句
 
-用于获得一个资源，执行一个语句，然后释放该资源。
+          用于获得一个资源，执行一个语句，然后释放该资源。
 
-\begin{lstlisting}
+          \begin{lstlisting}
 static void Main()
 {
     using (TextWriter w = File.CreateText("test.txt"))
@@ -368,7 +467,7 @@ public class Pair<T1, T2>
 泛型是现代编程语言非常重要的语法。
 
 \subsection{集合}
-数组Array、列表List、词典Dictionary、栈Stack、队列Queue 
+数组Array、列表List、词典Dictionary、栈Stack、队列Queue
 是程序设计中常用的数据结构，在 \cs 中均以类库形式提供，
 在\cs 程序设计中可以直接使用。
 
@@ -474,35 +573,35 @@ static void Main()
 
 \section{上机实验}
 \begin{enumerate}
-\item 冒泡排序 (Bubble Sort)
+    \item 冒泡排序 (Bubble Sort)
 
-冒泡排序是一种较简单的排序算法。它重复地走访过要排序的元素列，
-依次比较两个相邻的元素，如果顺序错误就把他们交换过来。
-走访元素的工作是重复地进行直到没有相邻元素需要交换，也就是说该元素列已经排序完成。
-这个算法的名字由来是因为越小的元素会经由交换慢慢“浮”到数列的顶端（升序或降序排列），
-就如同碳酸饮料中二氧化碳的气泡最终会上浮到顶端一样，故名“冒泡排序”。
+          冒泡排序是一种较简单的排序算法。它重复地走访过要排序的元素列，
+          依次比较两个相邻的元素，如果顺序错误就把他们交换过来。
+          走访元素的工作是重复地进行直到没有相邻元素需要交换，也就是说该元素列已经排序完成。
+          这个算法的名字由来是因为越小的元素会经由交换慢慢“浮”到数列的顶端（升序或降序排列），
+          就如同碳酸饮料中二氧化碳的气泡最终会上浮到顶端一样，故名“冒泡排序”。
 
-原理如下：
+          原理如下：
 
-比较相邻的元素。如果第一个比第二个大，就交换他们两个。
+          比较相邻的元素。如果第一个比第二个大，就交换他们两个。
 
-针对所有的元素重复以上的步骤，除了最后一个。
+          针对所有的元素重复以上的步骤，除了最后一个。
 
-持续每次对越来越少的元素重复上面的步骤，直到没有任何一对数字需要比较；
+          持续每次对越来越少的元素重复上面的步骤，直到没有任何一对数字需要比较；
 
-\item 快速排序 (Quick Sort)
+    \item 快速排序 (Quick Sort)
 
-基本思想：通过一趟排序将待排记录分隔成独立的两部分，其中一部分记录的关键字均比另一部分的关键字小，则可分别对这两部分记录继续进行排序，以达到整个序列有序。
+          基本思想：通过一趟排序将待排记录分隔成独立的两部分，其中一部分记录的关键字均比另一部分的关键字小，则可分别对这两部分记录继续进行排序，以达到整个序列有序。
 
-算法描述：
+          算法描述：
 
-    快速排序使用分治法来把一个串（list）分为两个子串（sub-lists）。具体算法描述如下：
+          快速排序使用分治法来把一个串（list）分为两个子串（sub-lists）。具体算法描述如下：
 
-    从数列中挑出一个元素，称为 “基准”（pivot）；
+          从数列中挑出一个元素，称为 “基准”（pivot）；
 
-    重新排序数列，所有元素比基准值小的摆放在基准前面，所有元素比基准值大的摆在基准的后面（相同的数可以到任一边）。在这个分区退出之后，该基准就处于数列的中间位置。这个称为分区（partition）操作；
+          重新排序数列，所有元素比基准值小的摆放在基准前面，所有元素比基准值大的摆在基准的后面（相同的数可以到任一边）。在这个分区退出之后，该基准就处于数列的中间位置。这个称为分区（partition）操作；
 
-    递归地（recursive）把小于基准值元素的子数列和大于基准值元素的子数列排序。
+          递归地（recursive）把小于基准值元素的子数列和大于基准值元素的子数列排序。
 
 \end{enumerate}
 

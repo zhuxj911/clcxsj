@@ -2,53 +2,36 @@
 
 %\chapter{测量基础函数设计}
 
-本节我们将利用已学的静态类与静态函数知识编写一些测量程序设计中常用的函数，用于以后的测绘算法之中。
+本节我们将利用已学的静态类与静态函数知识编写一些测量程序设计中常用的函数，以用于后续的测绘软件编写与设计。
 
 \subsection{C\# 知识点}
 
-C\# 是纯面向对象语言，也就是说所有的常量与方法都需要以类$class$为载体。
+C\# 是纯面向对象语言，所有的常量与方法都需要以类$class$为载体。
 
 C\#中的类分为实例类与静态类。实例类需要用关键字 new 将类实例化，在一些与类的实例成员操作无关的
-环境中，对类进行实例化的操作显得冗余，而静态类与类的静态成员可以很好的解决这个问题。 
+环境中，对类进行实例化的操作显得冗余，而静态类与类的静态成员可以很好的简化这个问题。 
 
-如果我们分析 \cs 系统中的 System.Math 类，我们会发现常用的一些数学函数都被设计成了静态函数。因此，我们也如同System.Math类一样，
-也将我们常用的测绘算法也用类名$SMath(SurveyMath)$命名，保存在$SMath.cs$文件中，
-将常用的一些常量及方法定义也定义为静态成员。
+我们分析 \cs 系统中的 $System.Math$ 类，会发现常用的一些数学函数都被设计成了静态函数。因此我们也模仿 $System.Math$ 类设计，
+将我们常用的测绘算法与常量保存在$SurMath.cs$文件中，并命名类名为$SurMath(Survey + Math)$，用 $SurMath.XXX$形式引用。
 
+我们新建一类库（class library），项目命名为SurApp.SurMath。在项目中新建一文件SurMath.cs，在文件SurMath.cs中编写静态类 SurMath，
 示例代码如下所示：
+
 \begin{lstlisting}
 ﻿using System;
 
 namespace ZXY;
 
-public static class SMath
+public static class SurMath
 {
     public const double PI = Math.PI;
     public const double TWOPI = 2 * Math.PI;
     public const double HALFPI = 0.5 * Math.PI;
     public const double TORADIANS = PI / 180.0;
-    public const double TODEGREE = 180.0 / PI;
-    public const double TOSECOND = 180.0 * 3600.0 / PI;
-    
-    /// <summary>
-    /// 将60进制的度分秒角度转换为弧度
-    /// </summary>
-    /// <param name="dmsAngle">形如ddd.mmss的60进制的角度</param>
-    /// <returns>弧度值</returns>
-    public static double DmsToRadians(double dmsAngle)
-    {
-    	......
-    }
-    
-    /// <summary>
-    /// 将弧度转换为60进制的度分秒角度
-    /// </summary>
-    /// <param name="radAngle">单位为弧度的角度</param>
-    /// <returns>60进制的角度</returns>
-    public static double RadiansToDms(double radAngle)
-    {
-    	......
-    }
+    public const double TODEGREES = 180.0 / PI;
+    public const double TOSECONDS = 180.0 * 3600.0 / PI;
+
+    ........................................................................
 }
 
 \end{lstlisting}
@@ -60,16 +43,17 @@ public static class SMath
 
 \subsection{测绘常用算法设计}
 
+
 \subsubsection{测绘算法中的常量}
 角度、距离与高差是测量工程师工作的基本对象，度分秒形式的角度与弧度之间的转换是我们进行测量数据处理的基础。
-为了方便的进行测量数据处理，我们首先需要定义一些常量，如上述示例代码所示，其中：
+为了方便的进行测量数据处理，我们首先定义一些常量，如上述示例代码所示，其中：
 
-$PI$ 表示 $\pi$, $TWOPI$ 表示 $2\pi$;
-$TODEGREE$ 表示 $180/\pi$，用于将弧度化为度；
-$TORADIANS$ 表示 $\pi/180$ ，用于将度化为弧度；
-$TOSECOND$ 表示 $180*3600/\pi$，用于将弧度转换为秒。
+$PI$ 表示 $\pi$, $TWOPI$ 表示 $2\pi$，$HALFPI$ 表示 $\pi/2$;
+$TODEGREES$ 表示 $*180/\pi$，用于将弧度化为度；
+$TORADIANS$ 表示 $*\pi/180$ ，用于将度化为弧度；
+$TOSECONDS$ 表示 $*180*3600/\pi$，用于将弧度转换为秒。
 
-在静态类SMath中我们采用常量const的形式定义了$\pi, 2\pi$等常用的数值，在 \cs 中 const类型的数据总是
+在静态类SurMath中我们采用常量const的形式定义了$\pi, 2\pi$等常用的数值，在 \cs 中 const类型的数据总是
 静态的(static)，而且是不需要static修饰符的。另外需注意，const类型的数据在声明时必须进行初始化，且其值
 必须在编译时就能确定计算出。
 
@@ -85,21 +69,21 @@ $TOSECOND$ 表示 $180*3600/\pi$，用于将弧度转换为秒。
 角度化弧度函数的逻辑非常简单，许多测量编程人员将其写成如下的形式：
 
 \begin{lstlisting}
-public static double DMStoRAD(double dmsAngle)
+public static double DmsToRadians(double dmsAngle)
 {
    int d = (int)dmsAngle;
    dmsAngle = (dmsAngle - d) * 100.0;
    int m = (int)dmsAngle;
    double s = (dmsAngle - m) * 100.0;
-   return (d + m / 60.0 + s / 3600.0) * TORAD;
+   return (d + m / 60.0 + s / 3600.0) * TORADIANS;
 }
 \end{lstlisting}
 
-但由于计算机中浮点数的表示方法的原因，以上函数并不能精确的将度分秒的角度转换为弧度。
+但由于计算机中浮点数的表示方法（IEEE754标准）的原因，以上函数设计并不能精确的将度分秒形式的角度转换为弧度。
 
- 如角值为$1\degree 40'00''$，以1.4000浮点数输入，计算机将表示为1.3999999999999999的形式。
+ 如角值为$1\degree 40'00''$，以1.4000浮点数输入，计算机将表示为1.39999999999的形式。
  这在计算机中并没有什么错误，但以上函数在提取角度的分秒时，提取到的m值为39，提取到的s值为
- 99.999999999999,即我们提取到的角度为$1\degree 39'100''$，有 $40''$ 的角度误差，显然这是我们测绘工程人员不能接受的。
+ 99.999999999999,即我们提取到的角度为$1\degree 39'100''$，有 $40''$ 的角度误差，显然这是测绘工程人员不能接受的误差。
  
  有的软件设计人员在软件中发现这个问题后的处理的办法是让用户在角度后加减一秒，进行规避这种误差，显然，
  将软件人员的责任推给用户是极其不合适和不负责任的。还有许多的书籍中介绍了许多五花八门的处理方法，但奏效的小，
@@ -109,7 +93,7 @@ public static double DMStoRAD(double dmsAngle)
  我们采用先将度分秒角度值提取为整数，然后再提取度分秒的运算方式进行计算，相应代码如下。
  
 \begin{lstlisting}
-public static double DMStoRAD(double dmsAngle)
+public static double DmsToRadians(double dmsAngle)
 {
     dmsAngle *= 10000; 
     int angle = (int)dmsAngle;
@@ -121,15 +105,61 @@ public static double DMStoRAD(double dmsAngle)
 }
 \end{lstlisting}
 
-首先将浮点形式的六十进制角度值乘以10000，如$1\degree 40'00''$表示为
-13999.999999999999的形式，然后将其四舍五入取整到整秒，其值为14000。
-再利用整数整除的精确算法将度(d)与分(m)提取出来。为了保持秒值的有效精度，
-我们用精度无损失的dmsAngle值减去d与m的值提取出秒值(s)。 这样既可以正确提取出度
-与分值，又可以保证秒值的有效精度。算法虽然简单，但确实需要保证这两个方面的需求。
+比如表示$1\degree 40'00''$的1.4，首先将浮点形式的六十进制角度值乘以10000（以秒为单位，秒本身就为浮点数），$1.4*10000$的结果不会表达为13999.999999999999的形式，
+应是准确的14000.000，再将其转换为整数14000，利用整数整除的精确算法将度(d)与分(m)提取出来。
+为了保持秒值的有效精度，用精度无损失的dmsAngle值减去d与m的值提取出秒值(s)。
+ 这样既可以正确提取出度与分值，又可以保证秒值的有效精度。
+算法虽然简单，但确实保证了准确度与精度这两个方面的要求。
 
- 以上算法对于负的角度值的转换同样有效。
+ 经分析，以上算法对于负的角度值的转换同样有效。
 
- 考察精度（秒之后五位小数）是否足够：$39\degree 52'0.71672''$
+ 考察精度，如秒之后五位小数$39\degree 52'0.71672''$，同样满足精度要求。
+
+
+
+
+\subsubsection{对DmsToRadians函数进行单元测试}
+
+DmsToRadians函数是测量算法中的基础函数，必须保证其正确性，必须对其正确性进行测试。
+
+测试算法最直接的方法就是目视观察比对，但随着算法的增加与优化、修改等，目视观察比对方法显然不能满足需求。
+我们需要引入单元测试(UnitTest)，让算法的编写者首先对自己的算法进行测试，保证算法的正确性。
+
+新建一测试项目，命名为SurApp.TestSurMath， 测试架构采用xUnit，在项目中添加对项目SurApp.SurMath项目的引用。
+在项目中新建一文件UnitTestSurMath.cs，在文件中编写测试代码。
+
+\begin{lstlisting}
+using Moq;
+using ZXY;
+
+namespace UnitTestSurMath;
+
+public class UnitTestSurMath
+{
+    [Fact]
+    public void TestDmsToRadians()
+    {
+        var r = SurMath.DmsToRadians(101.02201);
+        Assert.Equal(1.76346176848151, r, 1e-14);
+
+        r = SurMath.DmsToRadians(-101.02201);
+        Assert.Equal(-1.76346176848151, r, 1e-14);
+
+        r = SurMath.DmsToRadians(1.4000);
+        Assert.Equal(0.0290888208665722, r, 1e-14);
+
+        r = SurMath.DmsToRadians(-1.4000);
+        Assert.Equal(-0.0290888208665722, r, 1e-14);
+
+        r = SurMath.DmsToRadians(1.40001);
+        Assert.Equal(0.02908930568025330, r, 1e-14);
+
+        r = SurMath.DmsToRadians(-1.40001);
+        Assert.Equal(-0.02908930568025330, r, 1e-14);
+    }
+\end{lstlisting}
+
+
 
 
 \subsubsection{弧度函数化六十进制度分秒}

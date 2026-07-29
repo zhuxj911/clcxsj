@@ -1,0 +1,129 @@
+% latex 中文测试文档
+
+\documentclass{article}
+\usepackage{ctex}
+
+\usepackage{graphicx} % 插图片
+
+\usepackage{amsmath}  % 数学公式拓展
+\usepackage{amssymb}
+
+\usepackage{float}    % 浮动体控制
+
+%% \usepackage{listings} % 插入代码，不过据说 minted 的效果更好一些
+%% \usepackage{minted}
+
+\usepackage{fontspec}
+
+\usepackage{listings}
+\usepackage{xcolor}
+\setmonofont{Fira Code}
+% 定义代码块的全局样式
+% Define colors for syntax highlighting
+\definecolor{bluekeywords}{rgb}{0.13,0.13,1}
+\definecolor{greencomments}{rgb}{0,0.5,0}
+\definecolor{stringstyle}{rgb}{0.63,0.13,0.94}
+\lstset{
+    language={[Sharp]C},                 % Set language to C#
+    captionpos=b,                        % Put captions at the bottom
+    numbers=left,                        % Line numbers on the left
+    numberstyle=\tiny\color{gray},       % Line number styling
+    keywordstyle=\color{bluekeywords}\bfseries,
+    commentstyle=\color{greencomments}\itshape,
+    stringstyle=\color{stringstyle},
+    basicstyle=\ttfamily\small,          % Use monospace font
+    breaklines=true,                     % Automatic line wrapping
+    showstringspaces=false               % Do not show spaces inside strings
+}
+
+% 自定义中文字体命令
+% 在Ubuntu中，最后的名字应与字体库中的名字一致，否则会报错
+\setCJKfamilyfont{song}{SimSun}    % 宋体
+\setCJKfamilyfont{fsong}{FangSong}  % 仿宋
+\setCJKfamilyfont{hei}{SimHei}     % 黑体
+\setCJKfamilyfont{kai}{KaiTi}     % 楷体
+\setCJKfamilyfont{you}{YouYuan}     % 幼圆
+\setCJKfamilyfont{li}{LiSu}     % 隶书
+
+\setCJKfamilyfont{yahei}{Microsoft YaHei}     % 微软雅黑
+
+% 声明快捷命令
+\newcommand{\song}{\CJKfamily{song}}
+\newcommand{\fsong}{\CJKfamily{fsong}}
+\newcommand{\hei}{\CJKfamily{hei}}
+\newcommand{\kai}{\CJKfamily{kai}}
+\newcommand{\you}{\CJKfamily{you}}
+\newcommand{\li}{\CJKfamily{li}}
+
+\newcommand{\yahei}{\CJKfamily{yahei}}
+
+\setCJKmainfont{Microsoft YaHei} % 设置正文默认中文字体为微软雅黑
+
+
+
+\begin{document}
+
+\song 这段文字是宋体
+
+\fsong 这段文字是仿宋体
+
+\hei 这段文字是黑体
+
+\kai 这段文字是楷体
+
+\you 这段文字是幼圆体
+
+\li 这段文字是隶书体
+
+\yahei  ～～～～～～～微软雅黑～～～～～～～ 
+
+\textbf 这是黑体加粗
+
+\textbf 加粗
+
+\textit  意大利斜体
+
+\textsl  slanted斜体
+
+\textsf  无衬线
+
+\texttt  等宽
+
+\texttt 0.123456789abcdefghijklmnopqrstuvwxyz
+
+
+\noindent 我是全局字体，我使用的是宋体
+
+\kaishu 我是ctex已定义好的字体，我使用的楷体
+
+\heiti 我是ctex已定义好的字体，我使用的黑体
+
+\fangsong 我是ctex已定义好的字体，我使用的仿宋
+
+% \lisu 我是ctex已定义好的字体，我使用的隶书
+
+% \youyuan 我是ctex已定义好的字体，我使用的幼圆
+
+
+Hello, Ubuntu 中文之 \LaTeX 测试！
+
+
+\begin{lstlisting}[language=Python]
+def hello_world():
+    print("Hello, LaTeX!")
+\end{lstlisting}
+
+\begin{lstlisting}
+using System;
+class Test
+{
+    static void Main()
+    {
+        int i = 123;
+        object o = i;      // Boxing line 装箱
+        int j = (int)o;    // Unboxing    拆箱
+    }
+}
+\end{lstlisting}
+
+\end{document}

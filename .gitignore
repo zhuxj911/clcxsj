@@ -11,6 +11,7 @@
 *.ind
 *.xdv
 *.vs/
+*.synctex
 bin/
 obj/
 x64/

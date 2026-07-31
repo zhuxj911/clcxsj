@@ -149,16 +149,9 @@ Point p2 = p1; // p2 引用 p1 所指向的对象
 值类型的值则通过对其执行装箱和拆箱操作按对象处理。下面的示例将 int 值转换为 object，然后又转换回 int。
 
 \begin{lstlisting}
-using System;
-class Test
-{
-    static void Main()
-    {
-        int i = 123;
-        object o = i;      // Boxing
-        int j = (int)o;    // Unboxing
-    }
-}
+int i = 123;
+object o = i;      // Boxing
+int j = (int)o;    // Unboxing
 \end{lstlisting}
 
 当将值类型的值转换为类 object 时，将分配一个对象实例（也称为“箱子”）以包含该值，
@@ -259,7 +252,7 @@ class Test
 \cs 中常见的操作句有声明变量、赋值、调用方法、循环访问集合、条件判断等，
 相应的语句有声明语句、表达式语句、循环语句、选择语句等。
 语句可以是以分号结尾的单个代码行，或是块中的一系列单行语句。
-语句块在大括号 \{\} 中，可以嵌套。
+语句块在大括号 \verb|{ }| 中，可以嵌套。
 
 具体的语句类型如下所示：
 
@@ -290,15 +283,15 @@ int b = a ?? -1; //如果a为null, 则 b 为 -1
 Console.WriteLine(b);  // output: -1
 \end{lstlisting}
 
-          \verb|?.Method(...)| 表示如果左值不为null，则执行相应的调用操作，如下代码所示：
+          \verb|?.Method(...)| 表示如果左值不为null，则执行 $ ?. $ 后相应的操作，如下代码所示：
 
           \begin{lstlisting}
 string? str1 = null;
-int? length1 = str1?.Length; // str1为null, 则length1为null
+int? length1 = str1?.Length; // str1 为 null, 则 length1 为null
 Console.WriteLine(length1);  // output: null
 
 string? str2 = "Hello, World!";
-int? length2 = str2?.Length; // str2不为null, 则length2为13
+int? length2 = str2?.Length; // str2 不为 null, 则 length2 为 13
 Console.WriteLine(length2);  // output: 13
 \end{lstlisting}
 
@@ -309,24 +302,46 @@ Console.WriteLine(length2);  // output: 13
           \cs 中常用foreach语句进行循环，示例代码如下:
 
           \begin{lstlisting}
-static void Main(string[] args)
+class Program
 {
-    foreach (string s in args)
+    static void Main(string[] args)
     {
-        Console.WriteLine(s);
+        foreach (string s in args)
+        {
+            Console.WriteLine(s);
+        }
     }
 }
 \end{lstlisting}
+
+          假设编译出的程序名为Demo，在命令行中输入 \verb|Demo.exe Hello World of C#| ，则输出结果为：
+          \begin{verbatim}
+Hello
+World
+of
+C#
+\end{verbatim}
+
+          第3行代码中的 args 表示命令行中以空格分隔的参数数组。
 
     \item 跳转语句 (jump statement)
 
           用于转移控制，常用语句有 break、continue、goto、throw、return 和 yield 语句。
 
+          break 常表示中断当前的循环或 switch case 分支；
+          continue 表示继续从头开始循环， continue 语句只能用于循环语句中；
+          goto 表示跳转到指定标签处执行， goto 语句与跳转标签只能用于同一方法中，不能跨方法跳转；
+          throw 表示抛出异常，return 表示返回方法的调用处，yield 表示返回迭代器的下一个元素。
+
+          这些语句之后的语句不能被执行。
+
     \item 异常捕捉
 
-          try...catch 语句用于捕获在块的执行期间发生的异常，try...finally 语句用于指定终止代码，不管是否发生异常，该代码都始终要执行。
+          \verb|try...catch...finally| 语句用于捕获在块的执行期间发生的异常，
+          finally 语句用于指定终止代码，不管是否发生异常，该代码都始终要执行。
 
           \begin{lstlisting}
+// x/y 在y==0 时可能会抛出异常
 static double Divide(double x, double y)
 {
     if (y == 0) throw new DivideByZeroException();
@@ -335,6 +350,7 @@ static double Divide(double x, double y)
 
 static void Main(string[] args)
 {
+    //使用 try...catch...finally 捕获异常  
     try
     {
         if (args.Length != 2)
@@ -356,47 +372,6 @@ static void Main(string[] args)
 }
 \end{lstlisting}
 
-    \item checked 语句和 unchecked 语句
-
-          用于控制整型算术运算和转换的溢出检查上下文。
-
-          \begin{lstlisting}
-static void Main()
-{
-    int i = int.MaxValue;
-    checked
-    {
-        Console.WriteLine(i + 1);       // Exception
-    }
-    unchecked
-    {
-        Console.WriteLine(i + 1);       // Overflow
-    }
-}
-\end{lstlisting}
-
-    \item lock 语句
-
-          用于获取某个给定对象的互斥锁，执行一个语句，然后释放该锁。
-
-          \begin{lstlisting}
-class Account
-{
-    decimal balance;
-    public void Withdraw(decimal amount)
-    {
-        lock (this)
-        {
-            if (amount > balance)
-            {
-                throw new Exception("Insufficient funds");
-            }
-            balance -= amount;
-        }
-    }
-}
-\end{lstlisting}
-
     \item using 语句
 
           用于获得一个资源，执行一个语句，然后释放该资源。
@@ -413,14 +388,220 @@ static void Main()
 }
 \end{lstlisting}
 
+          在较新的语法中，上面代码可写成如下形式，从而减少 \verb|{ }|的嵌套层次。
+
+          \begin{lstlisting}
+static void Main()
+{
+    using TextWriter w = File.CreateText("test.txt");
+    w.WriteLine("Line one");
+    w.WriteLine("Line two");
+    w.WriteLine("Line three");
+}
+\end{lstlisting}
+
+    \item 其他语句
+
+          checked 语句和 unchecked 语句，用于控制整型算术运算和转换的溢出检查上下文。
+
+          lock 语句用于获取某个给定对象的互斥锁，执行一个语句，然后释放该锁。
+
+          还有其它一些语句，在我们的程序设计中不太常用，在此不做深入探讨。
+
 \end{itemize}
 
 
-\subsection{与模式匹配}
+\subsection{模式匹配(Pattern Matching)}
 
+模式匹配是 \cs 语言中比较特别的语法，许多现代程序设计语言也支持模式匹配，
+模式匹配使得编程代码更加与自然语言接近，让代码更加友好、可读，
+已成为现代编程语言的强大核心特性。
 
+模式匹配也是 \cs 的强大语言特性，是一种测试表达式是否具有特定特征的方法，
+能够测试表达式的类型、值、属性或结构并在匹配时直接解构或执行某些功能。
 
+\cs 的模式匹配主要包含 is表达式、switch表达式 和 各种内置模式。
+is表达式 支持通过模式匹配来测试表达式，并根据测试结果有条件声明一个新的变量。
+switch表达式 允许根据表达式的首次匹配模式执行操作。 这两个表达式支持丰富的模式词汇。
 
+\begin{itemize}
+    \item Null 检查(is表达式)
+
+          模式匹配最常见的方案之一是确保值不是 null。
+
+          \begin{lstlisting}
+int? maybe = 12;
+
+if (maybe is int number) // is
+{
+    Console.WriteLine($"The nullable int 'maybe' has the value {number}");
+}
+else
+{
+    Console.WriteLine("The nullable int 'maybe' doesn't hold a value");
+}
+\end{lstlisting}
+
+          上述代码是声明模式，用于测试变量类型并将其分配给新变量。
+
+          \begin{lstlisting}
+string? message = ReadMessageOrDefault();
+
+if (message is not null) // is not
+{
+    Console.WriteLine(message);
+}
+\end{lstlisting}
+
+          上述代码使用常数模式将变量与之进行比较， not 为一种逻辑模式，在否定模式不匹配时与该模式匹配。
+
+    \item 类型测试(is表达式)
+
+          模式匹配的另一种常见用途是测试变量是否与给定类型匹配。
+
+          \begin{lstlisting}
+public static T MidPoint<T>(IEnumerable<T> sequence)
+{
+    if (sequence is IList<T> list)
+    {
+        return list[list.Count / 2];
+    }
+    else if (sequence is null)
+    {
+        throw new ArgumentNullException(nameof(sequence), "Sequence can't be null.");
+    }
+    else
+    {
+        int halfLength = sequence.Count() / 2 - 1;
+        if (halfLength < 0) halfLength = 0;
+        return sequence.Skip(halfLength).First();
+    }
+}
+\end{lstlisting}
+
+    \item 比较离散值(switch表达式)
+          \begin{lstlisting}
+public State PerformOperation(Operation command) =>
+   command switch
+   {
+       Operation.SystemTest => RunDiagnostics(),
+       Operation.Start => StartSystem(),
+       Operation.Stop => StopSystem(),
+       Operation.Reset => ResetToReady(),
+       _ => throw new ArgumentException("Invalid enum value for command", nameof(command)),
+   };
+\end{lstlisting}
+
+          第8行代码中的 \_ 为弃元模式，处理值与定义的 enum 值之一不匹配的任何错误条件。
+
+          可用数值常量、常量字符串值或 Span<char> 或 ReadOnlySpan<char> 代替枚举值集，
+          示例代码如下：
+          \begin{lstlisting}
+//public State PerformOperation(string command) =>
+public State PerformOperation(ReadOnlySpan<char> command) =>
+   command switch
+   {
+       "SystemTest" => RunDiagnostics(),
+       "Start" => StartSystem(),
+       "Stop" => StopSystem(),
+       "Reset" => ResetToReady(),
+       _ => throw new ArgumentException("Invalid string value for command", nameof(command)),
+   };
+\end{lstlisting}
+
+          Span<char> 表示连续字符集，ReadOnlySpan<char> 表示只读的连续字符集。
+
+    \item 关系模式
+
+          关系模式测试如何将数值与常量进行比较。以下代码基于华氏温度返回水源状态：
+
+          \begin{lstlisting}
+string WaterState(int tempInFahrenheit) =>
+    tempInFahrenheit switch
+    {
+        < 32 => "solid",
+        32 => "solid/liquid transition",
+        (> 32) and (< 212) => "liquid",
+        212 => "liquid / gas transition",
+        > 212 => "gas",
+    };
+\end{lstlisting}
+
+          上述代码中的 32°F 和 212°F为熔点和沸点值。
+
+    \item 多个输入
+
+          \begin{lstlisting}
+public record Order(int Items, decimal Cost); //订单项数、价值
+
+public decimal CalculateDiscount(Order order) => //折扣
+    order switch
+    {
+        { Items: > 10, Cost: > 1000.00m } => 0.10m,
+        { Items: > 5, Cost: > 500.00m } => 0.05m,
+        { Cost: > 250.00m } => 0.02m,
+        null => throw new ArgumentNullException(nameof(order), "Can't calculate discount on null order"),
+        var someObject => 0m,
+    };
+\end{lstlisting}
+
+          上面代码可以用位置模式简写成如下形式，其中表达式的属性已析构：
+
+          \begin{lstlisting}
+public record Order(int Items, decimal Cost); //订单数量、价值
+
+public decimal CalculateDiscount(Order order) =>
+    order switch
+    {
+        ( > 10,  > 1000.00m) => 0.10m,
+        ( > 5, > 50.00m) => 0.05m,
+        { Cost: > 250.00m } => 0.02m,
+        null => throw new ArgumentNullException(nameof(order), "Can't calculate discount on null order"),
+        var someObject => 0m,
+    };
+\end{lstlisting}
+
+          还可以将属性与 \verb|{ }| 匹配，\verb|{ }| 可与任何非 null 值匹配。
+
+    \item 列表模式
+
+          可以使用列表模式检查列表或数组中的元素。 列表模式提供了一种方法，将模式应用于序列的任何元素。
+          此外，还可以应用 弃元模式 \verb|(_)| 来匹配任何元素，或者应用 切片模式 来匹配零个或多个元素。
+
+          如有一包含银行交易信息的文本文件内容如下：
+
+          \begin{verbatim}
+04-01-2020, DEPOSIT,    Initial deposit,            2250.00
+04-15-2020, DEPOSIT,    Refund,                      125.65
+04-18-2020, DEPOSIT,    Paycheck,                    825.65
+04-22-2020, WITHDRAWAL, Debit,           Groceries,  255.73
+05-01-2020, WITHDRAWAL, #1102,           Rent, apt, 2100.00
+05-02-2020, INTEREST,                                  0.65
+05-07-2020, WITHDRAWAL, Debit,           Movies,      12.57
+04-15-2020, FEE,                                       5.55
+    \end{verbatim}
+
+          一个包含弃元模式、常量模式和var模式的列表模式用于捕获数值数据处理过程代码如下：
+
+          \begin{lstlisting}
+decimal balance = 0m;
+foreach (string[] transaction in ReadRecords())
+{
+    balance += transaction switch
+    {
+        [_, "DEPOSIT", _, var amount]     => decimal.Parse(amount),
+        [_, "WITHDRAWAL", .., var amount] => -decimal.Parse(amount),
+        [_, "INTEREST", var amount]       => decimal.Parse(amount),
+        [_, "FEE", var fee]               => -decimal.Parse(fee),
+        _                                 => throw new InvalidOperationException($"Record {string.Join(", ", transaction)} is not in the expected format!"),
+    };
+    Console.WriteLine($"Record: {string.Join(", ", transaction)}, New balance: {balance:C}");
+}
+\end{lstlisting}
+
+          \cs 模式匹配功能强大，更多有关高级用法请参考相应文档说明。
+
+\end{itemize}
 
 
 \section{\cs 中字符与字符串}
@@ -431,7 +612,8 @@ static void Main()
 \verb|'A'| 、 \verb|'中'| 、\verb|'\u4E2D'|等。
 
 \subsection{字符串(string)}
-字符串 string 是引用类型，string 是 System.String 的别名，字符串一般用双引号表示，内容为系列字符的只读集合。表示字符串的字符可以是 Unicode 字符集中的任何字符，如 \verb|"Hello"| 、\verb|"世界"| 等。
+字符串 string 是引用类型，string 是 System.String 的别名，字符串一般用双引号表示，内容为系列字符的只读集合。
+表示字符串的字符可以是任何 Unicode 字符，如 \verb|"Hello"| 、\verb|"世界"| 等。
 
 字符串定义如下：
 

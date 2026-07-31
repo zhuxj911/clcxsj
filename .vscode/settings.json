@@ -255,9 +255,4 @@
   "[latex]": {
     "editor.defaultFormatter": "James-Yu.latex-workshop"
   },
-  // 向 latexindent 传递 -l 参数，使其加载项目目录下的 .latexindent.yaml
-  "latex-workshop.formatting.latexindent.args": [
-    "-l",
-    "-w"
-  ],
 }

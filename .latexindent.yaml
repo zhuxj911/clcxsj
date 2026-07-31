@@ -1,0 +1,38 @@
+# 推荐将此文件保存为 .latexindent.yaml，放在你书籍项目的根目录下
+# 它会自动被 latexindent -l 命令识别
+
+# 1. 缩进设置：使用 4 个空格缩进，看起来更清爽
+# 更多关于缩进规则的细节，可以参考文档[citation:11]
+defaultIndent: "    "
+
+# 2. 环境与命令设置：确保 \chapter, \section 等章节命令后的内容缩进
+# 详细的环境配置可以参考默认设置[citation:1]
+indentAfterHeadings:
+  chapter: 1
+  section: 1
+  subsection: 1
+  subsubsection: 1
+  lstlisting: 1
+
+
+# 3. 对齐设置：让表格和数组环境按 & 符号对齐
+lookForAlignDelims:
+  tabular: 1
+  array: 1
+  # 如果你的书中有复杂的数学矩阵，可以开启下面这些
+  matrix: 1
+  align: 1
+  aligned: 1
+
+# 4. 清理设置：在处理后自动移除行尾多余的空格
+removeTrailingWhitespace:
+  afterProcessing: 1
+
+# 5. 折行设置（可选）：如果你希望自动调整过长的行，可开启此功能
+# 在Zed编辑器的配置中也有类似用法[citation:2]
+modifyLineBreaks: 
+  # 可以添加具体的折行规则
+
+environments:
+    lstlisting:
+        bodyIndent: 0

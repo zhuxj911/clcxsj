@@ -1,0 +1,233 @@
+{
+  // LaTex配置
+  "latex-workshop.latex.tools": [
+    {
+      "name": "xelatex",
+      "command": "/usr/local/texlive/2026/bin/x86_64-linux/xelatex",
+      "args": [
+        "-synctex=1", //-synctex=1（用于正向/反向同步）
+        "-interaction=nonstopmode", //编译出错时不中断，继续执行
+        "-file-line-error",
+        "%DOC%"
+      ],
+      "env": {}
+    },
+    {
+      "name": "lualatexmk",
+      "command": "/usr/local/texlive/2026/bin/x86_64-linux/latexmk",
+      "args": [
+        "-synctex=1", //-synctex=1（用于正向/反向同步）
+        "-interaction=nonstopmode", //编译出错时不中断，继续执行
+        "-file-line-error",
+        "-lualatex",
+        "%DOC%"
+      ],
+      "env": {}
+    },
+    {
+      "name": "bibtex",
+      "command": "bibtex",
+      "args": [
+        "%DOCFILE%"
+      ],
+      "env": {}
+    },
+    {
+      "name": "pdflatex",
+      "command": "/usr/local/texlive/2026/bin/x86_64-linux/pdflatex",
+      "args": [
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "%DOC%"
+      ],
+      "env": {}
+    },
+    {
+      "name": "latexmk",
+      "command": "/usr/local/texlive/2026/bin/x86_64-linux/latexmk",
+      "args": [
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "-pdf",
+        "%DOC%"
+      ],
+      "env": {}
+    },
+    {
+      "name": "xelatexmk",
+      "command": "/usr/local/texlive/2026/bin/x86_64-linux/latexmk",
+      "args": [
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "-xelatex",
+        "%DOC%"
+      ],
+      "env": {}
+    },
+    {
+      "name": "latexmk_rconly",
+      "command": "latexmk",
+      "args": [
+        "%DOC%"
+      ],
+      "env": {}
+    },
+    {
+      "name": "rnw2tex",
+      "command": "Rscript",
+      "args": [
+        "-e",
+        "knitr::opts_knit$set(concordance = TRUE); knitr::knit('%DOCFILE_EXT%')"
+      ],
+      "env": {}
+    },
+    {
+      "name": "jnw2tex",
+      "command": "julia",
+      "args": [
+        "-e",
+        "using Weave; weave(\"%DOC_EXT%\", doctype=\"tex\")"
+      ],
+      "env": {}
+    },
+    {
+      "name": "jnw2texminted",
+      "command": "julia",
+      "args": [
+        "-e",
+        "using Weave; weave(\"%DOC_EXT%\", doctype=\"texminted\")"
+      ],
+      "env": {}
+    },
+    {
+      "name": "pnw2tex",
+      "command": "pweave",
+      "args": [
+        "-f",
+        "tex",
+        "%DOC_EXT%"
+      ],
+      "env": {}
+    },
+    {
+      "name": "pnw2texminted",
+      "command": "pweave",
+      "args": [
+        "-f",
+        "texminted",
+        "%DOC_EXT%"
+      ],
+      "env": {}
+    },
+    {
+      "name": "tectonic",
+      "command": "tectonic",
+      "args": [
+        "--synctex",
+        "--keep-logs",
+        "--print",
+        "%DOC%.tex"
+      ],
+      "env": {}
+    }
+  ],
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "xelatex",
+      "tools": [
+        "xelatex"
+      ]
+    },
+    {
+      "name": "xelatex -> bibtex -> xelatex * 2",
+      "tools": [
+        "xelatex",
+        "bibtex",
+        "xelatex",
+        "xelatex"
+      ]
+    },
+    {
+      "name": "pdflatex",
+      "tools": [
+        "pdflatex"
+      ]
+    },
+    {
+      "name": "bibtex",
+      "tools": [
+        "bibtex"
+      ]
+    },
+    {
+      "name": "latexmk",
+      "tools": [
+        "latexmk"
+      ]
+    }
+  ],
+  // 文件清理
+  "latex-workshop.latex.clean.fileTypes": [
+    "*.aux",
+    "*.bbl",
+    "*.blg",
+    "*.idx",
+    "*.ind",
+    "*.lof",
+    "*.lot",
+    "*.out",
+    "*.toc",
+    "*.acn",
+    "*.acr",
+    "*.alg",
+    "*.glg",
+    "*.glo",
+    "*.gls",
+    "*.ist",
+    "*.fls",
+    "*.log",
+    "*.fdb_latexmk"
+  ],
+  // 右键菜单
+  "latex-workshop.showContextMenu": true,
+  // 从使用的包中自动补全命令和环境
+  "latex-workshop.intellisense.package.enabled": true,
+  // 编译出错时设置是否弹出气泡设置
+  "latex-workshop.message.error.show": true,
+  "latex-workshop.message.warning.show": true,
+  //默认使用上次使用的编译方法.
+  //这个是非常好用的特别是对于需要使用xelatex编译中文文档和pdflatex编译英文文档的用户
+  "latex-workshop.latex.recipe.default": "lastUsed",
+  // 编译工具和命令（Linux 路径）
+  "latex-workshop.latex.clean.method": "glob",
+  // "latex.linter.enabled": false,
+  //tab:使用VSCode自带的pdf阅读器
+  "latex-workshop.view.pdf.viewer": "tab",
+  //每次保存 .tex 文件时就会自动编译
+  "latex-workshop.latex.autoBuild.run": "onSave",
+  //编译失败时自动清理辅助文件，避免干扰调试
+  "latex-workshop.latex.autoClean.run": "onFailed",
+  "latex-workshop.synctex.afterBuild.enabled": true,
+  // 用于反向同步的内部查看器的键绑定
+  "latex-workshop.view.pdf.internal.synctex.keybinding": "double-click",
+  //如果魔法注释定义了TeX命令，则使用魔法注释而不是默认配方。魔法注释： 
+  // % !TeX program = xelatex
+  // 把上面的魔法注释放在tex文件的第一行，那么这个tex文件就会使用xelatex编译，除非你手动更改编译方法
+  "latex-workshop.latex.build.enableMagicComments": false,
+  // 定义 latex 格式化程序
+  // "latex-workshop.formatting.latex": "tex-fmt",
+  // "latex-workshop.formatting.tex-fmt.args": [
+  //   "--nowrap",
+  //   "--tabsize=4",
+  //   "--indent=4"
+  // ],
+  "latex-workshop.formatting.latex": "latexindent",
+  // // Linux 上的 latexindent 路径
+  "latex-workshop.formatting.latexindent.path": "/usr/local/texlive/2026/bin/x86_64-linux/latexindent",
+  "latex-workshop.bibtex-format.tab": "4 spaces",
+  "latex-workshop.bibtex-format.trailingComma": true,
+  "ltex.language": "zh-CN",
+}

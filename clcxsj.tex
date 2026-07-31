@@ -1,5 +1,7 @@
-%!TEX program = xelatex 
-\documentclass[UTF8]{ctexbook}
+\documentclass{book}
+
+\usepackage[fontset=none]{ctex}
+
 \usepackage{clcxsj}
 
 \makeindex
@@ -17,31 +19,31 @@
 \mainmatter
 
 %%C#开发环境 与 从C走向C\#
-\include{chapter/csenv/csenv}                  
+\include{chapter/csenv/csenv}
 
- %% C# 语法 分为基础语法与高级语法
-\include{chapter/csbasic/csbasic}               
+%% C# 语法 分为基础语法与高级语法
+\include{chapter/csbasic/csbasic}
 
- %% C# 面向对象基础
-\include{chapter/csobjectbasic/csobjectbasic} 
+%% C# 面向对象基础
+\include{chapter/csobjectbasic/csobjectbasic}
 %\include{chapter/surveybase/surveybase}  %% 测量基础函数
 
- %% C# 面向对象程序设计
-\include{chapter/csobject/csobject}       
+%% C# 面向对象程序设计
+\include{chapter/csobject/csobject}
 
 
- %% wpf UI 基础, 将wpf基础、wpf数据绑定、wpf数据验证合并到这一章中，并以坐标方位角计算程序作为例子
-\include{chapter/uibasic/uibasic}         
+%% wpf UI 基础, 将wpf基础、wpf数据绑定、wpf数据验证合并到这一章中，并以坐标方位角计算程序作为例子
+\include{chapter/uibasic/uibasic}
 
 
- %%高斯投影程序设计
+%%高斯投影程序设计
 \include{chapter/gaussproj/gaussproj}
 
 
 %\include{chapter/xytoxy/xytoxy}                          %%坐标转换程序设计
 %\include{chapter/connectingtraverse/connectingtraverse}  %%附合导线近似平差程序设计
 
- %%线路要素计算程序设计
+%%线路要素计算程序设计
 \include{chapter/route/route}
 
 \end{document}

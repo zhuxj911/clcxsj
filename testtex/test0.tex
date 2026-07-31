@@ -24,16 +24,16 @@
 \definecolor{greencomments}{rgb}{0,0.5,0}
 \definecolor{stringstyle}{rgb}{0.63,0.13,0.94}
 \lstset{
-    language={[Sharp]C},                 % Set language to C#
-    captionpos=b,                        % Put captions at the bottom
-    numbers=left,                        % Line numbers on the left
-    numberstyle=\tiny\color{gray},       % Line number styling
-    keywordstyle=\color{bluekeywords}\bfseries,
-    commentstyle=\color{greencomments}\itshape,
-    stringstyle=\color{stringstyle},
-    basicstyle=\ttfamily\small,          % Use monospace font
-    breaklines=true,                     % Automatic line wrapping
-    showstringspaces=false               % Do not show spaces inside strings
+  language={[Sharp]C},                 % Set language to C#
+  captionpos=b,                        % Put captions at the bottom
+  numbers=left,                        % Line numbers on the left
+  numberstyle=\tiny\color{gray},       % Line number styling
+  keywordstyle=\color{bluekeywords}\bfseries,
+  commentstyle=\color{greencomments}\itshape,
+  stringstyle=\color{stringstyle},
+  basicstyle=\ttfamily\small,          % Use monospace font
+  breaklines=true,                     % Automatic line wrapping
+  showstringspaces=false               % Do not show spaces inside strings
 }
 
 % 自定义中文字体命令
@@ -48,18 +48,16 @@
 \setCJKfamilyfont{yahei}{Microsoft YaHei}     % 微软雅黑
 
 % 声明快捷命令
-\newcommand{\song}{\CJKfamily{song}}
+                  \newcommand{\song}{\CJKfamily{song}}
 \newcommand{\fsong}{\CJKfamily{fsong}}
-\newcommand{\hei}{\CJKfamily{hei}}
+                            \newcommand{\hei}{\CJKfamily{hei}}
 \newcommand{\kai}{\CJKfamily{kai}}
-\newcommand{\you}{\CJKfamily{you}}
+                          \newcommand{\you}{\CJKfamily{you}}
 \newcommand{\li}{\CJKfamily{li}}
 
 \newcommand{\yahei}{\CJKfamily{yahei}}
 
-\setCJKmainfont{Microsoft YaHei} % 设置正文默认中文字体为微软雅黑
-
-
+               \setCJKmainfont{Microsoft YaHei} % 设置正文默认中文字体为微软雅黑
 
 \begin{document}
 
@@ -75,7 +73,7 @@
 
 \li 这段文字是隶书体
 
-\yahei  ～～～～～～～微软雅黑～～～～～～～ 
+\yahei  ～～～～～～～微软雅黑～～～～～～～
 
 \textbf 这是黑体加粗
 
@@ -91,7 +89,6 @@
 
 \texttt 0.123456789abcdefghijklmnopqrstuvwxyz
 
-
 \noindent 我是全局字体，我使用的是宋体
 
 \kaishu 我是ctex已定义好的字体，我使用的楷体
@@ -104,9 +101,7 @@
 
 % \youyuan 我是ctex已定义好的字体，我使用的幼圆
 
-
 Hello, Ubuntu 中文之 \LaTeX 测试！
-
 
 \begin{lstlisting}[language=Python]
 def hello_world():

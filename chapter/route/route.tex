@@ -40,48 +40,48 @@
 
 圆曲线的各个要素计算算法如下：
 
- 切线长：$T = R \cdot \tan (\alpha / 2)$
+切线长：$T = R \cdot \tan (\alpha / 2)$
 
- 曲线长：$L = R \cdot \alpha$
+曲线长：$L = R \cdot \alpha$
 
- 外矢距：$E=R \cdot (\sec (\alpha /2) - 1)$
+外矢距：$E=R \cdot (\sec (\alpha /2) - 1)$
 
- 切曲差：$q = 2T - L$
+切曲差：$q = 2T - L$
 
- \subsection{圆曲线上点的坐标计算算法分析}
+\subsection{圆曲线上点的坐标计算算法分析}
 
- 全站仪的坐标放样模式与 GPS RTK 可以十分方便的进行圆曲线上点的坐标放样。
+全站仪的坐标放样模式与 GPS RTK 可以十分方便地进行圆曲线上点的坐标放样。
 
- 尽管圆曲线的计算方法有很多，也比较简单，但为了与后边的缓和曲线计算方法相一致，
- 我们在此采用圆心角加半径再加坐标系转换法进行圆曲线上点的坐标计算。
+尽管圆曲线的计算方法有很多，也比较简单，但为了与后边的缓和曲线计算方法相一致，
+我们在此采用圆心角加半径再加坐标系转换法进行圆曲线上点的坐标计算。
 
- 如图\ref{fig:CircleRoute}所示，以ZY点为原点，以ZY至JD切线方向为x轴，
- 以ZY至O点方向为y轴建立ZY切线测量坐标系。从（a）与（b）两图可以看出
+如图\ref{fig:CircleRoute}所示，以ZY点为原点，以ZY至JD切线方向为x轴，
+以ZY至O点方向为y轴建立ZY切线测量坐标系。从（a）与（b）两图可以看出
 无论圆曲线是左偏还是右偏的，其坐标系是一致的。
- 在ZY切线坐标系中用极坐标法按如下公式可以计算出圆曲线上任意一点$l_i$的坐标。
+在ZY切线坐标系中用极坐标法按如下公式可以计算出圆曲线上任意一点$l_i$的坐标。
 
 圆曲线偏左：
 
 \begin{equation}
-\left .
-\begin{aligned}
-x_{i} &= R \sin \alpha_i   \\
-y_{i} &= -R(1- \cos \alpha_i)
-\end{aligned}
-\right \}
-\label{eq:ZYLeftXY}
+    \left .
+    \begin{aligned}
+        x_{i} & = R \sin \alpha_i      \\
+        y_{i} & = -R(1- \cos \alpha_i)
+    \end{aligned}
+    \right \}
+    \label{eq:ZYLeftXY}
 \end{equation}
 
 圆曲线偏右：
 
 \begin{equation}
-\left .
-\begin{aligned}
-x_{i} &= R \sin \alpha_i   \\
-y_{i} &= R(1- \cos \alpha_i)
-\end{aligned}
-\right \}
-\label{eq:ZYRightXY}
+    \left .
+    \begin{aligned}
+        x_{i} & = R \sin \alpha_i     \\
+        y_{i} & = R(1- \cos \alpha_i)
+    \end{aligned}
+    \right \}
+    \label{eq:ZYRightXY}
 \end{equation}
 
 式中：$\alpha_i = l_i / R,  \alpha_i \le \alpha $, $l_i$可用圆曲线上任意一点的里程桩号
@@ -114,13 +114,13 @@ $KNo_{YZ} = KNo_{QZ} + T/2$
 转换公式如下：
 
 \begin{equation}
-\left .
-\begin{aligned}
-x_{P} &= x_{ZY} + x'_P \cos \alpha - y'_P \sin \alpha  \\
-y_{P} &= y_{ZY} + x'_P \sin \alpha + y'_P \cos \alpha
-\end{aligned}
-\right \}
-\label{eq:routexytoxy}
+    \left .
+    \begin{aligned}
+        x_{P} & = x_{ZY} + x'_P \cos \alpha - y'_P \sin \alpha \\
+        y_{P} & = y_{ZY} + x'_P \sin \alpha + y'_P \cos \alpha
+    \end{aligned}
+    \right \}
+    \label{eq:routexytoxy}
 \end{equation}
 
 
@@ -129,12 +129,12 @@ y_{P} &= y_{ZY} + x'_P \sin \alpha + y'_P \cos \alpha
 由以上分析可知，线路计算中至少应该有点类 GPoint 和 线路类 CircleRoute 。
 
 \begin{enumerate}
-\item 程序中的点类GPoint
+    \item 程序中的点类GPoint
 
-线路上的GPoint 类应包含序号、里程桩号、X坐标、Y坐标、备注信息等内容。
-我们设计如下：
+          线路上的GPoint 类应包含序号、里程桩号、X坐标、Y坐标、备注信息等内容。
+          我们设计如下：
 
-\begin{lstlisting}[language=C]
+          \begin{lstlisting}[language=C]
 using System;
 namespace Route.models
 {
@@ -223,11 +223,11 @@ namespace Route.models
 }
 \end{lstlisting}
 
-在上面GPoint类中，由于点的里程桩号是double类型，而我们常用的里程桩号是
-``K5+200.00''这样的形式，因此我们在类GPoint中设计函数OutKNoInfo()
-将其转换输出，其代码如下所示：
+          在上面GPoint类中，由于点的里程桩号是double类型，而我们常用的里程桩号是
+          ``K5+200.00''这样的形式，因此我们在类GPoint中设计函数OutKNoInfo()
+          将其转换输出，其代码如下所示：
 
-\begin{lstlisting}[language=C]
+          \begin{lstlisting}[language=C]
 public class GPoint : NotificationObject
 {
     //......类中其它代码......
@@ -245,14 +245,14 @@ public class GPoint : NotificationObject
 }
 \end{lstlisting}
 
-以上代码的逻辑非常简单，double类型的里程除以1000，取出公里数，
-然后将不足整公里数的部分再取出，然后组合成形如``K5+200.00''这样的
-字符串输出。
+          以上代码的逻辑非常简单，double类型的里程除以1000，取出公里数，
+          然后将不足整公里数的部分再取出，然后组合成形如``K5+200.00''这样的
+          字符串输出。
 
-由于以上代码只涉及类中的 \_kno 字段，因此也可以写成如下的只读属性字段，
-调用会更加方便。
+          由于以上代码只涉及类中的 \_kno 字段，因此也可以写成如下的只读属性字段，
+          调用会更加方便。
 
-\begin{lstlisting}[language=C]
+          \begin{lstlisting}[language=C]
 public class GPoint : NotificationObject
 {
     //......类中其它代码......
@@ -271,12 +271,12 @@ public class GPoint : NotificationObject
 }
 \end{lstlisting}
 
-\item 程序中的圆曲线类CircleRoute
+    \item 程序中的圆曲线类CircleRoute
 
-圆曲线类中应包含偏转角$\alpha$、曲率半径R、切线长$T$等基本属性，
-还应包括JD点、ZY点、QZ点、YZ点等属性，设计代码如下：
+          圆曲线类中应包含偏转角$\alpha$、曲率半径R、切线长$T$等基本属性，
+          还应包括JD点、ZY点、QZ点、YZ点等属性，设计代码如下：
 
-\begin{lstlisting}[language=C]
+          \begin{lstlisting}[language=C]
 public class CircleRoute : NotificationObject
 {
     private double _alpha;
@@ -449,10 +449,10 @@ public class CircleRoute : NotificationObject
 }
 \end{lstlisting}
 
-在圆曲线计算时，由于左偏与右偏的计算是不完全相同的，在此设计一
-属性IsLeftRight用来标记。
+          在圆曲线计算时，由于左偏与右偏的计算是不完全相同的，在此设计一
+          属性IsLeftRight用来标记。
 
-为了存储计算后的点坐标，我们设计了一点集属性PointList。
+          为了存储计算后的点坐标，我们设计了一点集属性PointList。
 \end{enumerate}
 
 \subsection{ 任意桩号点的坐标计算 }
@@ -504,7 +504,7 @@ public void CalSinglePoint(double kno)
 
 第23、24行根据公式 \ref{eq:ZYRightXY} 计算圆曲线上各点在ZY坐标系
 中的各点坐标。如果圆曲线偏左，根据公式 \ref{eq:ZYLeftXY} 将其Y坐标乘以
- -1 即IsLeftRight的属性值即可。
+-1 即IsLeftRight的属性值即可。
 
 第26行计算出ZY点至JD点的坐标方位角，第27行根据公式\ref{eq:routexytoxy}将其
 转换到大地坐标系。
@@ -518,22 +518,22 @@ public void CalSinglePoint(double kno)
 如表\ref{tab:YRoute}所示。
 
 \begin{table}[htbp]
-\centering
-\caption{圆曲线计算示例数据表}
-\label{tab:YRoute}
-\begin{tabular}{clccl}
-\hline
-序号  &  里程     &     X    &   Y	  & 备注 \\
-\hline
-1    & K3+091.05 &  6821.35 & 5999.38 &  ZY \\
-2    & K3+100	 & 	6826.56 & 5606.66 &     \\
-3    & K3+120	 &  6836.15 & 5624.18 &     \\
-4    & K3+133.29 &  6840.85 & 5636.60 &  QZ \\
-5    & K3+140	 & 	6842.69 & 5643.06 &     \\
-6    & K3+160	 &  6846.02 & 5662.76 &     \\
-7    & K3+175.52 &  6846.31 & 5678.27 &  YZ \\
-\hline
-\end{tabular}
+    \centering
+    \caption{圆曲线计算示例数据表}
+    \label{tab:YRoute}
+    \begin{tabular}{clccl}
+        \hline
+        序号 & 里程        & X       & Y       & 备注 \\
+        \hline
+        1  & K3+091.05 & 6821.35 & 5999.38 & ZY \\
+        2  & K3+100    & 6826.56 & 5606.66 &    \\
+        3  & K3+120    & 6836.15 & 5624.18 &    \\
+        4  & K3+133.29 & 6840.85 & 5636.60 & QZ \\
+        5  & K3+140    & 6842.69 & 5643.06 &    \\
+        6  & K3+160    & 6846.02 & 5662.76 &    \\
+        7  & K3+175.52 & 6846.31 & 5678.27 & YZ \\
+        \hline
+    \end{tabular}
 \end{table}
 
 测试代码为：
@@ -572,7 +572,7 @@ route.CalSinglePoint(3175.52);
 
 \subsection{缓和曲线的数学模型}
 
- \begin{figure}[htbp]
+\begin{figure}[htbp]
     \centering
     \includegraphics[scale=0.6]{chapter/route/HY01.png}
     \caption{缓和曲线的定义}
@@ -595,138 +595,138 @@ route.CalSinglePoint(3175.52);
     \label{fig:HR03}
 \end{figure}
 
- 缓和曲线参数计算公式为：
+缓和曲线参数计算公式为：
 
- $$\beta_0 = \frac{l_0}{2R} $$
+$$\beta_0 = \frac{l_0}{2R} $$
 切垂距：
 $$m=\frac{l_0}{2} - \frac{l^3_0}{240R^2}$$
 内移距：
 $$p=\frac{l^2_0}{24R}$$
 
 
- 切线长：$$T = m+ (R+p) \cdot \tan \frac{\alpha}{2}$$
+切线长：$$T = m+ (R+p) \cdot \tan \frac{\alpha}{2}$$
 
- 曲线全长：$$L = R \cdot (\alpha-2\beta_0)  + 2l_0$$
+曲线全长：$$L = R \cdot (\alpha-2\beta_0)  + 2l_0$$
 
- 圆曲线长：$$L_C = R \cdot (\alpha-2\beta_0)$$
+圆曲线长：$$L_C = R \cdot (\alpha-2\beta_0)$$
 
- 外矢距：$$E=(R+p) \cdot (\sec \frac{\alpha}{2} - 1)$$
+外矢距：$$E=(R+p) \cdot (\sec \frac{\alpha}{2} - 1)$$
 
 \begin{enumerate}
 
-\item  缓和曲线在ZH切线直角坐标系中的坐标计算(ZH段)
+    \item  缓和曲线在ZH切线直角坐标系中的坐标计算(ZH段)
 
-以ZH为坐标系原点，ZH至JD方向为x轴，过ZH点垂直于ZH-JD方向为y轴
-建立坐标，如图\ref{fig:HY02}所示。则ZH部分缓和曲线上各点的坐标为：
+          以ZH为坐标系原点，ZH至JD方向为x轴，过ZH点垂直于ZH-JD方向为y轴
+          建立坐标，如图\ref{fig:HY02}所示。则ZH部分缓和曲线上各点的坐标为：
 
-\begin{equation}
-\left .
-\begin{aligned}
-x_i &= l_i - \frac{l^5_i}{40R^2 l^2_0} + \frac{l^9_i}{3456R^4 l^4_0}
-           - \frac{l^{13}_i}{599040R^6l^6_0} + ...  \\
-y_i &=  \frac{l^3_i}{6Rl_0} - \frac{l^7_i}{336R^3 l^3_0}
-    + \frac{l^{11}_i}{42240R^5l^5_0} -\frac{l^{15}_i}{9676800R^7l^7_0}+ ...
-\end{aligned}
-\right \}
-\label{eq:routeZHXY}
-\end{equation}
+          \begin{equation}
+              \left .
+              \begin{aligned}
+                  x_i & = l_i - \frac{l^5_i}{40R^2 l^2_0} + \frac{l^9_i}{3456R^4 l^4_0}
+                  - \frac{l^{13}_i}{599040R^6l^6_0} + ...                               \\
+                  y_i & =  \frac{l^3_i}{6Rl_0} - \frac{l^7_i}{336R^3 l^3_0}
+                  + \frac{l^{11}_i}{42240R^5l^5_0} -\frac{l^{15}_i}{9676800R^7l^7_0}+ ...
+              \end{aligned}
+              \right \}
+              \label{eq:routeZHXY}
+          \end{equation}
 
-以上公式在计算中取前两项或前三项即可。
+          以上公式在计算中取前两项或前三项即可。
 
-\item  缓圆点(HY)坐标计算公式为：
+    \item  缓圆点(HY)坐标计算公式为：
 
-将$l_i = l_0$代入公式\ref{eq:routeZHXY}中计算可得到下式：
-\begin{equation}
-\left . \begin{aligned}
-x_{HY} &= l_0 - \frac{l^3_0}{40R^2} + \frac{l^5_0}{3456R^4}
-          - \frac{l^{7}_0}{599040R^6} + ...  \\
-y_{HY} &=  \frac{l^2_0}{6R} - \frac{l^4_0}{336R^3}
-          + \frac{l^{6}_i}{42240R^5} -\frac{l^{8}_0}{9676800R^7}+ ...
-\end{aligned} \right \}
-\label{eq:routeHY}
-\end{equation}
+          将$l_i = l_0$代入公式\ref{eq:routeZHXY}中计算可得到下式：
+          \begin{equation}
+              \left . \begin{aligned}
+                  x_{HY} & = l_0 - \frac{l^3_0}{40R^2} + \frac{l^5_0}{3456R^4}
+                  - \frac{l^{7}_0}{599040R^6} + ...                            \\
+                  y_{HY} & =  \frac{l^2_0}{6R} - \frac{l^4_0}{336R^3}
+                  + \frac{l^{6}_i}{42240R^5} -\frac{l^{8}_0}{9676800R^7}+ ...
+              \end{aligned} \right \}
+              \label{eq:routeHY}
+          \end{equation}
 
-\item  圆曲线上点的坐标计算公式为：
+    \item  圆曲线上点的坐标计算公式为：
 
-\begin{equation}
-\left . \begin{aligned}
-x_{j} &= R \sin \beta_j + m \\
-y_{j} &= R(1- \cos \beta_j) +p
-\end{aligned} \right \}
-\label{eq:routeYQXY}
-\end{equation}
+          \begin{equation}
+              \left . \begin{aligned}
+                  x_{j} & = R \sin \beta_j + m    \\
+                  y_{j} & = R(1- \cos \beta_j) +p
+              \end{aligned} \right \}
+              \label{eq:routeYQXY}
+          \end{equation}
 
-式中：$\beta_i = \beta_0 + (l_i - l_0)/R$
+          式中：$\beta_i = \beta_0 + (l_i - l_0)/R$
 
-\item  缓和曲线在HZ切线直角坐标系中的坐标计算(HZ段)
+    \item  缓和曲线在HZ切线直角坐标系中的坐标计算(HZ段)
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=0.7]{chapter/route/RHY.pdf}
-    \caption{缓和曲线的HZ部分坐标计算}
-    \label{fig:RHY}
-\end{figure}
+          \begin{figure}[htbp]
+              \centering
+              \includegraphics[scale=0.7]{chapter/route/RHY.pdf}
+              \caption{缓和曲线的HZ部分坐标计算}
+              \label{fig:RHY}
+          \end{figure}
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=0.7]{chapter/route/LeftRHY.pdf}
-    \caption{左偏缓和曲线的HZ部分坐标计算}
-    \label{fig:LeftRHY}
-\end{figure}
+          \begin{figure}[htbp]
+              \centering
+              \includegraphics[scale=0.7]{chapter/route/LeftRHY.pdf}
+              \caption{左偏缓和曲线的HZ部分坐标计算}
+              \label{fig:LeftRHY}
+          \end{figure}
 
-如图\ref{fig:RHY}与如图\ref{fig:LeftRHY}所示建立以缓直点HZ为原点，过HZ至JD方向为x轴，
-过HZ点的缓和曲线切线为y轴的直角坐标系，计算另一半曲线任意一点的坐标$(x'_i, y'_i)$。
-然后，将坐标转换为以ZH点为原点的直角坐标系中。
+          如图\ref{fig:RHY}与如图\ref{fig:LeftRHY}所示建立以缓直点HZ为原点，过HZ至JD方向为x轴，
+          过HZ点的缓和曲线切线为y轴的直角坐标系，计算另一半曲线任意一点的坐标$(x'_i, y'_i)$。
+          然后，将坐标转换为以ZH点为原点的直角坐标系中。
 
-缓和曲线在HZ坐标系中的坐标可以继续使用公式 \ref{eq:routeZHXY} 计算，然后由图\ref{fig:RHY}
-可知将其转换为HZ坐标系中的坐标计算公式为：
+          缓和曲线在HZ坐标系中的坐标可以继续使用公式 \ref{eq:routeZHXY} 计算，然后由图\ref{fig:RHY}
+          可知将其转换为HZ坐标系中的坐标计算公式为：
 
-\begin{equation}
-\left . \begin{aligned}
-x'_i &= x_i  \\
-y'_i &= - y_i
-\end{aligned} \right \}
-\label{eq:routeHZPtXY}
-\end{equation}
+          \begin{equation}
+              \left . \begin{aligned}
+                  x'_i & = x_i   \\
+                  y'_i & = - y_i
+              \end{aligned} \right \}
+              \label{eq:routeHZPtXY}
+          \end{equation}
 
-请注意在使用公式 \ref{eq:routeZHXY} 时应将$l_i$替换为 $L-l_i$。
+          请注意在使用公式 \ref{eq:routeZHXY} 时应将$l_i$替换为 $L-l_i$。
 
-为了将HZ坐标系中的点坐标转换到ZH坐标系中，我们引用公式\ref{eq:routexytoxy}来计算，
-请注意公式\ref{eq:routexytoxy}中的$\alpha$为$x'$轴的方位角(即x轴到$x'$轴的水平夹角)，
-因此图\ref{fig:RHY}应用到公式\ref{eq:routexytoxy}中的$\alpha$ 应为$\alpha + 180 \degree $。
-如果将其代入公式\ref{eq:routexytoxy}，则有转换公式为：
+          为了将HZ坐标系中的点坐标转换到ZH坐标系中，我们引用公式\ref{eq:routexytoxy}来计算，
+          请注意公式\ref{eq:routexytoxy}中的$\alpha$为$x'$轴的方位角(即x轴到$x'$轴的水平夹角)，
+          因此图\ref{fig:RHY}应用到公式\ref{eq:routexytoxy}中的$\alpha$ 应为$\alpha + 180 \degree $。
+          如果将其代入公式\ref{eq:routexytoxy}，则有转换公式为：
 
-\begin{equation}
-\left . \begin{aligned}
-x_i &= x_{HZ} - x'_i  \cos \alpha + y'_i \sin \alpha \\
-y_i &= y_{HZ}  -  x'_i \sin \alpha -  y'_i \cos \alpha
-\end{aligned} \right \}
-\label{eq:routeHZtoZH}
-\end{equation}
+          \begin{equation}
+              \left . \begin{aligned}
+                  x_i & = x_{HZ} - x'_i  \cos \alpha + y'_i \sin \alpha   \\
+                  y_i & = y_{HZ}  -  x'_i \sin \alpha -  y'_i \cos \alpha
+              \end{aligned} \right \}
+              \label{eq:routeHZtoZH}
+          \end{equation}
 
-公式\ref{eq:routeHZtoZH}中的$(x_{HZ}, y_{HZ})$为HZ点在ZH坐标系中的坐标，其值为：
+          公式\ref{eq:routeHZtoZH}中的$(x_{HZ}, y_{HZ})$为HZ点在ZH坐标系中的坐标，其值为：
 
-\begin{equation}
-\left .
-\begin{aligned}
-x_{HZ} &= T (1 +  \cos \alpha) \\
-y_{HZ} &=  T \sin \alpha
-\end{aligned}
-\right \}
-\label{eq:routeHZXY}
-\end{equation}
+          \begin{equation}
+              \left .
+              \begin{aligned}
+                  x_{HZ} & = T (1 +  \cos \alpha) \\
+                  y_{HZ} & =  T \sin \alpha
+              \end{aligned}
+              \right \}
+              \label{eq:routeHZXY}
+          \end{equation}
 
-也可以不用公式\ref{eq:routeHZtoZH}，直接将$\alpha+180\degree$代入到
-公式\ref{eq:routexytoxy}中进行计算。
+          也可以不用公式\ref{eq:routeHZtoZH}，直接将$\alpha+180\degree$代入到
+          公式\ref{eq:routexytoxy}中进行计算。
 
-在以上计算中，我们以曲线右偏为例的，如果曲线左偏，同样的方法建立坐标系，
-x坐标是相同的， y坐标乘以 -1 即可。
+          在以上计算中，我们以曲线右偏为例的，如果曲线左偏，同样的方法建立坐标系，
+          x坐标是相同的， y坐标乘以 -1 即可。
 
-\item 曲线上点坐标转换为大地坐标的计算公式为：
+    \item 曲线上点坐标转换为大地坐标的计算公式为：
 
-由于已经将曲线上的点坐标统一到ZH坐标系中了，我们继续引用公式\ref{eq:routexytoxy}
-将ZH切线坐标系坐标转换到大地坐标系（测量坐标系）中，公式中的$\alpha$为$ZH \rightarrow JD$
-的坐标方位角。
+          由于已经将曲线上的点坐标统一到ZH坐标系中了，我们继续引用公式\ref{eq:routexytoxy}
+          将ZH切线坐标系坐标转换到大地坐标系（测量坐标系）中，公式中的$\alpha$为$ZH \rightarrow JD$
+          的坐标方位角。
 
 \end{enumerate}
 
@@ -739,30 +739,30 @@ x坐标是相同的， y坐标乘以 -1 即可。
 计算出的曲线上各点坐标如表\ref{tab:HYRoute}所示。
 
 \begin{table}[htbp]
-\centering
-\caption{有缓和曲线的圆曲线计算示例数据表}
-\label{tab:HYRoute}
-\begin{tabular}{ccccl}
-\hline
-序号 & 里程	    &        X	   &      Y	   &  备注 \\
-\hline
-1   & K5+200.000 & 3088256.238 & 66798.566 &  ZH  \\
-2   & K5+220.000 & 3088276.238 & 66798.583 &      \\
-3   & K5+240.000 & 3088296.238 & 66798.699 &      \\
-4   & K5+260.000 & 3088316.235 & 66799.016 &      \\
-5   & K5+280.000 & 3088336.225 & 66799.632 &  HY  \\
-6   & K5+300.000 & 3088356.200 & 66800.632 &      \\
-7   & K5+320.000 & 3088376.150 & 66802.031 &      \\
-8   & K5+329.933 & 3088386.048 & 66802.874 &  QZ  \\
-9   & K5+339.866 & 3088395.936 & 66803.815 &      \\
-10  & K5+359.866 & 3088415.815 & 66806.008 &      \\
-11  & K5+379.866 & 3088435.646 & 66808.598 &  YH  \\
-12  & K5+399.866 & 3088455.424 & 66811.568 &      \\
-13  & K5+419.866 & 3088475.156 & 66814.834 &      \\
-14  & K5+439.866 & 3088494.853 & 66818.297 &      \\
-15  & K5+459.866 & 3088514.534 & 66821.858 &  HZ  \\
-\hline
-\end{tabular}
+    \centering
+    \caption{有缓和曲线的圆曲线计算示例数据表}
+    \label{tab:HYRoute}
+    \begin{tabular}{ccccl}
+        \hline
+        序号 & 里程         & X           & Y         & 备注 \\
+        \hline
+        1  & K5+200.000 & 3088256.238 & 66798.566 & ZH \\
+        2  & K5+220.000 & 3088276.238 & 66798.583 &    \\
+        3  & K5+240.000 & 3088296.238 & 66798.699 &    \\
+        4  & K5+260.000 & 3088316.235 & 66799.016 &    \\
+        5  & K5+280.000 & 3088336.225 & 66799.632 & HY \\
+        6  & K5+300.000 & 3088356.200 & 66800.632 &    \\
+        7  & K5+320.000 & 3088376.150 & 66802.031 &    \\
+        8  & K5+329.933 & 3088386.048 & 66802.874 & QZ \\
+        9  & K5+339.866 & 3088395.936 & 66803.815 &    \\
+        10 & K5+359.866 & 3088415.815 & 66806.008 &    \\
+        11 & K5+379.866 & 3088435.646 & 66808.598 & YH \\
+        12 & K5+399.866 & 3088455.424 & 66811.568 &    \\
+        13 & K5+419.866 & 3088475.156 & 66814.834 &    \\
+        14 & K5+439.866 & 3088494.853 & 66818.297 &    \\
+        15 & K5+459.866 & 3088514.534 & 66821.858 & HZ \\
+        \hline
+    \end{tabular}
 
 \end{table}
 

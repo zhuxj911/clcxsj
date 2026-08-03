@@ -36,218 +36,218 @@ WGS84坐标系以及CGCS2000大地坐标系或自定义参考椭球的高斯投�
 
 \begin{enumerate}
 
-\item 基本公式
+    \item 基本公式
 
-\begin{enumerate}
-\item 扁率：
-$$\alpha=\frac{a-b}{a}$$
+          \begin{enumerate}
+              \item 扁率：
+                    $$\alpha=\frac{a-b}{a}$$
 
-\item 第一偏心率：
-$$e=\sqrt{\frac{a^2-b^2}{a^2}}$$
+              \item 第一偏心率：
+                    $$e=\sqrt{\frac{a^2-b^2}{a^2}}$$
 
-\item 第二偏心率：
-$$e'=\sqrt{\frac{a^{2}-b^{2}}{b^{2}}}$$
+              \item 第二偏心率：
+                    $$e'=\sqrt{\frac{a^{2}-b^{2}}{b^{2}}}$$
 
-\item 子午圈曲率半径：
-$$M=\frac{a(1-e^2)}{(1-e^2\sin ^2 B)^{\frac{3}{2}}}$$
+              \item 子午圈曲率半径：
+                    $$M=\frac{a(1-e^2)}{(1-e^2\sin ^2 B)^{\frac{3}{2}}}$$
 
-\item 卯酉圈曲率半径：
-$$N=\frac{a}{\sqrt{1-e^2\sin^2 B}}$$
+              \item 卯酉圈曲率半径：
+                    $$N=\frac{a}{\sqrt{1-e^2\sin^2 B}}$$
 
-\item 辅助符号：
-$$t=\tan B\qquad\eta=e'\cos B$$
-\end{enumerate}
+              \item 辅助符号：
+                    $$t=\tan B\qquad\eta=e'\cos B$$
+          \end{enumerate}
 
-\item 椭球面梯形图幅面积计算
+    \item 椭球面梯形图幅面积计算
 
-$$P = \frac{b^2}{2}(L_2 - L_1) \left | \frac{\sin B}{1-e^2\sin^2 B} 
-+ \frac{1}{2e}\ln \frac{1+e\sin B}{1-e\sin B}\right |_{B1} ^{B2} $$
-公式引用自《大地测量学基础》第121页(4-140)。
+          $$P = \frac{b^2}{2}(L_2 - L_1) \left | \frac{\sin B}{1-e^2\sin^2 B}
+              + \frac{1}{2e}\ln \frac{1+e\sin B}{1-e\sin B}\right |_{B1} ^{B2} $$
+          公式引用自《大地测量学基础》第121页(4-140)。
 
-$$P=b^2(L_2 - L_1) \left | sinB + \frac{2}{3}e^2 \sin ^3 B 
-+ \frac{3}{5}e^4 \sin^5 B + \frac{4}{7}e^6 \sin ^7 B \right | _{B_1} ^{B_2}$$
+          $$P=b^2(L_2 - L_1) \left | sinB + \frac{2}{3}e^2 \sin ^3 B
+              + \frac{3}{5}e^4 \sin^5 B + \frac{4}{7}e^6 \sin ^7 B \right | _{B_1} ^{B_2}$$
 
-公式引用自《大地测量学基础》第121页(4-142)，该公式为（4-140）的展开式。
+          公式引用自《大地测量学基础》第121页(4-142)，该公式为（4-140）的展开式。
 
-\item 子午线弧长
-\begin{equation}
-\label{eq:xx}
-X=a_0 B - \frac{a_2}{2}\sin 2B + \frac{a_4}{4}\sin 4B
-- \frac{a_6}{6} \sin 6B  + \frac{a_8}{8}\sin 8B
-\end{equation}
+    \item 子午线弧长
+          \begin{equation}
+              \label{eq:xx}
+              X=a_0 B - \frac{a_2}{2}\sin 2B + \frac{a_4}{4}\sin 4B
+              - \frac{a_6}{6} \sin 6B  + \frac{a_8}{8}\sin 8B
+          \end{equation}
 
-式中：
-\begin{equation}
-\label{eq:xxaa}
-\left  . \begin{aligned}
-a_0 &= m_0 + \frac{m_2}{2} + \frac{3}{8}m_4 + \frac{5}{16}m_6 + \frac{35}{128}m_8  \\
-a_2 &= \frac{m_2}{2} + \frac{m_4}{2} + \frac{15}{32}m_6 + \frac{7}{16}m_8  \\
-a_4 &= \frac{m_4}{8} + \frac{3}{16}m_6 + \frac{7}{32}m_8  \\
-a_6 &= \frac{m_6}{32} + \frac{m_8}{16}  \\
-a_8 &= \frac{m_8}{128}
-\end{aligned} \right \}
-\end{equation}
+          式中：
+          \begin{equation}
+              \label{eq:xxaa}
+              \left  . \begin{aligned}
+                  a_0 & = m_0 + \frac{m_2}{2} + \frac{3}{8}m_4 + \frac{5}{16}m_6 + \frac{35}{128}m_8 \\
+                  a_2 & = \frac{m_2}{2} + \frac{m_4}{2} + \frac{15}{32}m_6 + \frac{7}{16}m_8         \\
+                  a_4 & = \frac{m_4}{8} + \frac{3}{16}m_6 + \frac{7}{32}m_8                          \\
+                  a_6 & = \frac{m_6}{32} + \frac{m_8}{16}                                            \\
+                  a_8 & = \frac{m_8}{128}
+              \end{aligned} \right \}
+          \end{equation}
 
-式中$m_0, m_2, m_4, m_6, m_8$的值为：
+          式中$m_0, m_2, m_4, m_6, m_8$的值为：
 
-\begin{equation}
-\label{eq:xxmm}
-\left . 
-\begin{aligned}
-m_0 &= a(1-e^2) \\
-m_2 &= \frac{3}{2}e^2 m_0  \\
-m_4 &= \frac{5}{4}e^2 m_2  = \frac{15}{8} e^4 m_0 \\
-m_6 &= \frac{7}{6}e^2 m_4   = \frac{35}{16} e^6 m_0 \\
-m_8 &= \frac{9}{8}e^2 m_6 = \frac{315}{128} e^8 m_0
-\end{aligned} 
-\right \}
-\end{equation}
+          \begin{equation}
+              \label{eq:xxmm}
+              \left .
+              \begin{aligned}
+                  m_0 & = a(1-e^2)                                     \\
+                  m_2 & = \frac{3}{2}e^2 m_0                           \\
+                  m_4 & = \frac{5}{4}e^2 m_2  = \frac{15}{8} e^4 m_0   \\
+                  m_6 & = \frac{7}{6}e^2 m_4   = \frac{35}{16} e^6 m_0 \\
+                  m_8 & = \frac{9}{8}e^2 m_6 = \frac{315}{128} e^8 m_0
+              \end{aligned}
+              \right \}
+          \end{equation}
 
-以上公式引用自《大地测量学基础》第115页(4-101)、(4-100)与(4-72).
+          以上公式引用自《大地测量学基础》第115页(4-101)、(4-100)与(4-72).
 
-将公式 \ref{eq:xxmm} 代入公式  \ref{eq:xxaa}可得到如下公式：
+          将公式 \ref{eq:xxmm} 代入公式  \ref{eq:xxaa}可得到如下公式：
 
- \begin{equation}
-\label{eq:xxaamm}
-\left  . \begin{aligned}
-a_0 &=(1 + \frac{3}{4} e^2 + \frac{45}{64} e^4 + \frac{175}{256} e^6 + \frac{11025}{16384} e^8) m_0  \\
-a_2 &=(\frac{3}{4} e^2 + \frac{15}{16} e^4 + \frac{525}{512} e^6 + \frac{2205}{2048} e^8) m_0  \\
-a_4 &=(\frac{15}{64} e^4 + \frac{105}{256} e^6 + \frac{2205}{4096} e^8) m_0  \\
-a_6 &=(\frac{35}{512} e^6 + \frac{315}{2048} e^8) m_0  \\
-a_8 &= \frac{315}{16384} e^8 m_0
-\end{aligned} \right \}
-\end{equation}
+          \begin{equation}
+              \label{eq:xxaamm}
+              \left  . \begin{aligned}
+                  a_0 & =(1 + \frac{3}{4} e^2 + \frac{45}{64} e^4 + \frac{175}{256} e^6 + \frac{11025}{16384} e^8) m_0 \\
+                  a_2 & =(\frac{3}{4} e^2 + \frac{15}{16} e^4 + \frac{525}{512} e^6 + \frac{2205}{2048} e^8) m_0       \\
+                  a_4 & =(\frac{15}{64} e^4 + \frac{105}{256} e^6 + \frac{2205}{4096} e^8) m_0                         \\
+                  a_6 & =(\frac{35}{512} e^6 + \frac{315}{2048} e^8) m_0                                               \\
+                  a_8 & = \frac{315}{16384} e^8 m_0
+              \end{aligned} \right \}
+          \end{equation}
 
-若令：
-\begin{equation}
-\label{eq:xxAAA}
-\left  . \begin{aligned}
-A_0 &=a_0 = (1 + \frac{3}{4} e^2 + \frac{45}{64} e^4 + \frac{175}{256} e^6 + \frac{11025}{16384} e^8) m_0  \\
-A_2 &=-\frac{a2}{2} =-\frac{1}{2}  (\frac{3}{4} e^2 + \frac{15}{16} e^4 + \frac{525}{512} e^6 + \frac{2205}{2048} e^8) m_0  \\
-A_4 &=\frac{a_4}{4}=\frac{1}{4} (\frac{15}{64} e^4 + \frac{105}{256} e^6 + \frac{2205}{4096} e^8) m_0  \\
-A_6 &=-\frac{a_6}{6}=-\frac{1}{6} (\frac{35}{512} e^6 + \frac{315}{2048} e^8) m_0  \\
-A_8 &= \frac{a_8}{8}=\frac{1}{8} \times \frac{315}{16384} e^8 m_0
-\end{aligned} \right \}
-\end{equation}
+          若令：
+          \begin{equation}
+              \label{eq:xxAAA}
+              \left  . \begin{aligned}
+                  A_0 & =a_0 = (1 + \frac{3}{4} e^2 + \frac{45}{64} e^4 + \frac{175}{256} e^6 + \frac{11025}{16384} e^8) m_0                  \\
+                  A_2 & =-\frac{a2}{2} =-\frac{1}{2}  (\frac{3}{4} e^2 + \frac{15}{16} e^4 + \frac{525}{512} e^6 + \frac{2205}{2048} e^8) m_0 \\
+                  A_4 & =\frac{a_4}{4}=\frac{1}{4} (\frac{15}{64} e^4 + \frac{105}{256} e^6 + \frac{2205}{4096} e^8) m_0                      \\
+                  A_6 & =-\frac{a_6}{6}=-\frac{1}{6} (\frac{35}{512} e^6 + \frac{315}{2048} e^8) m_0                                          \\
+                  A_8 & = \frac{a_8}{8}=\frac{1}{8} \times \frac{315}{16384} e^8 m_0
+              \end{aligned} \right \}
+          \end{equation}
 
-则子午线弧长公式 \ref{eq:xx}可以演变为如下公式：
-\begin{equation}
-\label{eq:AAAxxAAA}
-X= A_0 B + A_2 \sin 2B + A_4 \sin 4B + A_6 \sin 6B  + A_8 \sin 8B
-\end{equation}
+          则子午线弧长公式 \ref{eq:xx}可以演变为如下公式：
+          \begin{equation}
+              \label{eq:AAAxxAAA}
+              X= A_0 B + A_2 \sin 2B + A_4 \sin 4B + A_6 \sin 6B  + A_8 \sin 8B
+          \end{equation}
 
-公式 \ref{eq:AAAxxAAA} 将作为我们进行程序设计时进行子午线弧长与底点纬度计算的基本公式。
+          公式 \ref{eq:AAAxxAAA} 将作为我们进行程序设计时进行子午线弧长与底点纬度计算的基本公式。
 
-由公式 \ref{eq:xxAAA}看出，其值只与椭球的定义有关，一旦椭球的参数确定，这些值也就被确定。
+          由公式 \ref{eq:xxAAA}看出，其值只与椭球的定义有关，一旦椭球的参数确定，这些值也就被确定。
 
-% 或用很多书上都引用的公式：
+          % 或用很多书上都引用的公式：
 
-% \begin{equation}
-% \label{eq:CX}
-% X=c[\beta_0 B + (\beta_2 \cos B + \beta_4 \cos^3 B + \beta_6 \cos^5 B + \beta_8 \cos^7 B) \sin B] 
-% \end{equation}
+          % \begin{equation}
+          % \label{eq:CX}
+          % X=c[\beta_0 B + (\beta_2 \cos B + \beta_4 \cos^3 B + \beta_6 \cos^5 B + \beta_8 \cos^7 B) \sin B] 
+          % \end{equation}
 
-% 式中 c 为极曲率半径，其值为： $c= a^2 / b$，
-% $\beta_0, \beta_2, \beta_4, \beta_6, \beta_8$的值为：
+          % 式中 c 为极曲率半径，其值为： $c= a^2 / b$，
+          % $\beta_0, \beta_2, \beta_4, \beta_6, \beta_8$的值为：
 
-% \begin{equation}
-% \label{eq:CXC}
-% \left .
-% \begin{aligned}
-% \beta_0 &= 1 - \frac{3}{4}e'^2 + \frac{45}{64}e'^4 - \frac{175}{256}e'^6 + \frac{11025}{16384}e'^8  \\
-% \beta_2 &= \beta_0 -1  \\
-% \beta_4 &= \frac{15}{32}e'^4 - \frac{175}{384}e'^6 + \frac{3675}{8192}e'^8   \\
-% \beta_6 &= -\frac{35}{96}e'^6 + \frac{735}{2048}e'^8   \\
-% \beta_8 &= \frac{315}{1024}e'^8
-% \end{aligned} 
-% \right \}
-% \end{equation}
+          % \begin{equation}
+          % \label{eq:CXC}
+          % \left .
+          % \begin{aligned}
+          % \beta_0 &= 1 - \frac{3}{4}e'^2 + \frac{45}{64}e'^4 - \frac{175}{256}e'^6 + \frac{11025}{16384}e'^8  \\
+          % \beta_2 &= \beta_0 -1  \\
+          % \beta_4 &= \frac{15}{32}e'^4 - \frac{175}{384}e'^6 + \frac{3675}{8192}e'^8   \\
+          % \beta_6 &= -\frac{35}{96}e'^6 + \frac{735}{2048}e'^8   \\
+          % \beta_8 &= \frac{315}{1024}e'^8
+          % \end{aligned} 
+          % \right \}
+          % \end{equation}
 
-% 公式引用自《大地测量学基础》第115页(4-107)、与(4-108)。
+          % 公式引用自《大地测量学基础》第115页(4-107)、与(4-108)。
 
-% 可对公式\ref{eq:CXC}做进一步演化，令：
-% \begin{equation}
-% 	\label{eq:CXCC}
-% 	\left .
-% 	\begin{aligned}
-% 		C_0 &= c \beta_0 = c(1 - \frac{3}{4}e'^2 + \frac{45}{64}e'^4 - \frac{175}{256}e'^6 + \frac{11025}{16384}e'^8) \\
-% 		C_2 &= c \beta_2 = c(\beta_0 -1)                                                                              \\
-% 		C_4 &= c \beta_4 = c(\frac{15}{32}e'^4 - \frac{175}{384}e'^6 + \frac{3675}{8192}e'^8)                         \\
-% 		C_6 &= c \beta_6 = c(-\frac{35}{96}e'^6 + \frac{735}{2048}e'^8)                                               \\
-% 		C_8 &= c \beta_8 = c(\frac{315}{1024}e'^8)
-% 	\end{aligned}
-% 	\right \}
-% \end{equation}
+          % 可对公式\ref{eq:CXC}做进一步演化，令：
+          % \begin{equation}
+          % 	\label{eq:CXCC}
+          % 	\left .
+          % 	\begin{aligned}
+          % 		C_0 &= c \beta_0 = c(1 - \frac{3}{4}e'^2 + \frac{45}{64}e'^4 - \frac{175}{256}e'^6 + \frac{11025}{16384}e'^8) \\
+          % 		C_2 &= c \beta_2 = c(\beta_0 -1)                                                                              \\
+          % 		C_4 &= c \beta_4 = c(\frac{15}{32}e'^4 - \frac{175}{384}e'^6 + \frac{3675}{8192}e'^8)                         \\
+          % 		C_6 &= c \beta_6 = c(-\frac{35}{96}e'^6 + \frac{735}{2048}e'^8)                                               \\
+          % 		C_8 &= c \beta_8 = c(\frac{315}{1024}e'^8)
+          % 	\end{aligned}
+          % 	\right \}
+          % \end{equation}
 
-% 则子午线弧长公式\ref{eq:CX}可演化为：
+          % 则子午线弧长公式\ref{eq:CX}可演化为：
 
-% \begin{equation}
-% 	\label{eq:CXX}
-% 	X=C_0 B + (C_2 \cos^2 B + C_4 \cos^4 B + C_6 \cos^6 B + C_8 \cos^8 B) \tan B
-% \end{equation}
+          % \begin{equation}
+          % 	\label{eq:CXX}
+          % 	X=C_0 B + (C_2 \cos^2 B + C_4 \cos^4 B + C_6 \cos^6 B + C_8 \cos^8 B) \tan B
+          % \end{equation}
 
-\subsection{高斯投影正算}
+          \subsection{高斯投影正算}
 
-高斯投影正算就是将球面上一点的大地坐标 $(B, L)$ 投影为高斯平面直角坐标 $(x, y)$。
+          高斯投影正算就是将球面上一点的大地坐标 $(B, L)$ 投影为高斯平面直角坐标 $(x, y)$。
 
-\item 高斯投影正算
-\begin{equation}
-\left .
-\begin{aligned}
-x&=X+\frac{l^2 N}{2}sinBcosB +\frac{l^4 N}{24}sinBcos^3B(5-t^2 +9\eta^2+4\eta^4) \\
-  &+\frac{N}{720}sinBcos^5 B(61-58t^2 +t^4)l^6  \\
-y&=l N cosB+\frac{l^3 N}{6}cos^3 B(1-t^2 +\eta^2 ) \\
-        &+\frac{l^5 N}{120}cos^5 B (5-18t^2+t^4 +14\eta^2 -58\eta^2t^2)
-\end{aligned}
- \right \}
-\end{equation}
+    \item 高斯投影正算
+          \begin{equation}
+              \left .
+              \begin{aligned}
+                  x & =X+\frac{l^2 N}{2}sinBcosB +\frac{l^4 N}{24}sinBcos^3B(5-t^2 +9\eta^2+4\eta^4) \\
+                    & +\frac{N}{720}sinBcos^5 B(61-58t^2 +t^4)l^6                                    \\
+                  y & =l N cosB+\frac{l^3 N}{6}cos^3 B(1-t^2 +\eta^2 )                               \\
+                    & +\frac{l^5 N}{120}cos^5 B (5-18t^2+t^4 +14\eta^2 -58\eta^2t^2)
+              \end{aligned}
+              \right \}
+          \end{equation}
 
-公式引用自《大地测量学基础》第169页(4-367)。
+          公式引用自《大地测量学基础》第169页(4-367)。
 
-\item 高斯投影反算
+    \item 高斯投影反算
 
-\begin{equation}
-\left  .
-\begin{aligned}
-B&=B_f - \frac{t_f}{2M_f N_f }y^2 +\frac{t_f}{24 M_f N_f ^3}
-(5 + 3t_f ^2  + \eta_f ^2 - 9\eta_f ^2 t_f^2)y^4 \\
- &- \frac{t_f}{720 M_f N_f ^5}(61 + 90t_f ^2 + 45t_f ^4)y^6 \\
-l&=\frac{1}{N_f cosB_f}y - \frac{1}{6N_f ^3 cosB_f}(1 + 2t_f ^2 + \eta_f ^2)y^3  \\
- &+ \frac{1}{120N_f ^5 cosB_f}(5 + 28t_f ^2 + 24t_f ^4 + 6\eta_f ^2 +8\eta_f ^2 t_f ^2)y^5
-\end{aligned} 
-\right \}
-\end{equation}
+          \begin{equation}
+              \left  .
+              \begin{aligned}
+                  B & =B_f - \frac{t_f}{2M_f N_f }y^2 +\frac{t_f}{24 M_f N_f ^3}
+                  (5 + 3t_f ^2  + \eta_f ^2 - 9\eta_f ^2 t_f^2)y^4                                             \\
+                    & - \frac{t_f}{720 M_f N_f ^5}(61 + 90t_f ^2 + 45t_f ^4)y^6                                \\
+                  l & =\frac{1}{N_f cosB_f}y - \frac{1}{6N_f ^3 cosB_f}(1 + 2t_f ^2 + \eta_f ^2)y^3            \\
+                    & + \frac{1}{120N_f ^5 cosB_f}(5 + 28t_f ^2 + 24t_f ^4 + 6\eta_f ^2 +8\eta_f ^2 t_f ^2)y^5
+              \end{aligned}
+              \right \}
+          \end{equation}
 
-公式引用自《大地测量学基础》第171页(4-383)。
+          公式引用自《大地测量学基础》第171页(4-383)。
 
 
-\item 平面子午线收敛角计算
+    \item 平面子午线收敛角计算
 
-利用$(B, l)$计算公式如下：
-$$\gamma = l \cdot \sin B  + \frac{l^3}{3} \sin B \cos ^2 B \cdot (1 + 3 \eta^2 + 2 \eta^4)
-+ \frac{ l^5}{15}\sin B \cos ^4 B \cdot (2 - t^2)$$
+          利用$(B, l)$计算公式如下：
+          $$\gamma = l \cdot \sin B  + \frac{l^3}{3} \sin B \cos ^2 B \cdot (1 + 3 \eta^2 + 2 \eta^4)
+              + \frac{ l^5}{15}\sin B \cos ^4 B \cdot (2 - t^2)$$
 
-公式引用自《大地测量学基础》第181页(4-408)。
+          公式引用自《大地测量学基础》第181页(4-408)。
 
-利用$(x, y)$计算公式如下：
+          利用$(x, y)$计算公式如下：
 
-$$\gamma = \frac{1}{N_f}t_f y - \frac{1+t_f ^2 - \eta_f ^2}{3N_f ^3}t_f y^3
-+ \frac{2+5t_f^2+3t_f^4}{15N_f ^5}t_fy^5$$
+          $$\gamma = \frac{1}{N_f}t_f y - \frac{1+t_f ^2 - \eta_f ^2}{3N_f ^3}t_f y^3
+              + \frac{2+5t_f^2+3t_f^4}{15N_f ^5}t_fy^5$$
 
-公式引用自《大地测量学基础》第182页(4-410)。
+          公式引用自《大地测量学基础》第182页(4-410)。
 
-\item 长度比计算
+    \item 长度比计算
 
-利用$(B, l)$计算公式如下：
-$$m=1+\frac{l^2}{2} \cos ^2 B(1+\eta^2) + \frac{l^4}{24}\cos ^4 B(5-4t^2)$$
+          利用$(B, l)$计算公式如下：
+          $$m=1+\frac{l^2}{2} \cos ^2 B(1+\eta^2) + \frac{l^4}{24}\cos ^4 B(5-4t^2)$$
 
-公式引用自《大地测量学基础》第189页(4-447)。
+          公式引用自《大地测量学基础》第189页(4-447)。
 
-利用$(x, y)$计算公式如下：
+          利用$(x, y)$计算公式如下：
 
-$$m=1+\frac{y^2}{2R^2} + \frac{y^4}{24R^4}$$
+          $$m=1+\frac{y^2}{2R^2} + \frac{y^4}{24R^4}$$
 
-式中$R=\sqrt{MN}$，公式引用自《大地测量学基础》第189页(4-451)。
+          式中$R=\sqrt{MN}$，公式引用自《大地测量学基础》第189页(4-451)。
 
 \end{enumerate}
 
@@ -258,7 +258,7 @@ $$m=1+\frac{y^2}{2R^2} + \frac{y^4}{24R^4}$$
     \item 坐标正算：将点的大地坐标转换成高斯投影平面直角坐标。
     \item 坐标反算：将点的高斯投影平面直角坐标转换成大地坐标。
     \item 换带计算：将某带的点的高斯投影平面直角坐标转换成邻带或某中央
-    子午线经度的高斯投影平面直角坐标。
+          子午线经度的高斯投影平面直角坐标。
     \item 其他计算：计算子午线收敛角、长度比等。
 \end{enumerate}
 
@@ -272,11 +272,11 @@ $(a_0, a_2, a_4, a_6, a_8)$也就确定了，其中的$(m_0, m_2, m_4, m_6, m_8)
 
 我们新建一 WPF 项目，命名为GaussProj，程序中我们将应用WPF技术编写图形界面。
 
-在高斯投影中由于要处理角度与点等数据，我们可将前面的角度处理函数DMS2RAD、RAD2DMS
+在高斯投影中由于要处理角度与点等数据，我们可将前面的角度处理函数 DMS2RAD、RAD2DMS
 与SPoint点类拷贝到当前项目中来，也可以将其打包成一 Class Library(.NET Framework)
 即类库文件引用到当前项目中，在当前项目中尽量不修改前面的各个功能代码。
 
-基于上一小节的分析，我们新建一椭球类$(Spheroid)$，在其中我们定义以上与椭球类型
+基于上一小节的分析，我们新建一椭球类 $(Spheroid)$ ，在其中我们定义以上与椭球类型
 相关的元素。代码如下所示：
 
 \begin{lstlisting}
@@ -325,8 +325,8 @@ namespace GaussProj
 在各项计算中，第一偏心率与第二偏心率的直接使用较少，其平方值用的较多，因此在
 Spheroid类我们直接用其平方值。
 
- 在Spheroid类中我们可以如下直接定义构造函数用于初始化其各个字段(Field)：
-  \begin{lstlisting}
+在Spheroid类中我们可以如下直接定义构造函数用于初始化其各个字段(Field)：
+\begin{lstlisting}
 /// <summary>
 /// 构造函数
 /// </summary>
@@ -342,7 +342,7 @@ private Spheroid(double semimajor_axis, double inverse_flattening)
 为 private，让用户无法通过new直接创建实例化对象。我们设计类的静态函数
 Create**** 来创建类Spheroid的实例化对象，其代码如下：
 
- \begin{lstlisting}
+\begin{lstlisting}
 /// <summary>
 /// 构造函数
 /// </summary>
@@ -441,10 +441,10 @@ public void BLtoXY(double B, double L, double L0,
 由于函数的返回值为两个值x与y，无法以函数的返回值return的形式返回计算结果，
 所以我们用函数参数 out 的形式将计算结果返回。
 
- 由前面的高斯投影正算公式分析可知，高斯投影正算的计算较为简单，没有复杂的逻辑，
- 先计算经差，然后计算子午线弧长后就可以直接写计算坐标x,y的算法了。
- 但公式较为复杂，极容易写错，公式中具有大量的平方、四次方等变量。因此在编程时
- 应将这些变量命名为与其相似的形式并提前计算。相关代码如下：
+由前面的高斯投影正算公式分析可知，高斯投影正算的计算较为简单，没有复杂的逻辑，
+先计算经差，然后计算子午线弧长后就可以直接写计算坐标x,y的算法了。
+但公式较为复杂，极容易写错，公式中具有大量的平方、四次方等变量。因此在编程时
+应将这些变量命名为与其相似的形式并提前计算。相关代码如下：
 
 \begin{lstlisting}
 /// <summary>
@@ -532,7 +532,7 @@ spheroid.BLtoXY(B, L, L0, out x, out y);
 进行变换，如下所示：
 
 $$B= (X + \frac{a_2}{2}\sin 2B - \frac{a_4}{4}\sin 4B
-+ \frac{a_6}{6} \sin 6B  - \frac{a_8}{8}\sin 8B)/a_0$$
+    + \frac{a_6}{6} \sin 6B  - \frac{a_8}{8}\sin 8B)/a_0$$
 
 在该公式中，两边都有B，我们将公式右边的B赋初始值$B_0=X/a_0$代入可以
 计算出新的$B$值，循环进行计算，由于该迭代收敛，两值之差 $B - B_0$ 在一定范围内时
@@ -576,9 +576,9 @@ private double funBf(double x)
 }
 \end{lstlisting}
 
- 在底点纬度计算出以后，高斯投影反算计算就没有难度了。
- 我们将函数名命名为 XYtoBL，其函数设计为：
- \begin{lstlisting}
+在底点纬度计算出以后，高斯投影反算计算就没有难度了。
+我们将函数名命名为 XYtoBL，其函数设计为：
+\begin{lstlisting}
 public void XYtoBL(double x, double y, double L0,
     out double B, out double L)
 {
@@ -614,14 +614,14 @@ public void XYtoBL(double x, double y, double L0,
 \end{lstlisting}
 
 该函数中还有Nf与Mf需要计算，Nf的计算同前面的funN函数，Mf的计算函数为
- \begin{lstlisting}
+\begin{lstlisting}
 private double funM(double sinB)
 {
     return a * (1 - e2) * Math.Pow(1 - e2 * sinB * sinB, -1.5);
 }
 \end{lstlisting}
 
- 有了高斯投影反算函数 XYtoBL， 就可以比较容易的写出其反算示例了，如以下代码所示：
+有了高斯投影反算函数 XYtoBL， 就可以比较容易的写出其反算示例了，如以下代码所示：
 
 \begin{lstlisting}
 //创建克拉索夫斯基参考椭球
@@ -1070,12 +1070,12 @@ private void XYtoBLButton_Click(object sender, RoutedEventArgs e)
 实用的高斯投影程序功能如下：
 
 \begin{enumerate}
-\item 椭球基准的选择：能够自由的选择参考椭球基准，或者自定义参考椭球；
-\item 能实现高斯投影正反算与换带功能；
-\item 高斯投影坐标的定义：能自动去除或添加点的Y坐标前的常数500km和带号；
-\item 数据的界面录入：能利用程序界面组织输入数据；
-\item 能导入导出文本数据：能将外部文本数据导入到程序中，能将程序中的数据导出为文本文件；
-\item 能实现多个点的批量计算。
+    \item 椭球基准的选择：能够自由的选择参考椭球基准，或者自定义参考椭球；
+    \item 能实现高斯投影正反算与换带功能；
+    \item 高斯投影坐标的定义：能自动去除或添加点的Y坐标前的常数500km和带号；
+    \item 数据的界面录入：能利用程序界面组织输入数据；
+    \item 能导入导出文本数据：能将外部文本数据导入到程序中，能将程序中的数据导出为文本文件；
+    \item 能实现多个点的批量计算。
 \end{enumerate}
 
 软件运行时的界面如图\ref{fig:GaussProjUI02}所示，该界面基本能满足以上功能。
@@ -1622,8 +1622,8 @@ public class CoordinateSystem : NotificationObject
 在这段xaml代码中，除了功能按钮区外，实际上分为了三部分：
 
 第一部分为参考椭球定义，如第18行代码所示，我们将其布局到
- groupBox\_spheroid中，数据绑定a与f，数据源设置在groupBox\_spheroid中，
- 采用冒泡搜寻类CoordinateSystem中的ProjSpheroid属性。
+groupBox\_spheroid中，数据绑定a与f，数据源设置在groupBox\_spheroid中，
+采用冒泡搜寻类CoordinateSystem中的ProjSpheroid属性。
 
 为了简化示例程序的编写，ComboBox中的参考椭球类型采用硬编码方式直接写在其中了。
 通过SelectionChange事件对不同的椭球类型选择进行响应。
@@ -1813,27 +1813,27 @@ UTM投影的第一带($180\degree - 174\degree W$)为高斯-克吕格投影的�
 
 已知大地坐标计算空间直角坐标的公式:
 \begin{equation}
-\left .
-\begin{aligned}
-X &= (N+H) \cos B \cos L \\
-Y &= (N+H) \cos B \sin L \\
-Z &= [N(1 - e^2) + H)] \sin B 
-\end{aligned} 
-\right \}
+    \left .
+    \begin{aligned}
+        X & = (N+H) \cos B \cos L      \\
+        Y & = (N+H) \cos B \sin L      \\
+        Z & = [N(1 - e^2) + H)] \sin B
+    \end{aligned}
+    \right \}
 \end{equation}
 
 已知空间直角坐标$(X,Y,Z)$计算大地坐标$(B, L, H)$的公式如下：
 
 \begin{equation}
-\left . 
-\begin{aligned}
-L &= \arctan \frac{Y}{X} \\
-\tan B &= \frac{Z + Ne^2 \sin B}{\sqrt{X^2 + Y^2}} \\
-H &= \frac{Z}{sinB} - N(1-e^2)  \\
- or  \\
-H &=\frac{\sqrt{X^2 + Y^2}}{\cos B} - N 
-\end{aligned} 
-\right \}
+    \left .
+    \begin{aligned}
+        L      & = \arctan \frac{Y}{X}                      \\
+        \tan B & = \frac{Z + Ne^2 \sin B}{\sqrt{X^2 + Y^2}} \\
+        H      & = \frac{Z}{sinB} - N(1-e^2)                \\
+        or                                                  \\
+        H      & =\frac{\sqrt{X^2 + Y^2}}{\cos B} - N
+    \end{aligned}
+    \right \}
 \end{equation}
 
 由以上公式可以看出，L 可以直接由X，Y算出，B 则需要迭代计算。
@@ -1878,12 +1878,12 @@ $$R_m = \sqrt{MN}= a \frac{\sqrt{1-e^2}}{1-e^2 \sin^2 B_m}$$
 子午曲率半径
 
 $$
-\left .
-\begin{aligned}
-M &= \frac{a \cdot (1-e^2)}{\sqrt{(1-e^2 \sin ^2 B)^3}} \\
-N &= \frac{a}{\sqrt{1-e^2 \sin^2 B}}
-\end{aligned} 
-\right \}
+    \left .
+    \begin{aligned}
+        M & = \frac{a \cdot (1-e^2)}{\sqrt{(1-e^2 \sin ^2 B)^3}} \\
+        N & = \frac{a}{\sqrt{1-e^2 \sin^2 B}}
+    \end{aligned}
+    \right \}
 $$
 
 
@@ -1903,20 +1903,20 @@ $$da = \frac{1-e^2 \sin ^2 B_m}{\sqrt{1-e^2}} \cdot H_m$$
 
 
 $$
-\left .
-\begin{aligned}
-dL &= 0 \\
-dB &= \frac{N}{(M+H) \cdot a} e^2 \sin B \cos B \cdot \Delta a  \\
-dH &= -\frac{N}{a}(1-e^2 \sin ^2 B ) \cdot \Delta a
-\end{aligned} 
-\right \}
+    \left .
+    \begin{aligned}
+        dL & = 0                                                        \\
+        dB & = \frac{N}{(M+H) \cdot a} e^2 \sin B \cos B \cdot \Delta a \\
+        dH & = -\frac{N}{a}(1-e^2 \sin ^2 B ) \cdot \Delta a
+    \end{aligned}
+    \right \}
 $$
 
 
 \section*{小结}
 
 我们从较为简单的单点高斯投影正反算程序开始，运用
- \cs 知识与WPF界面技术实现了一个较为实用的高斯投影正反算与换带
+\cs 知识与WPF界面技术实现了一个较为实用的高斯投影正反算与换带
 程序。
 
 在程序过程中，我们遵循了界面与算法相分离的原则，运用了WPF的

@@ -28,13 +28,13 @@
 实例也称为对象 (object)。也可以说类是定义，对象是类的实例。
 静态类不能生成类的实例，在此声明，若非特别语境下，以后本书中所指的类均为实例类。
 
-在 \cs 中类支持单继承 (inheritance)，通过类继承产生派生类 (derived class)， 
+在 \cs 中类支持单继承 (inheritance)，通过类继承产生派生类 (derived class)，
 从而扩展和专用化基类 (base class) 。
 
- \cs 中所有的类均从 System.Object 继承，如果一个类只从 System.Object 类继承，
- 则可以将其省略。
+\cs 中所有的类均从 System.Object 继承，如果一个类只从 System.Object 类继承，
+则可以将其省略。
 
- \subsection{类的定义}
+\subsection{类的定义}
 
 类的关键字为 class ，定义一个新类的方式如下：
 
@@ -58,7 +58,7 @@ public class Point : System.Object
 }
 \end{lstlisting}
 
-上面是测量点的简单定义，关键字 class 前的 public 为访问限定符，表示访问不受限制。 
+上面是测量点的简单定义，关键字 class 前的 public 为访问限定符，表示访问不受限制。
 也可以为 internal ，表示该类仅限于当前程序集访问，外部程序集不能访问。
 如果在 class 前不加访问修饰符，默认的访问权限为 internal 。
 
@@ -80,19 +80,21 @@ public class Point
 在 \cs 中用 new 操作符生成类的实例对象。该运算符为新的实例分配内存、
 调用构造函数初始化实例，并返回对该实例的引用。
 
-下面的语句生成两个 Point 实例对象，并将对这两个对象的引用存储在两个变量 p1 、p2 中：
+下面的语句是生成 Point 实例对象，可以合理使用 \cs 的推断功能，
+在较新的 \cs 语法中， 在知道类型的情况下，可以简化 new 的写法：
 
 \begin{lstlisting}
 {
     ......
     Point p1 = new Point();
-    Point p2 = new Point();
+    var p2 = new Point();
+    Point p3 = new();
     ......
 }
 \end{lstlisting}
 
-当程序执行到这段代码后边的 ``\}'' 时，将自动释放变量 p1、p2，
-p1与p2所指向的内存，将由 .Net 系统自动收回。
+当程序执行到这段代码后边的 ``\}'' 时，将自动释放变量 p1、p2、p3，
+p1、p2与p3所指向的内存，将由 .NET 系统自动收回。
 
 \subsection{类的字段（Filed）}
 一个类通常由两部分组成：数据与对数据的操作。字段是与类或类的实例相关的变量，
@@ -103,8 +105,8 @@ p1与p2所指向的内存，将由 .Net 系统自动收回。
 \begin{lstlisting}
 public class Point
 {
-    public string name;
-    public string code;
+    public string? name;
+    public string? code;
     public double x;
     public double y;
     public double z;
@@ -119,25 +121,33 @@ public class Point
 
 从以上点 Point 类的定义看出，每个字段的定义前都有 public ，代表着对字段的访问权限。
 
-类的每个成员都可以关联可访问性，以控制访问该类成员的权限，默认的可访问性为private。
+类的每个成员都可以关联可访问性，以控制访问该类成员的权限，默认的可访问性为 private。
 
 有六种可能的可访问性形式，如下表所示：
 
-\begin{tabular}{|l|l|}
-\hline
-可访问性                 &   含义  \\
-\hline
-public                  &  访问不受限制   \\
-protected               &  访问仅限于该类及该类的派生类  \\
-internal                &  访问仅限于当前程序集  \\
-protected internal      &  访问仅限于当前程序集或该类的派生类  \\
-private                 &  访问仅限于包含类  \\
-private protected       &  访问限于包含类或当前程序集中派生自包含类的类型。 \\
-\hline
-\end{tabular}
+\begin{table}[htbp]
+    \centering
+    % 已经全局设置了，此处不用再设置
+    % 调小标题与表格之间的间距， 默认为10 
+    % \setlength{\abovecaptionskip}{3pt} 
+    \caption{字段的可访问性}
+    \label{tab:fieldaccessibility}
+    \begin{tabular}{l l}
+        \hline
+        可访问性               & 含义                       \\
+        \hline
+        public             & 访问不受限制                   \\
+        protected          & 访问仅限于该类及该类的派生类           \\
+        internal           & 访问仅限于当前程序集               \\
+        protected internal & 访问仅限于当前程序集或该类的派生类        \\
+        private            & 访问仅限于包含类                 \\
+        private protected  & 访问限于包含类或当前程序集中派生自包含类的类型。 \\
+        \hline
+    \end{tabular}
+\end{table}
 
-一个类可以访问自己的属性，可以通过this关键字进行引用访问，在不引起混淆的情况下，可以省略this。
-this关键字指类的实例本身。
+一个类可以访问自己的属性，可以通过 this 关键字进行引用访问，在不引起混淆的情况下，可以省略 this。
+this 关键字指类的实例本身。
 
 在Point类的定义 public 访问权限的数据成员后，就可以按照``实例.数据成员''进行引用了，
 如下代码所示：
@@ -165,16 +175,17 @@ this关键字指类的实例本身。
 从上面的p1、p2的引用语句看，实际上是在给p1、p2两个点赋初值。
 如果每个点都这样做的话，十分不方便。初始化实例对象更好的方法是使用构造函数。
 
-\textbf{构造函数是函数名称与类名完全相同，且没有返回类型(即使返回类型为void也不行)的函数，
-它的作用是做类的初始化工作（主要是初始化类的数据）。}
+%% { } 用于限定  \heiti 的作用范围, 或用 \textheiti{ 这里是黑体 }
+{ \heiti 构造函数是函数名称与类名完全相同，且没有返回类型(即使返回类型为void也不行)的函数，
+它的作用是做类的初始化工作（主要是初始化类的数据）。 }
 
 定义与使用Point类的代码如下：
 \begin{lstlisting}
 //在Point.cs文件中定义
 public class Point : System.Object
 {
-    public string name;
-    public string code;
+    public string? name;
+    public string? code;
     public double x;
     public double y;
     public double z;
@@ -207,8 +218,8 @@ Point p2 = new Point("p2", "", 200.0, 200.0, 420.0);
 //在Point.cs文件中定义
 public class Point : System.Object
 {
-    public string name;
-    public string code;
+    public string? name;
+    public string? code;
     public double x;
     public double y;
     public double z;
@@ -217,9 +228,9 @@ public class Point : System.Object
     {
         this.name = null;
         this.code = null;
-        this.x = 0;
-        this.y = 0;
-        this.z = 0;
+        this.x = 0.0;
+        this.y = 0.0;
+        this.z = 0.0;
     }
 
     public Point(double x, double y)
@@ -228,7 +239,7 @@ public class Point : System.Object
         this.code = null;
         this.x = x;
         this.y = y;
-        this.z = 0;
+        this.z = 0.0;
     }
 
     public Point(double x, double y, double z)
@@ -246,7 +257,7 @@ public class Point : System.Object
         this.code = null;
         this.x = x;
         this.y = y;
-        this.z = 0;
+        this.z = 0.0;
     }
 
     public Point(string name, double x, double y, double z)
@@ -415,41 +426,41 @@ public double X
 方法也称为函数，是类的一种行为成员，用于实现类的计算或操作。
 
 \begin{itemize}
-\item 方法的签名 (signature)
+    \item 方法的签名 (signature)
 
-方法的签名在声明该方法的类中必须唯一。方法的签名由方法的名称、
-参数类型、参数个数、返回类型、修饰符组成。
+          方法的签名在声明该方法的类中必须唯一。方法的签名由方法的名称、
+          参数类型、参数个数、返回类型、修饰符组成。
 
-方法可以有重载形式，但必须符合重载规则。
+          方法可以有重载形式，但必须符合重载规则。
 
-方法的参数 (parameter) 表示传递给该方法的值或变量，参数列表可以为空；
+          方法的参数 (parameter) 表示传递给该方法的值或变量，参数列表可以为空；
 
-方法还有一个返回类型 (return type)，用于指定该方法的返回值类型。
-如果方法没有返回值，返回类型必须定义为 void，不能不定义或省略。
+          方法还有一个返回类型 (return type)，用于指定该方法的返回值类型。
+          如果方法没有返回值，返回类型必须定义为 void，不能不定义或省略。
 
-\item 方法/函数的参数
+    \item 方法/函数的参数
 
-参数用于向方法传数据，可以传值或传变量。
-有四类参数：值参数、引用参数、输出参数和参数数组。
+          参数用于向方法传数据，可以传值或传变量。
+          有四类参数：值参数、引用参数、输出参数和参数数组。
 
-    \begin{itemize}
-	\item 值参数 (value parameter)
+          \begin{itemize}
+              \item 值参数 (value parameter)
 
-    值参数用于传递值类型数据。一个值参数相当于一个局部变量，它的初始值来自于该形参传递的实参数据。
-    值参数在传递时，实际上是传递值参数的一个拷贝，因此在函数内部对值参数的任何修改不会影响到传值的实参的。
-    值参数在传值时可以直接传递数值。
+                    值参数用于传递值类型数据。一个值参数相当于一个局部变量，它的初始值来自于该形参传递的实参数据。
+                    值参数在传递时，实际上是传递值参数的一个拷贝，因此在函数内部对值参数的任何修改不会影响到传值的实参的。
+                    值参数在传值时可以直接传递数值。
 
-	\item 引用参数 (reference parameter)
+              \item 引用参数 (reference parameter)
 
-    引用参数可用于传递输入和输出的数据。
-    在方法执行期间，引用参数与实参变量表示同一存储位置，因此为引用参数传递的实参必须是变量，
-    而且必须是具有初始值的变量。
+                    引用参数可用于传递输入和输出的数据。
+                    在方法执行期间，引用参数与实参变量表示同一存储位置，因此为引用参数传递的实参必须是变量，
+                    而且必须是具有初始值的变量。
 
-    引用参数使用 ref 修饰符声明。
+                    引用参数使用 ref 修饰符声明。
 
-    下面的交换两个变量值的代码演示了 ref 参数的用法：
+                    下面的交换两个变量值的代码演示了 ref 参数的用法：
 
-\begin{lstlisting}
+                    \begin{lstlisting}
 using System;
 class Test
 {
@@ -470,14 +481,14 @@ class Test
 \end{lstlisting}
 
 
-	\item 输出参数(output parameter)
+              \item 输出参数(output parameter)
 
-    输出参数用于函数输出计算数据值。对于输出参数来说，调用方提供的实参的初始值并不重要。
-    除此之外，输出参数与引用参数类似。输出参数用 out 修饰符声明的。
+                    输出参数用于函数输出计算数据值。对于输出参数来说，调用方提供的实参的初始值并不重要。
+                    除此之外，输出参数与引用参数类似。输出参数用 out 修饰符声明的。
 
-    下面的代码演示 out 参数的用法：
+                    下面的代码演示 out 参数的用法：
 
-\begin{lstlisting}
+                    \begin{lstlisting}
 using System;
 class Test
 {
@@ -495,19 +506,19 @@ class Test
 }
 \end{lstlisting}
 
-    第12行代码为较新式的 \cs 语法。
+                    第12行代码为较新式的 \cs 语法。
 
-	\item 参数数组 (parameter array)
+              \item 参数数组 (parameter array)
 
-    参数数组允许向方法传递可变数量的实参。
+                    参数数组允许向方法传递可变数量的实参。
 
-    参数数组使用 params 修饰符声明。只有方法的最后一个参数才可以是参数数组，
-    并且参数数组的类型必须是一维数组类型。
+                    参数数组使用 params 修饰符声明。只有方法的最后一个参数才可以是参数数组，
+                    并且参数数组的类型必须是一维数组类型。
 
-    System.Console 类的 Write 和 WriteLine 方法就是参数数组用法的很好示例，
-    它们的声明如下：
+                    System.Console 类的 Write 和 WriteLine 方法就是参数数组用法的很好示例，
+                    它们的声明如下：
 
-\begin{lstlisting}
+                    \begin{lstlisting}
 public class Console
 {
     public static void Write(string fmt, params object[] args) {...}
@@ -515,20 +526,20 @@ public class Console
 }
 \end{lstlisting}
 
-    在使用参数数组的方法中，参数数组的行为完全就像常规的数组类型参数。
-    但是，在具有参数数组的方法的调用中，既可以传递参数数组类型的单个实参，
-    也可以传递参数数组的元素类型的任意数目的实参。在后一种情况下，
-    将自动创建一个数组实例，并使用给定的实参对它进行初始化。
+                    在使用参数数组的方法中，参数数组的行为完全就像常规的数组类型参数。
+                    但是，在具有参数数组的方法的调用中，既可以传递参数数组类型的单个实参，
+                    也可以传递参数数组的元素类型的任意数目的实参。在后一种情况下，
+                    将自动创建一个数组实例，并使用给定的实参对它进行初始化。
 
-    传递参数数组类型的单个实参代码示例如下：
+                    传递参数数组类型的单个实参代码示例如下：
 
-\begin{lstlisting}
+                    \begin{lstlisting}
 Console.WriteLine("x={0} y={1} z={2}", x, y, z);
 \end{lstlisting}
 
-    上面代码等价于以下语句：
+                    上面代码等价于以下语句：
 
-\begin{lstlisting}
+                    \begin{lstlisting}
 string s = "x={0} y={1} z={2}";
 object[] args = new object[3];
 args[0] = x;
@@ -537,7 +548,7 @@ args[2] = z;
 Console.WriteLine(s, args);
 \end{lstlisting}
 
-    \end{itemize}
+          \end{itemize}
 
 \end{itemize}
 
@@ -828,20 +839,20 @@ p3--p4点的距离为：141.4213562373095
 
 \cs 中类的成员如下表所示：
 \begin{tabular}{|l|l|}
-\hline
-成员     &  说明   \\
-\hline
-常量     &         与类关联的常量值 \\
-字段     &         类的变量 \\
-方法     &         类可执行的计算和操作 \\
-属性     &         与读写类的命名属性相关联的操作 \\
-索引器   &      与以数组方式索引类的实例相关联的操作 \\
-事件     &         可由类生成的通知 \\
-运算符   &      类所支持的转换和表达式运算符 \\
-构造函数 &   初始化类的实例或类本身所需的操作 \\
-析构函数 &   在永久释放类的实例之前执行的操作 \\
-类型     &         类所声明的嵌套类型 \\
-\hline
+    \hline
+    成员   & 说明                 \\
+    \hline
+    常量   & 与类关联的常量值           \\
+    字段   & 类的变量               \\
+    方法   & 类可执行的计算和操作         \\
+    属性   & 与读写类的命名属性相关联的操作    \\
+    索引器  & 与以数组方式索引类的实例相关联的操作 \\
+    事件   & 可由类生成的通知           \\
+    运算符  & 类所支持的转换和表达式运算符     \\
+    构造函数 & 初始化类的实例或类本身所需的操作   \\
+    析构函数 & 在永久释放类的实例之前执行的操作   \\
+    类型   & 类所声明的嵌套类型          \\
+    \hline
 \end{tabular}
 
 类中成员的类型也可以用泛型类型进行定义，则这个类就是泛型类了。
@@ -913,13 +924,13 @@ Console.WriteLine($"运行时间：{st.Elapsed}");
 
 
 \subsection{静态构造函数}
- \cs 中所有的类均有一个静态构造函数(static constructor) ，
- 它是在第一次加载类本身时执行，用于实现类的初始化操作
- (也是在类的所有构造函数执行之前执行)。
+\cs 中所有的类均有一个静态构造函数(static constructor) ，
+它是在第一次加载类本身时执行，用于实现类的初始化操作
+(也是在类的所有构造函数执行之前执行)。
 
- 在构造函数声明前加入 static 修饰符，则显示声明了静态构造函数。
+在构造函数声明前加入 static 修饰符，则显示声明了静态构造函数。
 
- 比如我们可以在前面的Point类中加入静态构造函数，如下所示：
+比如我们可以在前面的Point类中加入静态构造函数，如下所示：
 
 \begin{lstlisting}
 namespace ZXY

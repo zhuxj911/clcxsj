@@ -430,9 +430,9 @@ public double Z {get; set ;}
 完整的优化后的 \cs 代码如下：
 \lstinputlisting{./chapter/csenv/Ch01Ex03/Ch01Ex03/Circle.cs}
 
-代码中由于计算圆的面积将会在属性R中和构造函数中调用，
-我们将其定义为函数CalArea供多次复用，
-并将可访问性定义为private供内部使用。
+代码中由于计算圆的面积将会在属性 R 与 构造函数中多次调用，
+我们将其定义为函数 CalArea 供复用，
+并将可访问性定义为 private 限制为内部使用。
 
 相应 \cs 的Main函数测试代码如下：
 

@@ -47,7 +47,7 @@
     % \setlength{\abovecaptionskip}{3pt} 
     \caption{常见值类型}
     \label{tab:valuetype}
-    \begin{tabular}{l|l}
+    \begin{tabular}{l l}
         \hline
         类别         & 说明                                   \\
         \hline
@@ -81,7 +81,7 @@
     % \setlength{\abovecaptionskip}{3pt} 
     \caption{常见引用类型}
     \label{tab:referencetype}
-    \begin{tabular}{l|l}
+    \begin{tabular}{l l}
         \hline
         类别            & 说明                                                  \\
         \hline
@@ -218,7 +218,7 @@ int j = (int)o;    // Unboxing
     % \setlength{\abovecaptionskip}{3pt} 
     \caption{常用表达式}
     \label{tab:expression}
-    \begin{tabular}{l|l}
+    \begin{tabular}{l l}
         \hline
         类别              & 说明                               \\
         \hline
@@ -400,6 +400,42 @@ static void Main()
 }
 \end{lstlisting}
 
+    \item is 与 as 语句
+
+          is和as是两个用于类型转换和检查的关键字。
+
+          is关键字用于检查一个对象是否兼容于指定的类型。如果兼容，则返回true；否则，返回false。
+
+          \begin{lstlisting}
+Object obj = new Object();
+if (obj is ClassA)
+{
+   ClassA a = (ClassA)obj; // 使用强制类型转换
+   Console.WriteLine("类型转换成功");
+}
+else
+{
+   Console.WriteLine("类型转换失败");
+}
+\end{lstlisting}
+
+          as关键字用于尝试将一个对象转换为指定的类型。如果转换成功，则返回转换后的对象；如果转换失败，则返回null，而不会抛出异常。
+
+          \begin{lstlisting}
+Object obj = new Object();
+ClassA a = obj as ClassA; // 尝试将obj转换为ClassA类型
+if (a == null)
+{
+   Console.WriteLine("类型转换失败");
+}
+else
+{
+   Console.WriteLine("类型转换成功");
+}
+\end{lstlisting}
+
+          \cs 7.0 引入了模式匹配，允许在 is 与 as 表达式中进行类型检查和转换, 功能更加强大。
+
     \item 其他语句
 
           checked 语句和 unchecked 语句，用于控制整型算术运算和转换的溢出检查上下文。
@@ -411,197 +447,6 @@ static void Main()
 \end{itemize}
 
 
-\subsection{模式匹配(Pattern Matching)}
-
-模式匹配是 \cs 语言中比较特别的语法，许多现代程序设计语言也支持模式匹配，
-模式匹配使得编程代码更加与自然语言接近，让代码更加友好、可读，
-已成为现代编程语言的强大核心特性。
-
-模式匹配也是 \cs 的强大语言特性，是一种测试表达式是否具有特定特征的方法，
-能够测试表达式的类型、值、属性或结构并在匹配时直接解构或执行某些功能。
-
-\cs 的模式匹配主要包含 is表达式、switch表达式 和 各种内置模式。
-is表达式 支持通过模式匹配来测试表达式，并根据测试结果有条件声明一个新的变量。
-switch表达式 允许根据表达式的首次匹配模式执行操作。 这两个表达式支持丰富的模式词汇。
-
-\begin{itemize}
-    \item Null 检查(is表达式)
-
-          模式匹配最常见的方案之一是确保值不是 null。
-
-          \begin{lstlisting}
-int? maybe = 12;
-
-if (maybe is int number) // is
-{
-    Console.WriteLine($"The nullable int 'maybe' has the value {number}");
-}
-else
-{
-    Console.WriteLine("The nullable int 'maybe' doesn't hold a value");
-}
-\end{lstlisting}
-
-          上述代码是声明模式，用于测试变量类型并将其分配给新变量。
-
-          \begin{lstlisting}
-string? message = ReadMessageOrDefault();
-
-if (message is not null) // is not
-{
-    Console.WriteLine(message);
-}
-\end{lstlisting}
-
-          上述代码使用常数模式将变量与之进行比较， not 为一种逻辑模式，在否定模式不匹配时与该模式匹配。
-
-    \item 类型测试(is表达式)
-
-          模式匹配的另一种常见用途是测试变量是否与给定类型匹配。
-
-          \begin{lstlisting}
-public static T MidPoint<T>(IEnumerable<T> sequence)
-{
-    if (sequence is IList<T> list)
-    {
-        return list[list.Count / 2];
-    }
-    else if (sequence is null)
-    {
-        throw new ArgumentNullException(nameof(sequence), "Sequence can't be null.");
-    }
-    else
-    {
-        int halfLength = sequence.Count() / 2 - 1;
-        if (halfLength < 0) halfLength = 0;
-        return sequence.Skip(halfLength).First();
-    }
-}
-\end{lstlisting}
-
-    \item 比较离散值(switch表达式)
-          \begin{lstlisting}
-public State PerformOperation(Operation command) =>
-   command switch
-   {
-       Operation.SystemTest => RunDiagnostics(),
-       Operation.Start => StartSystem(),
-       Operation.Stop => StopSystem(),
-       Operation.Reset => ResetToReady(),
-       _ => throw new ArgumentException("Invalid enum value for command", nameof(command)),
-   };
-\end{lstlisting}
-
-          第8行代码中的 \_ 为弃元模式，处理值与定义的 enum 值之一不匹配的任何错误条件。
-
-          可用数值常量、常量字符串值或 Span<char> 或 ReadOnlySpan<char> 代替枚举值集，
-          示例代码如下：
-          \begin{lstlisting}
-//public State PerformOperation(string command) =>
-public State PerformOperation(ReadOnlySpan<char> command) =>
-   command switch
-   {
-       "SystemTest" => RunDiagnostics(),
-       "Start" => StartSystem(),
-       "Stop" => StopSystem(),
-       "Reset" => ResetToReady(),
-       _ => throw new ArgumentException("Invalid string value for command", nameof(command)),
-   };
-\end{lstlisting}
-
-          Span<char> 表示连续字符集，ReadOnlySpan<char> 表示只读的连续字符集。
-
-    \item 关系模式
-
-          关系模式测试如何将数值与常量进行比较。以下代码基于华氏温度返回水源状态：
-
-          \begin{lstlisting}
-string WaterState(int tempInFahrenheit) =>
-    tempInFahrenheit switch
-    {
-        < 32 => "solid",
-        32 => "solid/liquid transition",
-        (> 32) and (< 212) => "liquid",
-        212 => "liquid / gas transition",
-        > 212 => "gas",
-    };
-\end{lstlisting}
-
-          上述代码中的 32°F 和 212°F为熔点和沸点值。
-
-    \item 多个输入
-
-          \begin{lstlisting}
-public record Order(int Items, decimal Cost); //订单项数、价值
-
-public decimal CalculateDiscount(Order order) => //折扣
-    order switch
-    {
-        { Items: > 10, Cost: > 1000.00m } => 0.10m,
-        { Items: > 5, Cost: > 500.00m } => 0.05m,
-        { Cost: > 250.00m } => 0.02m,
-        null => throw new ArgumentNullException(nameof(order), "Can't calculate discount on null order"),
-        var someObject => 0m,
-    };
-\end{lstlisting}
-
-          上面代码可以用位置模式简写成如下形式，其中表达式的属性已析构：
-
-          \begin{lstlisting}
-public record Order(int Items, decimal Cost); //订单数量、价值
-
-public decimal CalculateDiscount(Order order) =>
-    order switch
-    {
-        ( > 10,  > 1000.00m) => 0.10m,
-        ( > 5, > 50.00m) => 0.05m,
-        { Cost: > 250.00m } => 0.02m,
-        null => throw new ArgumentNullException(nameof(order), "Can't calculate discount on null order"),
-        var someObject => 0m,
-    };
-\end{lstlisting}
-
-          还可以将属性与 \verb|{ }| 匹配，\verb|{ }| 可与任何非 null 值匹配。
-
-    \item 列表模式
-
-          可以使用列表模式检查列表或数组中的元素。 列表模式提供了一种方法，将模式应用于序列的任何元素。
-          此外，还可以应用 弃元模式 \verb|(_)| 来匹配任何元素，或者应用 切片模式 来匹配零个或多个元素。
-
-          如有一包含银行交易信息的文本文件内容如下：
-
-          \begin{verbatim}
-04-01-2020, DEPOSIT,    Initial deposit,            2250.00
-04-15-2020, DEPOSIT,    Refund,                      125.65
-04-18-2020, DEPOSIT,    Paycheck,                    825.65
-04-22-2020, WITHDRAWAL, Debit,           Groceries,  255.73
-05-01-2020, WITHDRAWAL, #1102,           Rent, apt, 2100.00
-05-02-2020, INTEREST,                                  0.65
-05-07-2020, WITHDRAWAL, Debit,           Movies,      12.57
-04-15-2020, FEE,                                       5.55
-    \end{verbatim}
-
-          一个包含弃元模式、常量模式和var模式的列表模式用于捕获数值数据处理过程代码如下：
-
-          \begin{lstlisting}
-decimal balance = 0m;
-foreach (string[] transaction in ReadRecords())
-{
-    balance += transaction switch
-    {
-        [_, "DEPOSIT", _, var amount]     => decimal.Parse(amount),
-        [_, "WITHDRAWAL", .., var amount] => -decimal.Parse(amount),
-        [_, "INTEREST", var amount]       => decimal.Parse(amount),
-        [_, "FEE", var fee]               => -decimal.Parse(fee),
-        _                                 => throw new InvalidOperationException($"Record {string.Join(", ", transaction)} is not in the expected format!"),
-    };
-    Console.WriteLine($"Record: {string.Join(", ", transaction)}, New balance: {balance:C}");
-}
-\end{lstlisting}
-
-          \cs 模式匹配功能强大，更多有关高级用法请参考相应文档说明。
-
-\end{itemize}
 
 
 \section{\cs 中字符与字符串}
@@ -609,7 +454,7 @@ foreach (string[] transaction in ReadRecords())
 \subsection{字符(char)}
 
 \cs 有强大的字符与字符串处理能力，字符 char 是值类型，用单引号表示，存储 unicode 字符，如
-\verb|'A'| 、 \verb|'中'| 、\verb|'\u4E2D'|等。
+\verb|'A'| 、 \verb|'中'| 、\verb|'\u4E2D'| ( 中的 unicode 编码)等。
 
 \subsection{字符串(string)}
 字符串 string 是引用类型，string 是 System.String 的别名，字符串一般用双引号表示，内容为系列字符的只读集合。
@@ -637,11 +482,15 @@ string raw = """
 """;
 \end{lstlisting}
 
-上面的代码展示了字符串的多种定义方式，创建字符串对象不使用 new 运算符，除非使用字符数组初始化字符串; 长度为零的字符串表示形式为 \verb|""|，也可以使用 \verb|String.Empty| 来表示长度为零的字符串。
+上面的代码展示了字符串的多种定义方式，创建字符串对象不使用 new 运算符，除非使用字符数组初始化字符串;
+长度为零的字符串表示形式为 \verb|""|，也可以使用 \verb|String.Empty| 来表示长度为零的字符串。
 
-通过使用 String.Empty （不是 null）初始化字符串，可以减少 NullReferenceException 发生的可能性。在访问字符串前，可以先使用静态 \verb|String.IsNullOrEmpty(...)| 方法验证字符串的值。
+通过使用 String.Empty （不是 null）初始化字符串，可以减少 NullReferenceException 发生的可能性。
+在访问字符串前，可以先使用静态 \verb|String.IsNullOrEmpty(...)| 方法验证字符串的值是否为 null 或 空。
 
-字符串有三种形式：第5行用双引号包含起来的字符串称为字面字符串(Quoted string literals)，在这种字符串中，转义字符起作用；第6行用 @ 符号表示的字符串称为逐字字符串(Verbatim string literals)，在这种字符串中，转义字符不起作用；第7行用三个双引号表示的字符串称为原始字符串(Raw string literals)，在这种字符串中，在首尾 \verb|"""| 中的任何内容都是字符串的一部分。
+字符串有三种形式：第5行用双引号包含起来的字符串称为字面字符串(Quoted string literals)，在这种字符串中，转义字符起作用；
+第6行用 @ 符号表示的字符串称为逐字字符串(Verbatim string literals)，在这种字符串中，转义字符不起作用；
+第7行用三个双引号表示的字符串称为原始字符串(Raw string literals)，在这种字符串中，在首尾 \verb|"""| 中的任何内容都是字符串的一部分。
 
 \subsection{字符串的格式化}
 
@@ -651,7 +500,8 @@ string raw = """
 \begin{itemize}
     \item 字符串插值
 
-          字符串插值是 \cs 6.0 引入的一种新的字符串格式化方式，它使用 \$ 符号和花括号 \{\} 来表示变量或表达式。例如已知某六十进制的角度值为$123\degree3'35.78''$：
+          字符串插值是 \cs 6.0 引入的一种新的字符串格式化方式，它使用 \$ 符号和花括号 \{\} 来表示变量或表达式。
+          例如已知某六十进制的角度值为$123\degree3'35.78''$：
 
           \begin{lstlisting}
 int d = 123;
@@ -677,7 +527,8 @@ Console.WriteLine(angle);// 输出 123°03'35.78"
 
     \item ToString()方法
 
-          除了字符串插值和 String.Format 方法，\cs 还提供了其它一些字符串格式化的方法，如 ToString() 方法，它可以将数值类型转换为字符串，并且可以指定格式。例如：
+          除了字符串插值和 String.Format 方法，\cs 还提供了其它一些字符串格式化的方法，如 ToString() 方法，
+          它可以将数值类型转换为字符串，并且可以指定格式。例如：
 
           \begin{lstlisting}
 double pi = 3.14159265358979323846;
@@ -706,7 +557,8 @@ Console.WriteLine(num);
 \end{lstlisting}
 
 上面代码中，Convert.ToDouble() 方法和 Double.Parse() 方法都可能转换失败从而抛出异常。
-比较好的方法是使用 Double.TryParse() 方法，它会返回一个布尔值，表示转换是否成功，如果成功，则将转换后的值赋给指定的变量，如下代码所示：
+比较好的方法是使用 Double.TryParse() 方法，它会返回一个布尔值，表示转换是否成功，
+如果成功，则将转换后的值赋给指定的变量，如下代码所示：
 
 \begin{lstlisting}
 string str = "123.521";
@@ -720,7 +572,9 @@ if (Double.TryParse(str, out var num))
 
 \subsection{ string 的性能与 StringBuilder}
 
-string 字符串的内容是不能被修改的，每次对字符串进行修改时，都会创建一个新的字符串对象，这会导致频繁的内存分配和垃圾回收，从而影响性能。 频繁的字符串修改与大量字符串拼接应尽可能使用
+string 字符串的内容是不能被修改的，每次对字符串进行修改时，
+都会创建一个新的字符串对象，这会导致频繁的内存分配和垃圾回收，从而影响性能。
+频繁的字符串修改与大量字符串拼接应尽可能使用
 StringBuilder 类， 最后用函数 ToString() 将其转换为 string 。
 
 \section{ \cs 特殊语法}
@@ -747,7 +601,7 @@ Console.WriteLine($"Angle value is {a1.Item1}°{a1.Item2}'{a1.Item3}\".");
 // Output: Angle value is 45°30'15.5".
 \end{lstlisting}
 
-元组类型是值类型，元组元素是公共字段, 若无显示类型指定， 元组字段的默认名称为 Item1、Item2、Item3 等。
+元组类型是值类型，元组元素是公共字段, 若无显式类型指定，默认名称为 Item1、Item2、Item3 等。
 
 还可以定义为：
 
@@ -765,12 +619,14 @@ record 修饰符是用于封装数据的内置功能，提供了一种简洁的�
 record 与 record class 语法定义引用类型，record struct 定义值类型。
 
 如下代码定义了一个 record Point：
-\begin{lstlisting}
+
+\begin{lstlisting} [numbers = none]
 public record Point(string Name, double X, double Y, double Z);
 \end{lstlisting}
 
 在 record 上声明主构造函数时，编译器会为主构造函数参数生成公共属性。
 上面代码相当于如下代码：
+
 \begin{lstlisting}
 public record Point
 {
@@ -811,119 +667,495 @@ point对象的属性值在初始化后不能被修改，尝试修改会导致编
 
 record struct 的相等性定义基本与 struct 等同。
 
+
+
+
+
 \subsection{泛型}
-在定义类时，在类名后用尖括号括起来的类型参数列表，称之为泛型。如：
-\begin{lstlisting}
+
+泛型是现代编程语言非常重要的语法。在\cs 中， 泛型方法是 一种强大的编程特性，
+它允许方法在声明时使用类型参数，从而实现对多种数据类型的灵活支持。
+泛型在代码复用和类型安全性方面具有显著优势。
+
+\begin{itemize}
+
+    \item 泛型的定义
+
+          在定义类时，在类名后用尖括号括起来的类型参数列表，称之为泛型。
+
+          以下代码展示了在类中使用泛型：
+
+          \begin{lstlisting}
 public class Pair<T1, T2>
 {
     public T1 first;
     public T2 second;
 }
 \end{lstlisting}
-代码中的T1与T2为类型参数。
 
-泛型是现代编程语言非常重要的语法。
+          代码中的T1与T2为类型参数。
+
+          以下代码展示了在方法中使用泛型交换两个数的值：
+
+          \begin{lstlisting}
+static void Swap<T>(ref T l, ref T r)
+{
+   T temp = l;
+   l = r;
+   r = temp;
+}
+\end{lstlisting}
+
+          上述代码中，T 是类型参数，表示该方法可以操作任意类型的数据。
+          参数为 ref T l 和 ref T r，表示传入的参数是引用类型，可以在方法内部修改它们的值。
+
+    \item 泛型的调用
+
+          泛型方法的调用需要指定类型参数，编译器会根据传入的参数类型推断出类型参数的具体类型。
+
+          \begin{lstlisting}
+int a = 1, b = 2;
+Swap<int>(ref a, ref b); // 显式指定类型
+Swap(ref a, ref b); // 类型推断
+Console.WriteLine($"{a}, {b}"); // 输出：2, 1
+\end{lstlisting}
+
+
+    \item 泛型的约束
+
+          泛型约束用于限制类型参数的范围，以确保类型参数满足特定的条件。
+          这有助于在编译时捕获潜在的错误，并提供更好的类型安全性。
+          \cs 中泛型通过 where 关键字对类型参数进行约束。
+
+          \begin{lstlisting}  
+void SwapIfGreater<T>(ref T l, ref T r) where T : IComparable<T>
+{
+   if (l.CompareTo(r) > 0)
+   {
+       T temp = l;
+       l = r;
+       r = temp;
+   }
+}
+\end{lstlisting}
+
+          上述代码中，where T : IComparable<T> 表示类型参数 T 必须实现 IComparable<T> 接口，
+          这样我们就可以在方法内部使用 CompareTo 方法来比较两个值。
+
+
+\end{itemize}
+
+
+
 
 \subsection{集合}
-数组Array、列表List、词典Dictionary、栈Stack、队列Queue
-是程序设计中常用的数据结构，在 \cs 中均以类库形式提供，
-在\cs 程序设计中可以直接使用。
 
-在使用这些集合类时，应尽量使用泛型集合,如动态数组：List<int>
+\cs 以类库形式提供了 数组(Array)、列表(List)、词典(Dictionary)、栈(Stack)、队列(Queue)
+等集合数据结构, 集合中的元素可以是任意类型的数据。
 
-\subsection{委托}
-委托类似于C、\cpp 中的函数指针。语法为：
+\begin{itemize}
+    \item 数组
 
-访问修饰符 delegate 返回类型 委托名(参数序列);
+          数组是相同数据类型的元素按一定顺序排列的集合，在存储数据时是连续存储的，可以快速地遍历元素。
+          数组的大小与元素类型一般在定义时需确定，这类数组称为静态数组，如 \cs 中的 System.Array ，如以下代码所示：
 
-从语法上可以看出，delegate之后实际上就是函数的定义。
-
-.Net中预定义了Func和Action委托。
-
-Func委托代表有返回值的委托，参数最多有16个，最后一个参数必须是返回参数TResult，语法形式为：
-
-public delegate TResult Func<in T1, ..., in T15, out TResult>(T1 arg1, ..., T15 arg15);
-
-Action委托代表无有返回值的委托，参数最多有16个，语法形式为：
-
-public delegate void Action<in T1,...,in T16>(T1 arg1, ..., T16 arg2);
-
-\subsection{Lambda语句}
-Lambda表达式主要用于简化委托的编写形式，是一种可用于创建委托或表达式树类型的匿名函数。语法为：
-
-(输入参数列表) => \{表达式或语句块\}
-
-Lambda表达式实质是一个匿名函数，如下代码所示：
-\begin{lstlisting}
-List<int> list = new List<int>(){1,2,3,4,5,6,7,8,10,11,12,13,14,15};
-var q = list.Were( x => x%2 == 0);
-\end{lstlisting}
-list.Where函数中调用的就是Lambda表达式。
-
-\subsection{迭代器}
-
-迭代器用于逐步迭代集合(如列表和数组)。
-
-迭代器方法或 get 访问器可对集合执行自定义迭代。 迭代器方法使用 yield return 语句返回元素，每次返回一个。 到达 yield return 语句时，会记住当前在代码中的位置。 下次调用迭代器函数时，将从该位置重新开始执行。
-
-通过 foreach 语句或 LINQ 查询从客户端代码中使用迭代器。
-
-如下所示代码，将输出 3 5 8
-
-\begin{lstlisting}
-using System;
-
-namespace ConsoleApp1
+          \begin{lstlisting}  
+int[] a1 = new int[10]; // 长度为10的一维整型数组
+int[] a11 = new int[]{1,2,3,4,5,6,7,8,9,10}; // 由初始化元素等个数确定数组的长度
+int[,] a2 = new int[10, 10]; // 长度为10x10的二维整型数组
+int[,] a21 = new int[,]{{1,2,3},
+                        {4,5,6},
+                        {7,8,9} }; // 长度为3x3的二维整型数组
+int[][] a3 = new int[10][];  // 长度为10的一维数组的数组，也称为交错数组(jagged array)
+int[][] a31 = new int[10][];  // 长度为10的交错数组
+for(int i=0; i<10; i++)
 {
-    class Program
+    a31[i] = new int[10]; // 每个一维数组的长度为10
+}
+\end{lstlisting}
+
+          上述代码中，a1、a2、a3是静态数组，a11、a21、a31是动态数组。
+
+    \item 列表
+
+          列表是一个可变大小的集合，可以动态地添加或删除元素。列表在内存中不是连续存储的，
+          但它提供了类似于数组的索引访问方式。列表的大小可以根据需要动态调整，这类集合称为动态数组，
+          如 \cs 中的 System.Collections.Generic.List<T> ，如以下代码所示：
+
+          \begin{lstlisting}
+List<int> numbers = [1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15];
+numbers.ForEach(number => Console.Write(number + ", "));
+Console.WriteLine();
+
+Console.WriteLine(numbers[1]);
+Console.WriteLine(string.Join(',', numbers[1..5])); 
+Console.WriteLine(numbers[^1]); 
+Console.WriteLine(string.Join(',', numbers[^5..^1]));
+Console.WriteLine(string.Join(',', numbers[^5..]));  
+\end{lstlisting}
+
+          上述代码第1行，定义了 一个 List<int> 类型的动态数组 numbers，这是采用了表达式初始化器的方式进行了定义，
+          还可以用如下之一的定义方式：
+
+          \begin{lstlisting}
+List<int> numbers1 = new List<int>(){1,2,3,4,5,6,7,8,10,11,12,13,14,15};
+List<int> numbers2 = new(){1,2,3,4,5,6,7,8,10,11,12,13,14,15};
+var numbers3 = new List<int>(){1,2,3,4,5,6,7,8,10,11,12,13,14,15};
+\end{lstlisting}
+
+          第2行代码使用了 Lambda 表达式的方式来遍历列表中的每个元素，并将其打印出来。输出结果为：
+          \verb|1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, |
+
+          传统的遍历输出方式为：
+          \begin{lstlisting}
+foreach (int number in numbers)
+{
+    Console.Write(number + ", ");
+}
+\end{lstlisting}
+
+          List<T> 几乎是 \cs 中最常用的集合类(动态数组)，List<T> 是一个泛型集合类，T 表示集合中元素的类型。
+
+
+    \item  切片(Slice)
+
+          切片是对数组或列表的一个连续子集的引用，它允许我们在不复制数据的情况下访问和操作原始集合的一部分。
+          \verb| .. |表示切片一个区域，\verb| ^ | 表示从倒数第几个元素开始。
+
+          在上小节代码第5行代码使用了索引访问方式来获取列表中索引为1的元素，输出结果为：2
+
+          第6行代码使用了切片(Slice)的方式来获取列表中索引为1到4的元素，输出结果为：2,3,4,5
+
+          第7行代码使用了索引访问方式来获取列表中最后一个元素，输出结果为：15
+
+          第8行代码使用了切片(Slice)的方式来获取列表中倒数第5到倒数第1的元素，
+          注意切片是左闭右开区间，也就是不包括最后一个元素，所以输出结果为：11,12,13,14
+
+          第9行代码使用了列表中倒数第5个元素至末尾，输出结果为：11,12,13,14,15
+
+\end{itemize}
+
+
+在使用这些集合类时，应尽量使用泛型集合, 如动态数组：List<T>、栈：Stack<T>、队列：Queue<T>、字典：Dictionary<TKey, TValue>等，
+而不是使用非泛型集合，如 ArrayList、Stack、Queue、Hashtable 等.
+
+
+
+\subsection{委托与事件}
+
+\begin{itemize}
+    \item 委托(delegate)
+
+          委托是一种类型，表示对具有特定参数列表和返回类型的方法的引用。委托类似于C、\cpp 中的函数指针。
+          语法为：
+
+          \begin{lstlisting}[numbers = none]
+public delegate <return type> <delegate-name>(<parameter list>);
+\end{lstlisting}
+
+          从语法上可以看出，delegate 之后实际上就是函数的定义。
+
+          .NET 中预定义了 Action、 Func 和  Predicate 委托。
+
+          Action委托表示没有返回值的委托，参数最多有16个，语法形式为：
+
+          \begin{lstlisting}[numbers = none]
+public delegate void Action<in T1,...,in T16>(T1 arg1, ..., T16 arg2);
+\end{lstlisting}
+
+          Func 委托表示有返回值的委托，参数最多有16个，最后一个参数必须是返回参数 TResult，语法形式为：
+
+          \begin{lstlisting} [numbers = none]
+public delegate TResult Func<in T1, ..., in T15, out TResult>(T1 arg1, ..., T15 arg15);
+\end{lstlisting}
+
+          Predicate 委托表示 返回 bool 值的方法，通常用于条件判断。
+
+          可以将 delegate 看作是一种数据类型，它是存储对方法的引用。委托可以像普通方法一样被调用，并且可以作为参数传递给其他方法。
+
+
+    \item 事件(event)
+
+          事件(event)是一种特殊类型的委托，用于发布和订阅机制。在 \cs 中，事件本质上就是一个封装了委托的类型，它用于响应程序中的某些操作。
+
+          \begin{lstlisting}
+public class Program
+{
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            foreach (int number in SomeNumbers())
-            {
-                Console.Write(number.ToString() + " ");
-            }
-            // Output: 3 5 8
-            Console.ReadKey();
+        var button = new Button();
+        button.Click += ButtonClick; // 订阅事件
+        button.OnClick();  // 引发事件, 输出 "Button clicked!"
+    }
 
-        }
+    static void ButtonClick(object? sender, EventArgs e)
+    {
+        Console.WriteLine("Button clicked!");
+    }
+}
 
-        public static System.Collections.IEnumerable SomeNumbers()
-        {
-            yield return 3;
-            yield return 5;
-            yield return 8;
-        }
+public class Button
+{
+    // 定义一个事件
+    public event EventHandler? Click;
+
+    // 引发事件的方法
+    public void OnClick()
+    {
+        Click?.Invoke(this, EventArgs.Empty);  // 调用事件 
     }
 }
 \end{lstlisting}
+
+\end{itemize}
+
+有关委托与事件更多的知识请参考相应的微软官方文档。
+
+\subsection{Lambda语句}
+
+Lambda表达式主要用于简化委托的编写形式，是一种可用于创建委托或表达式树类型的匿名函数。语法为：
+
+\verb|(parameter list) => { 表达式或语句块 } |
+
+Lambda表达式实质是一个匿名函数，如下代码所示：
+
+\begin{lstlisting}
+List<int> list = new(){1,2,3,4,5,6,7,8,10,11,12,13,14,15};
+var q = list.Where( x => x%2 == 0); // 取偶数
+Console.WriteLine(string.Join(",", q)); // 输出 2,4,6,8,10,12,14
+\end{lstlisting}
+
+list.Where函数中调用的就是Lambda表达式。
+
+\subsection{迭代器与 yield 语句}
+
+迭代器用于逐步迭代集合(如列表和数组)。
+
+迭代器方法或 get 访问器可对集合执行自定义迭代。 迭代器方法使用 yield return 语句返回元素，每次返回一个。
+到达 yield return 语句时，会记住当前在代码中的位置，下次调用迭代器函数时，将从该位置重新开始执行。
+
+如下所示代码，Range 函数是迭代器函数，返回从 from 到 to 的整数序列。
+
+\begin{lstlisting}
+Console.WriteLine(string.Join(", ", Range(-10, 10)));
+
+static IEnumerable<int> Range(int from, int to, int step = 1)
+{
+    for (int i = from; i < to; i += step)
+    {
+        yield return i;
+    }
+}
+\end{lstlisting}
+
+通过 foreach 语句或 LINQ 查询从客户端代码中使用迭代器。
 
 迭代器方法或 get 访问器的返回类型可以是 IEnumerable、IEnumerable<T>、IEnumerator 或 IEnumerator<T>。
 
 可以使用 yield break 语句来终止迭代。
 
-yield语句
+
+
+
+
+
+\section{模式匹配(Pattern Matching)}
+
+模式匹配是 \cs 语言中比较特别的语法，许多现代程序设计语言也支持模式匹配，
+模式匹配使得编程代码更加与自然语言接近，让代码更加友好、可读，
+已成为现代编程语言的强大核心特性。
+
+模式匹配也是 \cs 的强大语言特性，是一种测试表达式是否具有特定特征的方法，
+能够测试表达式的类型、值、属性或结构并在匹配时直接解构或执行某些功能。
+
+\cs 的模式匹配主要包含 is表达式、switch表达式 和 各种内置模式。
+is表达式 支持通过模式匹配来测试表达式，并根据测试结果有条件声明一个新的变量。
+switch表达式 允许根据表达式的首次匹配模式执行操作。 这两个表达式支持丰富的模式词汇。
+
+\subsection{Null 检查(is表达式)}
+
+模式匹配最常见的方案之一是确保值不是 null。
 
 \begin{lstlisting}
-static IEnumerable<int> Range(int from, int to) {
-    for (int i = from; i < to; i++) {
-        yield return i;
-    }
-    yield break;
-}
-static void Main()
+int? maybe = 12;
+
+if (maybe is int number) // is
 {
-    foreach (int x in Range(-10,10)) {
-        Console.WriteLine(x);
+    Console.WriteLine($"The nullable int 'maybe' has the value {number}");
+}
+else
+{
+    Console.WriteLine("The nullable int 'maybe' doesn't hold a value");
+}
+\end{lstlisting}
+
+上述代码是声明模式，用于测试变量类型并将其分配给新变量。
+
+\begin{lstlisting}
+string? message = ReadMessageOrDefault();
+
+if (message is not null) // is not
+{
+    Console.WriteLine(message);
+}
+\end{lstlisting}
+
+上述代码使用常数模式将变量与之进行比较， not 为一种逻辑模式，在否定模式不匹配时与该模式匹配。
+
+\subsection{类型测试(is表达式)}
+
+模式匹配的另一种常见用途是测试变量是否与给定类型匹配。
+
+\begin{lstlisting}
+public static T MidPoint<T>(IEnumerable<T> sequence)
+{
+    if (sequence is IList<T> list)
+    {
+        return list[list.Count / 2];
+    }
+    else if (sequence is null)
+    {
+        throw new ArgumentNullException(nameof(sequence), "Sequence can't be null.");
+    }
+    else
+    {
+        int halfLength = sequence.Count() / 2 - 1;
+        if (halfLength < 0) halfLength = 0;
+        return sequence.Skip(halfLength).First();
     }
 }
 \end{lstlisting}
+
+\subsection{比较离散值(switch表达式)}
+\begin{lstlisting}
+public State PerformOperation(Operation command) =>
+   command switch
+   {
+       Operation.SystemTest => RunDiagnostics(),
+       Operation.Start => StartSystem(),
+       Operation.Stop => StopSystem(),
+       Operation.Reset => ResetToReady(),
+       _ => throw new ArgumentException("Invalid enum value for command", nameof(command)),
+   };
+\end{lstlisting}
+
+第8行代码中的 \_ 为弃元模式，处理值与定义的 enum 值之一不匹配的任何错误条件。
+
+可用数值常量、常量字符串值或 Span<char> 或 ReadOnlySpan<char> 代替枚举值集，
+示例代码如下：
+\begin{lstlisting}
+//public State PerformOperation(string command) =>
+public State PerformOperation(ReadOnlySpan<char> command) =>
+   command switch
+   {
+       "SystemTest" => RunDiagnostics(),
+       "Start" => StartSystem(),
+       "Stop" => StopSystem(),
+       "Reset" => ResetToReady(),
+       _ => throw new ArgumentException("Invalid string value for command", nameof(command)),
+   };
+\end{lstlisting}
+
+Span<char> 表示连续字符集，ReadOnlySpan<char> 表示只读的连续字符集。
+
+\subsection{关系模式}
+
+关系模式测试如何将数值与常量进行比较。以下代码基于华氏温度返回水源状态：
+
+\begin{lstlisting}
+string WaterState(int tempInFahrenheit) =>
+    tempInFahrenheit switch
+    {
+        < 32 => "solid",
+        32 => "solid/liquid transition",
+        (> 32) and (< 212) => "liquid",
+        212 => "liquid / gas transition",
+        > 212 => "gas",
+    };
+\end{lstlisting}
+
+上述代码中的 32°F 和 212°F为熔点和沸点值。
+
+\subsection{多个输入}
+
+\begin{lstlisting}
+public record Order(int Items, decimal Cost); //订单项数、价值
+
+public decimal CalculateDiscount(Order order) => //折扣
+    order switch
+    {
+        { Items: > 10, Cost: > 1000.00m } => 0.10m,
+        { Items: > 5, Cost: > 500.00m } => 0.05m,
+        { Cost: > 250.00m } => 0.02m,
+        null => throw new ArgumentNullException(nameof(order), "Can't calculate discount on null order"),
+        var someObject => 0m,
+    };
+\end{lstlisting}
+
+上面代码可以用位置模式简写成如下形式，其中表达式的属性已析构：
+
+\begin{lstlisting}
+public record Order(int Items, decimal Cost); //订单数量、价值
+
+public decimal CalculateDiscount(Order order) =>
+    order switch
+    {
+        ( > 10,  > 1000.00m) => 0.10m,
+        ( > 5, > 50.00m) => 0.05m,
+        { Cost: > 250.00m } => 0.02m,
+        null => throw new ArgumentNullException(nameof(order), "Can't calculate discount on null order"),
+        var someObject => 0m,
+    };
+\end{lstlisting}
+
+还可以将属性与 \verb|{ }| 匹配，\verb|{ }| 可与任何非 null 值匹配。
+
+\subsection{列表模式}
+
+可以使用列表模式检查列表或数组中的元素。 列表模式提供了一种方法，将模式应用于序列的任何元素。
+此外，还可以应用 弃元模式 \verb|(_)| 来匹配任何元素，或者应用 切片模式 来匹配零个或多个元素。
+
+如有一包含银行交易信息的文本文件内容如下：
+
+\begin{verbatim}
+04-01-2020, DEPOSIT,    Initial deposit,            2250.00
+04-15-2020, DEPOSIT,    Refund,                      125.65
+04-18-2020, DEPOSIT,    Paycheck,                    825.65
+04-22-2020, WITHDRAWAL, Debit,           Groceries,  255.73
+05-01-2020, WITHDRAWAL, #1102,           Rent, apt, 2100.00
+05-02-2020, INTEREST,                                  0.65
+05-07-2020, WITHDRAWAL, Debit,           Movies,      12.57
+04-15-2020, FEE,                                       5.55
+\end{verbatim}
+
+一个包含弃元模式、常量模式和var模式的列表模式用于捕获数值数据处理过程代码如下：
+
+\begin{lstlisting}
+decimal balance = 0m;
+foreach (string[] transaction in ReadRecords())
+{
+    balance += transaction switch
+    {
+        [_, "DEPOSIT", _, var amount]     => decimal.Parse(amount),
+        [_, "WITHDRAWAL", .., var amount] => -decimal.Parse(amount),
+        [_, "INTEREST", var amount]       => decimal.Parse(amount),
+        [_, "FEE", var fee]               => -decimal.Parse(fee),
+        _                                 => throw new InvalidOperationException($"Record {string.Join(", ", transaction)} is not in the expected format!"),
+    };
+    Console.WriteLine($"Record: {string.Join(", ", transaction)}, New balance: {balance:C}");
+}
+\end{lstlisting}
+
+\cs 模式匹配功能强大，更多有关高级用法请参考相应文档说明。
+
+注：该节示例代码来自 Microsoft Learn。
+
 
 \section{小结}
 这一章我们学习了 \cs 基本语法：数据与语句，数据分为数值类型与引用类型，
 数据定义时可以使用var关键字让编译器推断变量的数据类型，还可以使用泛型。
 
-\cs 语句相对于C、\cpp 而言，出现了一些新的如lambda语句、迭代器等，
+\cs 语句相对于C、\cpp 而言，出现了一些新的如 lambda 语句、迭代器等，
 这些是许多现代语言中必不可少的语言特征，
 我们将在后续课程中将其继续学习与应用。
 

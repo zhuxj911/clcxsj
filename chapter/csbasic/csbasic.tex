@@ -927,17 +927,19 @@ Console.WriteLine(string.Join(",", q)); // 输出 2,4,6,8,10,12,14
 
 list.Where函数中调用的就是Lambda表达式。
 
-\subsection{迭代器与 yield 语句}
+\subsection{迭代器}
 
-迭代器用于逐步迭代集合(如列表和数组)。
+\cs 迭代器是一种用来遍历集合对象的方法，核心要素包括 yield return、yield break 和 foreach 循环。
+它能按需逐个返回元素，不需要一次性把所有数据都加载到内存中。
+
 
 迭代器方法或 get 访问器可对集合执行自定义迭代。 迭代器方法使用 yield return 语句返回元素，每次返回一个。
 到达 yield return 语句时，会记住当前在代码中的位置，下次调用迭代器函数时，将从该位置重新开始执行。
 
-如下所示代码，Range 函数是迭代器函数，返回从 from 到 to 的整数序列。
+如下所示代码，Range 函数是迭代器函数，返回从 from 到 to 间隔为2的整数序列。
 
 \begin{lstlisting}
-Console.WriteLine(string.Join(", ", Range(-10, 10)));
+Console.WriteLine(string.Join(", ", Range(-10, 10, 2)));
 
 static IEnumerable<int> Range(int from, int to, int step = 1)
 {
@@ -948,11 +950,12 @@ static IEnumerable<int> Range(int from, int to, int step = 1)
 }
 \end{lstlisting}
 
-通过 foreach 语句或 LINQ 查询从客户端代码中使用迭代器。
+上述代码输出为： \verb|-10, -8, -6, -4, -2, 0, 2, 4, 6, 8|
 
-迭代器方法或 get 访问器的返回类型可以是 IEnumerable、IEnumerable<T>、IEnumerator 或 IEnumerator<T>。
+迭代器方法或 get 访问器的返回类型可以是 IEnumerable、IEnumerable<T>、IEnumerator
+或 IEnumerator<T>。
 
-可以使用 yield break 语句来终止迭代。
+yield break 语句用来提前结束迭代过程。
 
 
 

@@ -2,56 +2,58 @@
 
 \chapter{\cs 面向对象基础}
 
-类(class) 是面向对象程序设计的基础与核心，封装、继承、多态(polymorphism)是面向对象程序设计的三大特征。
-
-封装把客观事物封装成抽象的类，在类中把自己的数据和方法只让可信的类或者对象操作，对不可信的类或对象进行信息隐藏。
-
-也就是应尽可能的把类成员变量的访问权限定为 private 或 protected ，通过属性(Property)或方法向外开放；
-类的方法/函数 应尽可能的定义为 public ；
-需向下继承的类成员，尽可能可以定义为 protected ；
-项目内能访问的成员，尽可能定义为 internal 。
-
-继承 (Inheritance) 是指这样一种能力：它可以使用现有类的所有功能，并在无需重新编写原来的类的情况下对这些功能进行扩展。
-
-继承符合开闭原则。
-
-通过继承创建的新类称为“子类”或“派生类”, 被继承的类称为“基类”、“父类”或“超类”。
-继承的过程，是从一般到特殊的过程。
-
-多态(polymorphism)是指将子对象赋值给父对象，父对象就可以根据当前赋值给它的子对象的特性以不同的方式运作。
+类(class) 是面向对象程序设计的基础与核心，
+类也是 \cs 语言最基础最重要的类型，是一种将数据（字段或属性）与对数据的操作（方法、函数等）组合在一起的数据结构。
 
 
-\section{类与对象}
-类是 \cs 中最基础最重要的类型，是一种将数据（字段）与对数据的操作（方法、函数以及属性等）组合在一起的数据结构。
+\section{类(class)}
 
-严格地说，类分为实例类与静态类，实例类为动态创建类的实例 (instance) 提供定义，
-实例也称为对象 (object)。也可以说类是定义，对象是类的实例。
-静态类不能生成类的实例，在此声明，若非特别语境下，以后本书中所指的类均为实例类。
+\subsection{类与实例对象(instance object)}
 
-在 \cs 中类支持单继承 (inheritance)，通过类继承产生派生类 (derived class)，
-从而扩展和专用化基类 (base class) 。
+类(class)是创建对象的蓝图或模板，对象(object)是根据类创建的具体实例(instance)。
+我们以点(Point)与具体的某个点(如11号教学楼旁的那个名叫 GP12 的点)为例，
+点就是类，它是一个抽象的概念，定义了点的属性与行为，而具体点 GP12 就是点的实例对象。
 
-\cs 中所有的类均从 System.Object 继承，如果一个类只从 System.Object 类继承，
-则可以将其省略。
+
+
+
+\subsection{类的实例与静态类、静态属性(static)}
+
+不是所有的类都有实例对象。没有实例或不需要实例的类定义为静态类(static class)。
+一个被定义为静态的类不能生成类的实例。如 \cs 中的数学类 System.Math,
+在这个类中定义个各种常数与常用数学算法，但没有任何实例数据和方法，
+因此将其定义为静态类(static class)。
+
+一个实例类中也可以有静态成员(static member)，静态成员属于类本身，而不是类的实例，
+\cs 中在成员前加关键字 static 将其定义为静态成员。
+
+类的静态成员调用方法为： 类名.静态成员名 ，
+而类的实例成员调用方法为： 实例对象名.实例成员名 。
+
+在类的静态方法中不能直接调用非静态成员，需通过实例对象进行调用；
+但在实例方法中可以直接调用静态成员。
+
+在此声明，若非特别语境下，以后本书中所指的类均为实例类。
+
 
 \subsection{类的定义}
 
-类的关键字为 class ，定义一个新类的方式如下：
+类的关键字为 class ，定义一个类的方式如下：
 
-\begin{lstlisting}
+\begin{lstlisting}[numbers=none]
 [public/internal] class ClassName [: BaseClass, Interface1,...,InterfaceN]
 {
     ......
 }
 \end{lstlisting}
 
-先指定类的修饰符， class 关键字后是类名称（类名称首字母一般大写），接着是要继承的基类
+先指定类的修饰符， class 关键字后是类名称（类名首字母一般大写），接着是要继承的基类
 与需实现的接口。
 之后是类的主体，它由一组位于一对大括号 ``\{'' 和 ``\}'' 之间的成员声明组成。
 
 由于测绘行业的基本任务是提供位置服务的，点位是我们经常使用的概念，我们就对它来定义一个类 Point ：
 
-\begin{lstlisting}
+\begin{lstlisting}[numbers=none]
 public class Point : System.Object
 {
     ......
@@ -67,7 +69,7 @@ public class Point : System.Object
 上例中 ``: System.Object'' 可以省略。
 
 上面的代码可以简写为：
-\begin{lstlisting}
+\begin{lstlisting}[numbers=none]
 public class Point
 {
     ......
@@ -97,8 +99,7 @@ public class Point
 p1、p2与p3所指向的内存，将由 .NET 系统自动收回。
 
 \subsection{类的字段（Filed）}
-一个类通常由两部分组成：数据与对数据的操作。字段是与类或类的实例相关的变量，
-用于存储类的数据。
+类的字段用于存储类的数据，是与类或类的实例相关的变量。
 
 如上面的点 Point 类，我们可以为其定义数据成员如下：
 
@@ -613,6 +614,7 @@ public class Point
 \begin{lstlisting}
 //在Point.cs文件中定义
 using System;
+
 public class Point
 { 
     //其它省略，代码如前面所示
@@ -636,6 +638,7 @@ public class Point
 \begin{lstlisting}
 //在Point.cs文件中定义
 using System;
+
 public class Point
 { 
     //其它省略，代码如前面所示
@@ -703,8 +706,6 @@ public class Point
 
     public Point() //默认构造函数
     {
-        this.name = null;
-        this.code = null;
         this.x = 0;
         this.y = 0;
         this.z = 0;
@@ -714,8 +715,6 @@ public class Point
 
     public Point(double x, double y)
     {
-        this.name = null;
-        this.code = null;
         this.x = x;
         this.y = y;
         this.z = 0;
@@ -725,8 +724,6 @@ public class Point
 
     public Point(double x, double y, double z)
     {
-        this.name = null;
-        this.code = null;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -737,7 +734,6 @@ public class Point
     public Point(string name, double x, double y)
     {
         this.name = name;
-        this.code = null;
         this.x = x;
         this.y = y;
         this.z = 0;
@@ -748,7 +744,6 @@ public class Point
     public Point(string name, double x, double y, double z)
     {
         this.name = name;
-        this.code = null;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -835,25 +830,34 @@ p3--p4点的距离为：141.4213562373095
 \subsection{类成员扩展阅读}
 \cs 中类的成员不仅有字段、方法、属性、常量等，还有其它的一些类型成员，
 在本课程中不常用到，所以在此就不详讲了，如果在后续用到了我们再进行讲解。
-有些区的同学可以参照下表自行阅读：
+有兴趣的同学可以参照下表自行阅读：
 
-\cs 中类的成员如下表所示：
-\begin{tabular}{|l|l|}
-    \hline
-    成员   & 说明                 \\
-    \hline
-    常量   & 与类关联的常量值           \\
-    字段   & 类的变量               \\
-    方法   & 类可执行的计算和操作         \\
-    属性   & 与读写类的命名属性相关联的操作    \\
-    索引器  & 与以数组方式索引类的实例相关联的操作 \\
-    事件   & 可由类生成的通知           \\
-    运算符  & 类所支持的转换和表达式运算符     \\
-    构造函数 & 初始化类的实例或类本身所需的操作   \\
-    析构函数 & 在永久释放类的实例之前执行的操作   \\
-    类型   & 类所声明的嵌套类型          \\
-    \hline
-\end{tabular}
+\cs 中类的成员如表 \ref{tab:classcontentitems} 所示：
+
+\begin{table}[htbp]
+    \centering
+    % 已经全局设置了，此处不用再设置
+    % 调小标题与表格之间的间距， 默认为10 
+    % \setlength{\abovecaptionskip}{3pt} 
+    \caption{类的成员}
+    \label{tab:classcontentitems}
+    \begin{tabular}{ll}
+        \hline
+        成员   & 说明                 \\
+        \hline
+        常量   & 与类关联的常量值           \\
+        字段   & 类的变量               \\
+        方法   & 类可执行的计算和操作         \\
+        属性   & 与读写类的命名属性相关联的操作    \\
+        索引器  & 与以数组方式索引类的实例相关联的操作 \\
+        事件   & 可由类生成的通知           \\
+        运算符  & 类所支持的转换和表达式运算符     \\
+        构造函数 & 初始化类的实例或类本身所需的操作   \\
+        析构函数 & 在释放类的实例之前执行的操作     \\
+        类型   & 类所声明的嵌套类型          \\
+        \hline
+    \end{tabular}
+\end{table}
 
 类中成员的类型也可以用泛型类型进行定义，则这个类就是泛型类了。
 

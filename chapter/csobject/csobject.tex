@@ -13,6 +13,12 @@
 需向下继承的类成员，尽可能可以定义为 protected ；
 项目内能访问的成员，尽可能定义为 internal 。
 
+在 \cs 中类支持单继承 (inheritance)，通过类继承产生派生类 (derived class)，
+从而扩展和专用化基类 (base class) 。
+
+\cs 中所有的类均从 System.Object 继承，如果一个类只从 System.Object 类继承，
+则可以将其省略。
+
 继承 (Inheritance) 是指这样一种能力：它可以使用现有类的所有功能，并在无需重新编写原来的类的情况下对这些功能进行扩展。
 
 继承符合开闭原则。
